@@ -1,0 +1,30 @@
+{
+
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "channel": "production"
+    },
+    "production2": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
