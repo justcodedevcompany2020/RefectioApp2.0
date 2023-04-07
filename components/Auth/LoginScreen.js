@@ -430,6 +430,8 @@ export default class LoginScreenComponent extends Component {
               left: 10,
               top: 23,
               zIndex: 100,
+
+              
             }}
           >
             <ArrowGrayComponent />
