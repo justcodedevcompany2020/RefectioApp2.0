@@ -259,10 +259,10 @@ export default class GhostPageComponent extends React.Component {
 
   componentDidMount() {
     const { navigation } = this.props;
-    this._loadFontsAsync();
     this.getProductsFunction();
-
+    
     this.focusListener = navigation.addListener("focus", () => {
+      this._loadFontsAsync();
       this.getProductsFunction();
     });
 
@@ -300,7 +300,7 @@ export default class GhostPageComponent extends React.Component {
 
   async _loadFontsAsync() {
     await Font.loadAsync(customFonts);
-    this.setState({ fontsLoaded: true });
+    await this.setState({ fontsLoaded: true });
   }
 
   renderItem = ({ item, index }) => {

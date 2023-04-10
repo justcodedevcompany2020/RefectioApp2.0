@@ -25,6 +25,7 @@ export default class EditPhoneNumberDesignerComponent extends React.Component {
       phone: "",
       phone_error: false,
       value_length: "",
+      error_message: false
     };
   }
 
@@ -48,7 +49,6 @@ export default class EditPhoneNumberDesignerComponent extends React.Component {
     await fetch(`${APP_URL}newnumberDesigner`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-
         if (
           result.status === true &&
           result.message[0] == "code send your phone number"
@@ -59,8 +59,13 @@ export default class EditPhoneNumberDesignerComponent extends React.Component {
         } else if (result.status === false) {
           if (result.message == "phone required") {
             this.setState({ phone_error: true });
+          } else if(result.message[0] == 'number already exists') {
+            this.setState({error_message : 'Такой номер телефона уже существует'})
+          } else if(result.message == 'Green error'){
+            this.setState({error_message : 'Что-то пошло не так. Попробуйте позже.'})
           } else {
             this.setState({ phone_error: false });
+            this.setState({error_message : false})
           }
         }
       })
@@ -184,6 +189,7 @@ export default class EditPhoneNumberDesignerComponent extends React.Component {
                 }}
               />
             </View>
+            {this.state.error_message && <Text style={{color: 'red', marginTop: 10  }}>{this.state.error_message}</Text>}
           </View>
           <TouchableOpacity
             style={{ alignSelf: "center", marginTop: "30%" }}

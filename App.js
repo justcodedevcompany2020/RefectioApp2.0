@@ -339,7 +339,6 @@ export default function App() {
           console.log(e);
         }
         dispatch({ type: "LOGOUT" });
-        callback();
       },
       signUp: () => {
         // setIsLoading(false);

@@ -84,7 +84,7 @@ export default class ForgetPasswordTelComponent extends Component {
                 pin4: "",
               });
               this.pin1Ref.current.focus();
-            } else if (result.message == "wrong verification code") {
+            } else if (result.message.message == "wrong verification code" || result.message == "invalid code") {
               this.setState({
                 error_code: true,
                 error_code_text: "Не верный код!",
@@ -340,7 +340,6 @@ export default class ForgetPasswordTelComponent extends Component {
                 maxLength={1}
               />
             </View>
-
             {this.state.error_code === true && (
               <View>
                 <Text style={{ paddingLeft: 25, color: "red" }}>

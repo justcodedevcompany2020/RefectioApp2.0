@@ -11,6 +11,7 @@ import {
   Modal,
   ImageBackground,
   Platform,
+  ScrollView,
 } from "react-native";
 import ArrowGrayComponent from "../../assets/image/ArrowGray";
 import BlueButton from "../Component/Buttons/BlueButton";
@@ -94,38 +95,38 @@ export default class LoginScreenComponent extends Component {
   //   console.log(isAvailable, "isAvailable");
   // };
 
-  register = async () => {
-    try {
-      const credential = await AppleAuthentication.signInAsync({
-        requestedScopes: [
-          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          AppleAuthentication.AppleAuthenticationScope.EMAIL,
-        ],
-      });
-      // console.log(credential);
-      this.setState({ authTokenApple: credential });
+  // register = async () => {
+  //   try {
+  //     const credential = await AppleAuthentication.signInAsync({
+  //       requestedScopes: [
+  //         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+  //         AppleAuthentication.AppleAuthenticationScope.EMAIL,
+  //       ],
+  //     });
+  //     // console.log(credential);
+  //     this.setState({ authTokenApple: credential });
 
-      const decoded = jwtDecode(credential.identityToken);
-      const current = Date.now() / 1000;
-      this.setState({
-        login: decoded.email,
-        apple_id: decoded.sub,
-        login_error: false,
-      });
+  //     const decoded = jwtDecode(credential.identityToken);
+  //     const current = Date.now() / 1000;
+  //     this.setState({
+  //       login: decoded.email,
+  //       apple_id: decoded.sub,
+  //       login_error: false,
+  //     });
 
-      console.log(decoded);
-    } catch (e) {
-      // if (e.code === "ERR_REQUEST_CANCELED") {
-      //   // handle that the user canceled the sign-in flow
-      // } else {
-      //   // handle other errors
-      // }
-      this.setState({
-        login_error: true,
-      });
-      console.log(e, "error");
-    }
-  };
+  //     console.log(decoded);
+  //   } catch (e) {
+  //     // if (e.code === "ERR_REQUEST_CANCELED") {
+  //     //   // handle that the user canceled the sign-in flow
+  //     // } else {
+  //     //   // handle other errors
+  //     // }
+  //     this.setState({
+  //       login_error: true,
+  //     });
+  //     console.log(e, "error");
+  //   }
+  // };
 
   // loginUserFromApple = async () => {
   //   fetch(`${APP_URL}loginuserFromApple`, {
@@ -194,7 +195,7 @@ export default class LoginScreenComponent extends Component {
 
           if (res.message.message == "wrong password") {
             this.setState({
-              pass_error: true,
+              pass_error: 'Неправильно указан пароль',
             });
           } else {
             this.setState({
@@ -202,16 +203,10 @@ export default class LoginScreenComponent extends Component {
             });
           }
           if (
-            res.message == "User@   heraxosahamari hastatum chi ancel Levon jan"
+            res.message == "verification error"
           ) {
-            this.setState({
-              no_verify: true,
-            });
-          } else {
-            this.setState({
-              no_verify: false,
-            });
-          }
+            this.props.navigation.navigate('ConfirmTelScreen', {params: res.token})
+          } 
         } else {
           if (res.message.user.active == "2") {
             let foundUser = {
@@ -224,11 +219,11 @@ export default class LoginScreenComponent extends Component {
           }
         }
       });
-  };
-
+};
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+        <ScrollView>
         <View
           style={{
             flex: 1,
@@ -424,14 +419,14 @@ export default class LoginScreenComponent extends Component {
 
           <TouchableOpacity
             // onPress={() => this.setState({ designer_or_manufacturer: true })}
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => this.props.navigation.navigate("AuthScreen")}
             style={{
               position: "absolute",
               left: 10,
               top: 23,
               zIndex: 100,
 
-              
+
             }}
           >
             <ArrowGrayComponent />
@@ -582,7 +577,7 @@ export default class LoginScreenComponent extends Component {
                     : { color: "#5B5B5B" },
                 ]}
               >
-                {this.state.pass_error ? "Неправильно указан пароль" : "Пароль"}
+                {this.state.pass_error ? this.state.pass_error : 'Пароль'}
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
@@ -648,7 +643,7 @@ export default class LoginScreenComponent extends Component {
                 } else {
                   if (this.state.pass == "") {
                     this.setState({
-                      pass_error: true,
+                      pass_error: 'Пароль',
                     });
                   } else {
                     this.setState({
@@ -698,6 +693,7 @@ export default class LoginScreenComponent extends Component {
             </View>
           {/* )} */}
         </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }

@@ -16,7 +16,6 @@ import Svg, { Path, Rect } from "react-native-svg";
 import BlueButton from "../Component/Buttons/BlueButton";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 
-
 export default class ConfirmTelScreenComponent extends Component {
   constructor(props) {
     super(props);
@@ -88,7 +87,7 @@ export default class ConfirmTelScreenComponent extends Component {
             } else if (result.message == "wrong verification code") {
               this.setState({
                 error_code: true,
-                error_code_text: "Не верный код!",
+                error_code_text: "Неверный код!",
                 pin1: "",
                 pin2: "",
                 pin3: "",
@@ -167,7 +166,6 @@ export default class ConfirmTelScreenComponent extends Component {
   };
 
   updateCodeSend = async () => {
-
     console.log("mtav");
     let token = this.props.token;
     let AuthStr = "Bearer " + token;
@@ -423,6 +421,7 @@ export default class ConfirmTelScreenComponent extends Component {
               maxLength={1}
             />
           </View>
+          {this.state.error_code && <Text style={{color: 'red',marginLeft: 25, marginTop: 10  }}>{this.state.error_code_text}</Text>}
           <TouchableOpacity
             onPress={() => {
               if (this.state.timerBool) {
