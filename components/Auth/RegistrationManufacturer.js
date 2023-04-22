@@ -111,6 +111,7 @@ export default class RegistrationManufacturerComponent extends Component {
       value_length: "",
       information: false,
     };
+    this.ref = React.createRef()
   }
 
   removeInputRow = () => {
@@ -408,13 +409,13 @@ export default class RegistrationManufacturerComponent extends Component {
       .then(async (res) => {
         // res = res.data;
 
-
         console.log(res);
         if (res.success === false && res.message == "Validation errors") {
           if (res.data.hasOwnProperty("company_name")) {
             this.setState({
               company_name_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               company_name_error: false,
@@ -425,6 +426,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               phone_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               phone_error: false,
@@ -455,6 +457,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               individual_number_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               individual_number_error: false,
@@ -465,6 +468,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               watsap_phone_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               watsap_phone_error: false,
@@ -475,6 +479,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               made_in_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               made_in_error: false,
@@ -485,6 +490,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               price_of_metr_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               price_of_metr_error: false,
@@ -505,6 +511,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               logo_error: true,
             });
+            // this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               logo_error: false,
@@ -515,6 +522,7 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               product_category_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               product_category_error: false,
@@ -525,13 +533,14 @@ export default class RegistrationManufacturerComponent extends Component {
             this.setState({
               sales_city_error: true,
             });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({
               sales_city_error: false,
             });
           }
 
-          this.form_data = new FormData();
+          // this.form_data = new FormData();
 
           return false;
         } else if (
@@ -541,7 +550,7 @@ export default class RegistrationManufacturerComponent extends Component {
           this.setState({
             phone_error: true,
           });
-
+          this.ref.current.scrollTo({x: 0, y: 0, animated: true})
           this.form_data = new FormData();
 
           return false;
@@ -553,7 +562,7 @@ export default class RegistrationManufacturerComponent extends Component {
             phone_exist: true,
           });
           this.form_data = new FormData();
-
+          this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           return false;
         } else if (
           res.status === false &&
@@ -760,6 +769,7 @@ export default class RegistrationManufacturerComponent extends Component {
           style={{
             width: "100%",
           }}
+          ref={this.ref}
         >
           <View style={{ paddingHorizontal: 25 }}>
             <View>

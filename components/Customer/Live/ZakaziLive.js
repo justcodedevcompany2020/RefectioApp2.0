@@ -158,7 +158,6 @@ export default class ZakaziLiveComponent extends React.Component {
                   (готовность, дата доставки) по всем производителям для одного
                   заказчика будет в одном месте.
                 </Text>
-
                 <TouchableOpacity
                   style={styles.buttonOk}
                   onPress={() => {

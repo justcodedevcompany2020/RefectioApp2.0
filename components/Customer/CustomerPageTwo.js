@@ -23,7 +23,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider2 from "../slider/Slider2";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 
-
 export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -768,7 +767,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                         )}
                       </View>
                     </View>
-{/* 
+                    {/* 
                     <TouchableOpacity
                       style={{ alignSelf: "flex-end" }}
                       onPress={() => {
@@ -910,26 +909,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                         Шоурум
                       </Text>
                       <View>
-                        {this.state.show_room == null && (
-                          <Svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <Rect
-                              x="0.2"
-                              y="0.2"
-                              width="19.6"
-                              height="19.6"
-                              rx="3.8"
-                              stroke="#52A8EF"
-                              stroke-width="0.4"
-                            />
-                          </Svg>
-                        )}
-                        {this.state.show_room == "Да" && (
+                        {this.state.show_room == "Да" ? (
                           <Svg
                             width="20"
                             height="20"
@@ -944,6 +924,24 @@ export default class DesignerPageTwoComponent extends React.Component {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                             />
+                            <Rect
+                              x="0.2"
+                              y="0.2"
+                              width="19.6"
+                              height="19.6"
+                              rx="3.8"
+                              stroke="#52A8EF"
+                              stroke-width="0.4"
+                            />
+                          </Svg>
+                        ) : (
+                          <Svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
                             <Rect
                               x="0.2"
                               y="0.2"

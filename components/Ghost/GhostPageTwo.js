@@ -379,10 +379,9 @@ export default class GhostPageTwoComponent extends React.Component {
                             />
                           </TouchableOpacity>
                         )}
-
                       </View>
                     </View>
-                        {/* <TouchableOpacity
+                    {/* <TouchableOpacity
                           style={{ alignSelf: "flex-end" }}
                           onPress={() => {
                             this.generateShareLink();
@@ -523,26 +522,7 @@ export default class GhostPageTwoComponent extends React.Component {
                         Шоурум
                       </Text>
                       <View>
-                        {this.state.user[0].show_room == null && (
-                          <Svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <Rect
-                              x="0.2"
-                              y="0.2"
-                              width="19.6"
-                              height="19.6"
-                              rx="3.8"
-                              stroke="#52A8EF"
-                              stroke-width="0.4"
-                            />
-                          </Svg>
-                        )}
-                        {this.state.user[0].show_room == "Да" && (
+                        {this.state.user[0].show_room == "Да" ? (
                           <Svg
                             width="20"
                             height="20"
@@ -557,6 +537,24 @@ export default class GhostPageTwoComponent extends React.Component {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                             />
+                            <Rect
+                              x="0.2"
+                              y="0.2"
+                              width="19.6"
+                              height="19.6"
+                              rx="3.8"
+                              stroke="#52A8EF"
+                              stroke-width="0.4"
+                            />
+                          </Svg>
+                        ) : (
+                          <Svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
                             <Rect
                               x="0.2"
                               y="0.2"

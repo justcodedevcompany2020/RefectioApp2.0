@@ -19,6 +19,7 @@ import ArrowGrayComponent from "../../../assets/image/ArrowGray";
 import BlueButton from "../../Component/Buttons/BlueButton";
 import DesignerPageNavComponent from "../DesignerPageNav";
 import { APP_URL, APP_IMAGE_URL, APP_PUBLIC_URL } from "@env";
+import Loading from "../../Component/Loading";
 const iconWidth = Dimensions.get("window").width / 5;
 
 export default class AddZakazchikDesignerComponent extends React.Component {
@@ -43,7 +44,9 @@ export default class AddZakazchikDesignerComponent extends React.Component {
       photo_error: false,
       proizvoditel_id: [],
       iconsArray: [],
+      isLoading: false,
     };
+    this.ref = React.createRef();
   }
 
   getAllIcons = async () => {
@@ -150,6 +153,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
   };
 
   createNewCustomer = async () => {
+    this.setState({ isLoading: true });
     let token = await AsyncStorage.getItem("userToken");
 
     let myHeaders = new Headers();
@@ -191,6 +195,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
           }
           if (result.hasOwnProperty("photo")) {
             this.setState({ photo_error: true });
+            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
           } else {
             this.setState({ photo_error: false });
           }
@@ -200,6 +205,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
             this.setState({ changed_city_error: false });
           }
         }
+        this.setState({ isLoading: false });
       })
       .catch((error) => console.log("error", error));
   };
@@ -360,7 +366,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
             <Text style={styles.pageTitle}>Новый заказчик</Text>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView showsVerticalScrollIndicator={false} ref={this.ref}>
             <TouchableOpacity
               style={styles.iconItems}
               onPress={() => {
@@ -622,6 +628,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
             navigation={this.props.navigation}
           />
         )}
+        {this.state.isLoading && <Loading />}
       </SafeAreaView>
     );
   }
@@ -780,7 +787,7 @@ const styles = StyleSheet.create({
   },
   iconParent: {
     // justifyContent: "space-between",
-    columnGap: "10%",
+    columnGap: 10,
     flexDirection: "row",
     flexWrap: "wrap",
   },

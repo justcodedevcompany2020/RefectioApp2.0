@@ -19,6 +19,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { APP_URL, APP_IMAGE_URL, APP_PUBLIC_URL } from "@env";
+import Loading from "../../Component/Loading";
 
 export default class AddZakaziComponent extends React.Component {
   constructor(props) {
@@ -39,6 +40,7 @@ export default class AddZakaziComponent extends React.Component {
       photo_error: false,
 
       button_boolean: true,
+      isLoading: false,
     };
   }
 
@@ -80,6 +82,7 @@ export default class AddZakaziComponent extends React.Component {
   };
 
   AddNextOrderCustomer = async () => {
+    this.setState({ isLoading: true });
     let token = await AsyncStorage.getItem("userToken");
 
     let myHeaders = new Headers();
@@ -138,6 +141,7 @@ export default class AddZakaziComponent extends React.Component {
             }
           }
           this.setState({ button_boolean: true });
+          this.setState({ isLoading: false });
         })
         .catch((error) => console.log("error", error));
     }
@@ -388,6 +392,7 @@ export default class AddZakaziComponent extends React.Component {
             navigation={this.props.navigation}
           />
         )}
+        {this.state.isLoading && <Loading />}
       </SafeAreaView>
     );
   }

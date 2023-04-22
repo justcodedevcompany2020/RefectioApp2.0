@@ -19,6 +19,7 @@ import Svg, { Path, Rect } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import Loading from "../Component/Loading";
 
 export default class AddProductComponent extends React.Component {
   constructor(props) {
@@ -56,32 +57,26 @@ export default class AddProductComponent extends React.Component {
       tabletop_error: false,
       all_images: [],
       all_images_error: false,
-      max_image_error: false,
 
       categoryArray: [],
 
       modalBool: false,
 
       buttonSend: true,
+      isLoading: false,
     };
   }
   formdata = new FormData();
 
   pickImage = async () => {
+    this.setState({ buttonSend: false });
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       quality: 0.5,
-      selectionLimit: 5,
     });
-    if (!result.canceled) {
-      this.setState({ img: result.assets[0].uri, all_images_error: false });
-    } else {
-      this.setState({ all_images_error: true });
-    }
-
     let all_images = this.state.all_images;
-    if (result.hasOwnProperty("assets")) {
+    if (!result.canceled) {
       await result.assets.map((element, index) => {
         all_images.push({
           uri: element.uri,
@@ -89,18 +84,12 @@ export default class AddProductComponent extends React.Component {
           name: "photo.jpg",
         });
       });
-    } else {
-      all_images.push({
-        uri: result.assets[0].uri,
-        type: "image/jpg",
-        name: "photo.jpg",
+      this.setState({
+        all_images: all_images,
+        all_images_error: false,
       });
     }
-
-    this.setState({
-      all_images: all_images,
-      all_images_error: false,
-    });
+    this.setState({ buttonSend: true });
   };
 
   clearAllData = () => {
@@ -137,7 +126,6 @@ export default class AddProductComponent extends React.Component {
       tabletop_error: false,
       all_images: [],
       all_images_error: false,
-      max_image_error: false,
 
       categoryArray: [],
 
@@ -146,17 +134,15 @@ export default class AddProductComponent extends React.Component {
       buttonSend: true,
 
       limitError: false,
+      isLoading: false,
     });
   };
 
   delateSelectedImage = async (index) => {
-    let { all_images, max_image_error } = this.state;
+    let { all_images } = this.state;
 
     let new_all_images = [];
 
-    if (all_images.length <= 11) {
-      this.setState({ max_image_error: false });
-    }
 
     for (let i = 0; i < all_images.length; i++) {
       if (i == index) {
@@ -189,24 +175,19 @@ export default class AddProductComponent extends React.Component {
 
   sendProduct = async () => {
     let { all_images } = this.state;
-
     if (this.state.all_images.length === 0) {
-      this.setState({ buttonSend: false, all_images_error: true });
-    } else if (this.state.all_images.length > 5) {
-      this.setState({ max_image_error: true });
+      this.setState({ all_images_error: true });
     }
     if (
       this.state.all_images.length > 0 &&
-      this.state.all_images.length <= 5 &&
       this.state.name !== "" &&
       this.state.categoryChanged !== ""
     ) {
       await all_images.map((element, index) => {
         this.formdata.append("photo[]", element);
       });
-
-      this.setState({ buttonSend: true, max_image_error: false });
     }
+    this.setState({ isLoading: true });
 
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem("userToken");
@@ -233,16 +214,14 @@ export default class AddProductComponent extends React.Component {
       body: this.formdata,
       redirect: "follow",
     };
-    await this.setState({
-      buttonSend: false,
-    });
+
     await fetch(`${APP_URL}createnewproductProizvoditel`, requestOptions)
       .then((response) => response.json())
       .then(async (result) => {
+        this.setState({ isLoading: false });
         if (result.status === true) {
           (await this.setState({
             modalBool: true,
-            buttonSend: true,
           })) && (await this.clearAllData());
         } else if (result.status !== true) {
           if (result.hasOwnProperty("category_name")) {
@@ -732,7 +711,7 @@ export default class AddProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="0.5 метров"
-                  keyboardType="number-pad"
+                  keyboardType="numeric"
                   style={{
                     borderWidth: 1,
                     borderColor: "#F5F5F5",
@@ -1053,13 +1032,6 @@ export default class AddProductComponent extends React.Component {
                 Превышен лимит добавления товаров в данной категории
               </Text>
             )}
-            {this.state.max_image_error === true && (
-              <Text
-                style={{ color: "red", textAlign: "center", marginTop: 10 }}
-              >
-                Максимальное количество из. 5 шт
-              </Text>
-            )}
 
             <TouchableOpacity
               onPress={() => {
@@ -1080,6 +1052,7 @@ export default class AddProductComponent extends React.Component {
         {this.state.keyboardOpen === false && (
           <CustomerMainPageNavComponent navigation={this.props.navigation} />
         )}
+        {this.state.isLoading && <Loading />}
       </SafeAreaView>
     );
   }

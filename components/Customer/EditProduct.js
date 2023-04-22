@@ -19,6 +19,7 @@ import Svg, { Path, Rect } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import Loading from "../Component/Loading";
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -66,6 +67,7 @@ export default class EditProductComponent extends React.Component {
       limitError: false,
 
       delate_photo: [],
+      isLoading: true
     };
     this.delate_images = [];
   }
@@ -215,10 +217,12 @@ export default class EditProductComponent extends React.Component {
       buttonSend: true,
 
       image_boolean: false,
+      isLoading: true
     });
   };
 
   sendProduct = async () => {
+    // this.setState({isLoading: true})
     let { all_images, delate_photo, get_old_image } = this.state;
 
     let myHeaders = new Headers();
@@ -258,13 +262,11 @@ export default class EditProductComponent extends React.Component {
       if (
         all_images.length > 0 &&
         get_old_image.length > 0 &&
-        all_images.length + get_old_image.length <= 5 &&
+        // all_images.length + get_old_image.length <= 5 &&
         this.state.name !== "" &&
         this.state.categoryChanged !== ""
       ) {
         this.setState({ buttonSend: true, max_image_error: false });
-      } else if (all_images.length + get_old_image.length > 5) {
-        this.setState({ buttonSend: false, max_image_error: true });
       }
     } else if (all_images.length === 0 && get_old_image.length === 0) {
       this.setState({ buttonSend: false, all_images_error: true });
@@ -329,6 +331,7 @@ export default class EditProductComponent extends React.Component {
             }
           }
           formdata = new FormData();
+          // this.setState({isLoading: false})
         })
         .catch((error) => console.log("error", error));
     }
@@ -422,6 +425,7 @@ export default class EditProductComponent extends React.Component {
           });
           this.setState({ get_old_image: new_all_images });
         }
+        this.setState({isLoading: false})
       })
       .catch((error) => console.log("error", error));
   };
@@ -502,7 +506,7 @@ export default class EditProductComponent extends React.Component {
                   color: "#2D9EFB",
                 }}
               >
-                Вы успешно{"\n"}добавили продукт
+                Вы успешно{"\n"}изменили продукт
               </Text>
 
               <TouchableOpacity
@@ -1270,6 +1274,7 @@ export default class EditProductComponent extends React.Component {
             </TouchableOpacity>
           </ScrollView>
         </View>
+        {this.state.isLoading && <Loading />}
         {this.state.keyboardOpen === false && (
           <CustomerMainPageNavComponent navigation={this.props.navigation} />
         )}

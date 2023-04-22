@@ -30,7 +30,6 @@ export default class CustomerMainPageComponent extends React.Component {
       filter: false,
       keyboardOpen: false,
       getAllProducts: [],
-      urlImage: APP_IMAGE_URL,
       countMeshok: 0,
       logo: "",
       name: "",
@@ -46,11 +45,12 @@ export default class CustomerMainPageComponent extends React.Component {
     };
 
     this.handler = this.handler.bind(this);
+    this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
   }
 
-  clearAllData = () => {
-    this.setState({
+  clearAllData = async () => {
+    await this.setState({
       filter: false,
       keyboardOpen: false,
       getAllProducts: [],
@@ -68,6 +68,10 @@ export default class CustomerMainPageComponent extends React.Component {
       isLastPage: false,
     });
   };
+
+  closePopup(value) {
+    this.setState({ filter: value });
+  }
 
   getProductsFunction = async () => {
     const { page, getAllProducts, isLastPage } = this.state;
@@ -98,7 +102,7 @@ export default class CustomerMainPageComponent extends React.Component {
               }
 
               let product_image = data[i].user_product_limit1[0].product_image;
-
+              product_image.length > 5 ? product_image.splice(5) : null;
               data[i].images = product_image;
             }
 
@@ -242,11 +246,12 @@ export default class CustomerMainPageComponent extends React.Component {
   }
 
   resetFilterData = async () => {
-    this.getProductsFunction();
+    await this.clearAllData();
+    await this.getProductsFunction();
     await this.setState({
       filter: false,
     });
-    console.log("click to resetFilterData");
+    return false;
   };
 
   modalState = async () => {
@@ -354,7 +359,7 @@ export default class CustomerMainPageComponent extends React.Component {
           >
             <View style={styles.infoCompanyMain}>
               <Image
-                source={{ uri: this.state.urlImage + item.logo }}
+                source={{ uri: APP_IMAGE_URL + item.logo }}
                 style={{
                   width: 70,
                   height: 70,
@@ -450,6 +455,7 @@ export default class CustomerMainPageComponent extends React.Component {
           {this.state.filter && (
             <FilterComponent
               handler={this.handler}
+              closePopup={this.closePopup}
               resetFilterData={this.resetFilterData}
             />
           )}
@@ -473,7 +479,7 @@ export default class CustomerMainPageComponent extends React.Component {
             {this.state.logo !== null && (
               <Image
                 style={styles.user}
-                source={{ uri: this.state.urlImage + this.state.logo }}
+                source={{ uri: APP_IMAGE_URL + this.state.logo }}
               />
             )}
 

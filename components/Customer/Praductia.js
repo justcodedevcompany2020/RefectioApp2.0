@@ -24,6 +24,7 @@ import {
   BottomSheetModalProvider,
   BottomSheetModal,
 } from "@gorhom/bottom-sheet";
+import Loading from "../Component/Loading";
 
 export default class PraductiaComponent extends React.Component {
   constructor(props) {
@@ -47,6 +48,7 @@ export default class PraductiaComponent extends React.Component {
       user_id: "",
 
       bottomSheetBool: false,
+      isLoading: true
     };
     this.bottomSheetRef = React.createRef(null);
     this.snapPoints = ["20%"];
@@ -75,13 +77,14 @@ export default class PraductiaComponent extends React.Component {
             data[i].images = product_image;
           }
         }
-
-        this.setState({
-          user: res.data.user,
-          user_bonus_for_designer: res.data.user_bonus_for_designer,
-          user_category_for_product: res.data.user_category_for_product,
-          city_for_sales_user: res.data.city_for_sales_user,
-        });
+        if (res.data.message !== "no product") {
+          this.setState({
+            user: res.data.user,
+            user_bonus_for_designer: res.data.user_bonus_for_designer,
+            user_category_for_product: res.data.user_category_for_product,
+            city_for_sales_user: res.data.city_for_sales_user,
+          });
+        }
       });
   };
 
@@ -254,6 +257,7 @@ export default class PraductiaComponent extends React.Component {
       this.state.user_category_for_product[0]?.category_name
     );
     await this.setState({ active: 0 });
+    this.setState({isLoading: false})
   };
 
   componentDidMount() {
@@ -691,6 +695,7 @@ export default class PraductiaComponent extends React.Component {
             </BottomSheetModal>
           </View>
           <CustomerMainPageNavComponent navigation={this.props.navigation} />
+          {this.state.isLoading && <Loading />}
         </SafeAreaView>
       </BottomSheetModalProvider>
     );

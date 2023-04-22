@@ -45,11 +45,12 @@ export default class CustomerMainPageComponent extends React.Component {
     };
 
     this.handler = this.handler.bind(this);
+    this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
   }
 
-  clearAllData = () => {
-    this.setState({
+  clearAllData = async () => {
+    await this.setState({
       filter: false,
       keyboardOpen: false,
       getAllProducts: [],
@@ -70,10 +71,8 @@ export default class CustomerMainPageComponent extends React.Component {
 
   getProductsFunction = async () => {
     const { page, getAllProducts, isLastPage } = this.state;
-
     this.setState({
       searchUserButton: false,
-      searchUser: "",
     });
 
     if (isLastPage) {
@@ -87,17 +86,14 @@ export default class CustomerMainPageComponent extends React.Component {
       .then((res) => {
         if (res.status === true) {
           let data = res.data.data.data;
-          // console.log(data);
-
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
               }
-
               let product_image = data[i].user_product_limit1[0].product_image;
-
+              product_image.length > 5 ? product_image.splice(5) : null;
               data[i].images = product_image;
             }
 
@@ -183,14 +179,18 @@ export default class CustomerMainPageComponent extends React.Component {
       });
   };
 
+  closePopup(value) {
+    this.setState({ filter: value });
+  }
+
   handler(filter_data) {
     let meshok = filter_data.meshok;
     let category_name =
-      filter_data.category_name.length > 0
-        ? filter_data.category_name.join(",")
+      filter_data?.category_name?.length > 0
+        ? filter_data?.category_name.join(",")
         : "";
     let made_in_result =
-      filter_data.made_in_result.length > 0
+      filter_data.made_in_result?.length > 0
         ? filter_data.made_in_result.join(",")
         : "";
     let city_name = filter_data.city_name;
@@ -255,10 +255,12 @@ export default class CustomerMainPageComponent extends React.Component {
   }
 
   resetFilterData = async () => {
-    this.getProductsFunction();
+    await this.clearAllData();
+    await this.getProductsFunction();
     await this.setState({
       filter: false,
     });
+    return false;
   };
 
   modalState = async () => {
@@ -273,6 +275,7 @@ export default class CustomerMainPageComponent extends React.Component {
     const { navigation } = this.props;
 
     this.focusListener = navigation.addListener("focus", () => {
+      this.clearAllData();
       this.getAuthUserProfile();
       this.getProductsFunction();
     });
@@ -441,6 +444,7 @@ export default class CustomerMainPageComponent extends React.Component {
           {this.state.filter && (
             <FilterComponent
               handler={this.handler}
+              closePopup={this.closePopup}
               resetFilterData={this.resetFilterData}
             />
           )}
@@ -577,9 +581,7 @@ export default class CustomerMainPageComponent extends React.Component {
                 fontSize: 15,
               }}
               value={this.state.searchUser}
-              onChangeText={(text) => {
-                this.searchUser(text);
-              }}
+              onChangeText={this.searchUser}
             />
             <TouchableOpacity onPress={() => this.modalState()}>
               <Svg

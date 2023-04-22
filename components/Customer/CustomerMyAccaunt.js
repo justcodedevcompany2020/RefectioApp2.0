@@ -2574,7 +2574,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                   : { borderColor: "#F5F5F5" },
                               ]}
                             >
-                              <TextInput
+                              <TextInput 
                                 keyboardType="number-pad"
                                 maxLength={2}
                                 value={item.percent}
@@ -2599,6 +2599,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                       style={{
                         flexDirection: "row",
                         justifyContent: "flex-end",
+                        marginTop: 15
                       }}
                     >
                       {/* jnjel */}
@@ -2631,7 +2632,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   <TouchableOpacity
                     style={{
                       alignSelf: "center",
-                      marginTop: 93,
+                      marginTop: 20,
                       marginBottom: 56,
                     }}
                     onPress={() => {
@@ -2843,7 +2844,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   DesignerRemunerationPercentageParent: {
-    width: "94%",
+    width: "96%",
     marginTop: 5,
     alignSelf: "center",
   },
@@ -2853,7 +2854,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   DesignerRemunerationPercentage: {
-    width: "100%",
+    width: "93%",
     height: 50,
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -2870,7 +2871,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#F5F5F5",
     borderRadius: 6,
-    width: "25%",
+    width: "25.5%",
     height: "100%",
     paddingLeft: 5,
     fontSize: 13,

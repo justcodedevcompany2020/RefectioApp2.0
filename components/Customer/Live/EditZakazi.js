@@ -18,6 +18,7 @@ import MaskInput from "react-native-mask-input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import Loading from "../../Component/Loading";
 
 import {
   APP_URL,
@@ -45,10 +46,9 @@ export default class EditZakaziComponent extends React.Component {
       photo_error: false,
 
       photo_bool: true,
+      isLoading: false,
     };
   }
-
-  form_data = new FormData();
 
   pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,34 +63,40 @@ export default class EditZakaziComponent extends React.Component {
         photo_error: false,
         photo_bool: false,
       });
-    } else {
-      this.setState({ photo_error: true, photo: null, photo_bool: true });
     }
-    this.form_data.append("photo", {
-      uri: result.assets[0].uri,
-      type: "image/jpg",
-      name: "photo.jpg",
-    });
   };
 
   UpdateordersDataFromManufacter = async () => {
+    this.setState({ isLoading: true });
     let token = await AsyncStorage.getItem("userToken");
 
+    form_data = new FormData();
     let myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
 
-    this.form_data.append("name", this.state.name);
-    this.form_data.append("order_id", this.props.order_id);
-    this.form_data.append("gatovnost", this.state.done_time);
-    this.form_data.append("dostavka", this.state.given_time);
-    if (this.state.photo_bool === false) {
-      this.form_data.append("photo", this.state.photo);
+    form_data.append("name", this.state.name);
+    form_data.append("order_id", this.props.order_id);
+    form_data.append("gatovnost", this.state.done_time);
+    form_data.append("dostavka", this.state.given_time);
+
+    if (this.state.photo) {
+      console.log(this.state.photo_bool);
+      form_data.append(
+        "photo",
+        !this.state.photo_bool
+          ? {
+              uri: this.state.photo,
+              type: "imarge/jpg",
+              name: "photo.jpg",
+            }
+          : this.state.photo
+      );
     }
 
     let requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: this.form_data,
+      body: form_data,
       redirect: "follow",
     };
 
@@ -123,6 +129,7 @@ export default class EditZakaziComponent extends React.Component {
             this.setState({ given_time_error: false });
           }
         }
+        this.setState({ isLoading: false });
       })
       .catch((error) => console.log("error", error));
   };
@@ -272,7 +279,9 @@ export default class EditZakaziComponent extends React.Component {
 
                   <TouchableOpacity
                     style={styles.delateImg}
-                    onPress={() => this.setState({ photo: null })}
+                    onPress={() =>
+                      this.setState({ photo: null, photo_bool: false })
+                    }
                   >
                     <Svg
                       width={32}
@@ -428,6 +437,7 @@ export default class EditZakaziComponent extends React.Component {
             navigation={this.props.navigation}
           />
         )}
+        {this.state.isLoading && <Loading />}
       </SafeAreaView>
     );
   }

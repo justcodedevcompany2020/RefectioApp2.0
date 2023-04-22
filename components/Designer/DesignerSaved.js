@@ -78,7 +78,9 @@ export default class DesignerSavedComponent extends React.Component {
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false}>
-            {this.state.saveds.map((item, index) => {
+            {this.state.saveds.length == 0 ? <Text style={{textAlign: 'center', marginTop: 40,  fontSize: 18}}>
+              Нет избранных
+            </Text> :  this.state.saveds.map((item, index) => {
               let count = item.favorit_users.meshok;
               return (
                 <View key={index} style={styles.campaign}>
@@ -100,6 +102,7 @@ export default class DesignerSavedComponent extends React.Component {
                         marginRight: 12,
                         borderColor: "#C8C8C8",
                         borderWidth: 1,
+                        borderRadius: 10
                       }}
                     />
                     <View style={styles.infoCompany}>

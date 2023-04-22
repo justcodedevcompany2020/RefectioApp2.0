@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   mainUserContainer: {
-    marginBottom: 14,
+    // marginBottom: 14,
   },
   praizvaditelName: {
     fontFamily: "Poppins_500Medium",

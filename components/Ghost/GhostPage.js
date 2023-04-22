@@ -69,8 +69,24 @@ export default class GhostPageComponent extends React.Component {
     };
 
     this.handler = this.handler.bind(this);
+    this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
   }
+
+  clearAllData = async () => {
+    await this.setState({
+      filter: false,
+      keyboardOpen: false,
+      getAllProducts: [],
+      countMeshok: 0,
+
+      searchUser: "",
+
+      page: 1,
+      isLoading: false,
+      isLastPage: false,
+    });
+  };
 
   getProductsFunction = async () => {
     const { page, getAllProducts, isLastPage } = this.state;
@@ -91,26 +107,38 @@ export default class GhostPageComponent extends React.Component {
       .then((res) => {
         if (res.status === true) {
           let data = res.data.data.data;
-          // console.log(data);
 
           if (data?.length > 0) {
+            
             for (let i = 0; i < data.length; i++) {
+              
               if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
               }
+              if (data[i].slider_photo.length > 0) {
+                //todo
+                //   let product_image = data[i].slider_photo[0].product_image;
+                //   data[i].images = product_image;
+                //   continue;
+                console.log(data[i].slider_photo);
+                // console.log('if');
+              }
 
               let product_image = data[i].user_product_limit1[0].product_image;
-
+              product_image.length > 5 ? product_image.splice(5) : null;
               data[i].images = product_image;
             }
-
+            console.log(getAllProducts.length, 'getAllProducts.length');
+            console.log(data.length, 'data.length');
+            console.log(page, 'page');
             this.setState({
               getAllProducts: [...getAllProducts, ...data],
               page: page + 1,
               isLoading: false,
             });
           } else {
+            console.log('else');
             this.setState({
               isLastPage: true,
               isLoading: false,
@@ -198,11 +226,12 @@ export default class GhostPageComponent extends React.Component {
   }
 
   resetFilterData = async () => {
-    this.getProductsFunction();
+    await this.clearAllData();
+    await this.getProductsFunction();
     await this.setState({
       filter: false,
     });
-    console.log("click to resetFilterData");
+    return false;
   };
 
   modalState = async () => {
@@ -259,8 +288,8 @@ export default class GhostPageComponent extends React.Component {
 
   componentDidMount() {
     const { navigation } = this.props;
-    this.getProductsFunction();
-    
+    // this.getProductsFunction();
+
     this.focusListener = navigation.addListener("focus", () => {
       this._loadFontsAsync();
       this.getProductsFunction();
@@ -404,8 +433,13 @@ export default class GhostPageComponent extends React.Component {
   };
 
   handleLoadMore = () => {
+    console.log('handleLoadMore');
     this.getProductsFunction();
   };
+
+  closePopup(value) {
+    this.setState({ filter: value });
+  }
 
   render() {
     if (!this.state.fontsLoaded) {
@@ -417,6 +451,7 @@ export default class GhostPageComponent extends React.Component {
             {this.state.filter && (
               <FilterComponent
                 handler={this.handler}
+                closePopup={this.closePopup}
                 resetFilterData={this.resetFilterData}
               />
             )}

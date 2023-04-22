@@ -121,7 +121,6 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
     photo = photo.photo;
     return (
       <View>
-        <View style={styles.mainUserContainer}>
           <View style={styles.mebelTypeBox}>
             <Image
               source={{ uri: APP_GET_PUBLIC_URL + photo }}
@@ -143,7 +142,6 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
               </View>
             </View>
           </View>
-        </View>
       </View>
     );
   };
@@ -223,9 +221,11 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
               stickySectionHeadersEnabled={false}
               renderSectionHeader={({ section }) => {
                 return (
-                  <Text style={styles.praizvaditelName}>
-                    {section.company_name}
-                  </Text>
+                  <View style={{borderBottomWidth: 1, borderColor: '#E6E6E6'}}>
+                    <Text style={styles.praizvaditelName}>
+                      {section.company_name}
+                    </Text>
+                  </View>
                 );
               }}
               renderSectionFooter={this.renderSectionFooter}
@@ -266,9 +266,6 @@ const styles = StyleSheet.create({
   userIcon: {
     width: 40,
     height: 40,
-  },
-  mainUserContainer: {
-    marginBottom: 14,
   },
   praizvaditelName: {
     fontFamily: "Poppins_500Medium",
@@ -321,6 +318,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     marginBottom: 100,
+    marginTop: 15
   },
   plusPraizvaditelText: {
     fontSize: 16,

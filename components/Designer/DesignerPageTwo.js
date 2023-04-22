@@ -13,6 +13,7 @@ import {
   Linking,
   ActivityIndicator,
   Share,
+  Dimensions
 } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
 import Slider from "../slider/Slider";
@@ -23,6 +24,8 @@ import Slider2 from "../slider/Slider2";
 import MaskInput from "react-native-mask-input";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import { Platform } from "react-native";
+
+const width = Dimensions.get('window').width
 
 export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
@@ -736,11 +739,12 @@ export default class DesignerPageTwoComponent extends React.Component {
 
                         <View style={styles.procent}>
                           <TextInput
+                            style={{color: "#888888"}}
                             keyboardType="number-pad"
                             editable={false}
                             value={item.percent}
                           />
-                          <Text>%</Text>
+                          <Text style={{color: "#888888"}}>%</Text>
                         </View>
                       </View>
                     );
@@ -1104,7 +1108,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                     }}
                   />
                   <View style={styles.infoCompany}>
-                    <View style={{ width: "85%" }}>
+                    <View>
                       <Text
                         numberOfLines={1}
                         style={{
@@ -1185,7 +1189,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                         )}
                       </View>
                     </View>
-                    <View style={{ justifyContent: "space-between" }}>
+                    <View>
                       <TouchableOpacity onPress={() => this.favorite()}>
                         {this.state.favoriteBool == true && (
                           <Image
@@ -1351,26 +1355,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                         Шоурум
                       </Text>
                       <View>
-                        {this.state.user[0].show_room == null && (
-                          <Svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <Rect
-                              x="0.2"
-                              y="0.2"
-                              width="19.6"
-                              height="19.6"
-                              rx="3.8"
-                              stroke="#52A8EF"
-                              stroke-width="0.4"
-                            />
-                          </Svg>
-                        )}
-                        {this.state.user[0].show_room == "Да" && (
+                        {this.state.user[0].show_room == "Да" ? (
                           <Svg
                             width="20"
                             height="20"
@@ -1385,6 +1370,24 @@ export default class DesignerPageTwoComponent extends React.Component {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                             />
+                            <Rect
+                              x="0.2"
+                              y="0.2"
+                              width="19.6"
+                              height="19.6"
+                              rx="3.8"
+                              stroke="#52A8EF"
+                              stroke-width="0.4"
+                            />
+                          </Svg>
+                        ) : (
+                          <Svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
                             <Rect
                               x="0.2"
                               y="0.2"
@@ -1599,7 +1602,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   infoCompany: {
-    width: "67%",
+    width: width - 150,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -1661,13 +1664,13 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   DesignerRemunerationPercentageParent: {
-    width: "90%",
+    width: "97%",
     marginTop: 85,
     alignSelf: "center",
     marginBottom: 20,
   },
   procentText: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: "Poppins_500Medium",
     color: "#888888",
   },
@@ -1689,7 +1692,7 @@ const styles = StyleSheet.create({
     fontFamily: "Raleway_400Regular",
   },
   DesignerRemunerationPercentage: {
-    width: "100%",
+    width: "95%",
     height: 50,
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -1701,13 +1704,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#F5F5F5",
     borderRadius: 6,
-    width: "22%",
+    width: "25.5%",
     height: "100%",
-    paddingLeft: 5,
-    fontSize: 14,
+    paddingLeft: 4,
+    fontSize: 13,
     fontFamily: "Poppins_400Regular",
     color: "#888888",
-    marginRight: 10,
+    marginRight: 8,
   },
   rubli: {
     height: "100%",

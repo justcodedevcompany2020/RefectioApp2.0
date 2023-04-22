@@ -50,6 +50,44 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
       redirect: "follow",
     };
 
+    this.setState({ isLoading: true });
+    fetch(`${APP_URL}GetAllOrderFromDesigner?page=${page}`, requestOptions)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson, 'aaaaaa');
+        if (responseJson.status === true) {
+          if (responseJson.data.data.length > 0) {
+            this.setState({
+              data: responseJson?.data?.data,
+              page: page + 1,
+              isLoading: false,
+            });
+          } else {
+            this.setState({
+              isLastPage: true,
+              isLoading: false,
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  loadMoreFunc = async () => {
+    const { page, data, isLastPage } = this.state;
+
+    let token = await AsyncStorage.getItem("userToken");
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
     if (isLastPage) {
       return;
     }
@@ -135,7 +173,7 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
   };
 
   handleLoadMore = () => {
-    this.fetchData();
+    this.loadMoreFunc();
   };
 
   render() {
