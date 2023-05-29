@@ -711,7 +711,7 @@ export default class AddProductComponent extends React.Component {
                 <TextInput
                   underlineColorAndroid="transparent"
                   placeholder="0.5 метров"
-                  keyboardType="numeric"
+                  keyboardType="decimal-pad"
                   style={{
                     borderWidth: 1,
                     borderColor: "#F5F5F5",

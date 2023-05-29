@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { Component } from "react";
 import {
   StyleSheet,
@@ -8,6 +9,8 @@ import {
   Touchable,
   TouchableOpacity,
 } from "react-native";
+import { AuthContext } from "../AuthContext/context";
+
 export default class CustomerMainPageNavComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -46,10 +49,16 @@ export default class CustomerMainPageNavComponent extends React.Component {
       ],
     };
   }
+  static contextType = AuthContext;
 
   goToPages = (e) => {
     this.props.navigation.navigate(e);
   };
+
+
+  componentDidMount() {
+    console.log(this.context.notify_count, 'CustomerMainPageNav')
+  }
 
   render() {
     return (
@@ -61,6 +70,9 @@ export default class CustomerMainPageNavComponent extends React.Component {
               onPress={() => this.goToPages(item.change)}
               key={index}
             >
+              {(item.text == 'Заказы' && this.context.notify_count > 0) && <View style={{ height: 13, width: 13, backgroundColor: 'red', borderRadius: 50, position: 'absolute', right: 0, alignItems: 'center' }}>
+                <Text style={{ color: 'white', fontSize: 9.5 }}>{this.context.notify_count}</Text>
+              </View>}
               <Image
                 source={item.images}
                 style={[
@@ -69,12 +81,12 @@ export default class CustomerMainPageNavComponent extends React.Component {
                     : styles.navIcons,
                   index === 1
                     ? {
-                        width: 40,
-                        height: 14,
-                        resizeMode: "contain",
-                        marginBottom: 5,
-                        marginTop: 9,
-                      }
+                      width: 40,
+                      height: 14,
+                      resizeMode: "contain",
+                      marginBottom: 5,
+                      marginTop: 9,
+                    }
                     : { width: 25, height: 25 },
                 ]}
               />

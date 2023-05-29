@@ -45,6 +45,8 @@ import AddZakazchikDesignerComponent from "./components/Designer/Live/AddZakazch
 import EditProductComponent from "./components/Customer/EditProduct";
 import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
+import { APP_URL } from "@env";
+
 const Stack = createStackNavigator();
 
 function AuthScreen({ navigation }) {
@@ -343,9 +345,38 @@ export default function App() {
       signUp: () => {
         // setIsLoading(false);
       },
+      notify_count: 0
     }),
     []
   );
+
+  getLiveZakaz = async () => {
+    console.log('getLiveZakaz');
+    let token = await AsyncStorage.getItem("userToken");
+    let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(`${APP_URL}GetManufacterOrders`, requestOptions)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.status === true) {
+          console.log(responseJson.notify_count, 'responseJson.notify_count');
+
+          if (responseJson.data.data.length > 0) {
+            authContext.notify_count = responseJson.notify_count
+          }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   // Проверка при входе в приложение.
 
@@ -377,6 +408,9 @@ export default function App() {
         userRole: userRole,
       });
     }, 1000);
+    setInterval(() => {
+      this.getLiveZakaz()
+    }, 3000);
   }, []);
 
   if (isLoading) {
@@ -461,131 +495,131 @@ export default function App() {
               </Stack.Navigator>
             ) : // Customer Pages Tabs
 
-            loginState.userToken !== null && loginState.userRole == "3" ? (
-              <Stack.Navigator
-                initialRouteName="CustomerMainPage"
-                screenOptions={({ route }) => ({
-                  tabBarShowLabel: false,
-                  headerShown: false,
-                  tabBarActiveTintColor: "#2EB6A5",
-                  tabBarInactiveTintColor: "gray",
-                  tabBarStyle: tabBarStyle,
-                })}
-              >
-                <Stack.Screen
-                  name="CustomerMainPage"
-                  component={CustomerMainPageComponent}
-                />
-                <Stack.Screen name="AddProduct" component={AddProductScreen} />
-                {/* <Stack.Screen
+              loginState.userToken !== null && loginState.userRole == "3" ? (
+                <Stack.Navigator
+                  initialRouteName="CustomerMainPage"
+                  screenOptions={({ route }) => ({
+                    tabBarShowLabel: false,
+                    headerShown: false,
+                    tabBarActiveTintColor: "#2EB6A5",
+                    tabBarInactiveTintColor: "gray",
+                    tabBarStyle: tabBarStyle,
+                  })}
+                >
+                  <Stack.Screen
+                    name="CustomerMainPage"
+                    component={CustomerMainPageComponent}
+                  />
+                  <Stack.Screen name="AddProduct" component={AddProductScreen} />
+                  {/* <Stack.Screen
                   name="CheckDesigner"
                   component={CheckDesignerComponent}
                 /> */}
 
-                <Stack.Screen
-                  name="CustomerMyAccaunt"
-                  component={CustomerMyAccauntComponent}
-                />
-                {/* <Stack.Screen
+                  <Stack.Screen
+                    name="CustomerMyAccaunt"
+                    component={CustomerMyAccauntComponent}
+                  />
+                  {/* <Stack.Screen
                   name="CustomerMyBroni"
                   component={CustomerMyBroniComponent}
                 /> */}
-                <Stack.Screen
-                  name="CustomerPageTwo"
-                  component={CustomerPageTwo}
-                />
-                {/* <Stack.Screen
+                  <Stack.Screen
+                    name="CustomerPageTwo"
+                    component={CustomerPageTwo}
+                  />
+                  {/* <Stack.Screen
                   name="CustomerRewards"
                //   component={CustomerRewardsComponent}
                 /> */}
-                <Stack.Screen name="Praductia" component={PraductiaFunc} />
-                <Stack.Screen
-                  name="EditPhoneNumber"
-                  component={EditPhoneNumberComponent}
-                />
-                <Stack.Screen
-                  name="EditPhoneNumberConfirm"
-                  component={EditPhoneNumberConfirmFunc}
-                />
+                  <Stack.Screen name="Praductia" component={PraductiaFunc} />
+                  <Stack.Screen
+                    name="EditPhoneNumber"
+                    component={EditPhoneNumberComponent}
+                  />
+                  <Stack.Screen
+                    name="EditPhoneNumberConfirm"
+                    component={EditPhoneNumberConfirmFunc}
+                  />
 
-                <Stack.Screen
-                  name="EditPasswordCustomer"
-                  component={EditPasswordCustomerCompnent}
-                />
-                <Stack.Screen
-                  name="ZakaziLive"
-                  component={ZakaziLiveComponent}
-                />
-                <Stack.Screen
-                  name="LiveZakazchikSingl"
-                  component={LiveZakazchikSinglFunc}
-                />
-                <Stack.Screen name="AddZakazi" component={AddZakaziFunc} />
-                <Stack.Screen name="EditZakazi" component={EditZakaziFunc} />
-                <Stack.Screen
-                  name="EditProduct"
-                  component={EditProductScreen}
-                />
-              </Stack.Navigator>
-            ) : // Guest pages tabs
+                  <Stack.Screen
+                    name="EditPasswordCustomer"
+                    component={EditPasswordCustomerCompnent}
+                  />
+                  <Stack.Screen
+                    name="ZakaziLive"
+                    component={ZakaziLiveComponent}
+                  />
+                  <Stack.Screen
+                    name="LiveZakazchikSingl"
+                    component={LiveZakazchikSinglFunc}
+                  />
+                  <Stack.Screen name="AddZakazi" component={AddZakaziFunc} />
+                  <Stack.Screen name="EditZakazi" component={EditZakaziFunc} />
+                  <Stack.Screen
+                    name="EditProduct"
+                    component={EditProductScreen}
+                  />
+                </Stack.Navigator>
+              ) : // Guest pages tabs
 
-            loginState.userToken == null ? (
-              <Stack.Navigator
-                initialRouteName="GhostPage"
-                screenOptions={({ route }) => ({
-                  tabBarShowLabel: false,
-                  headerShown: false,
-                  tabBarActiveTintColor: "#2EB6A5",
-                  tabBarInactiveTintColor: "gray",
-                  tabBarStyle: tabBarStyle,
-                })}
-              >
-                <Stack.Screen name="GhostPage" component={GhostPageComponent} />
-                <Stack.Screen
-                  name="LoginScreen"
-                  component={LoginScreenComponent}
-                />
-                <Stack.Screen
-                  name="ConfirmTelScreen"
-                  component={ConfirmTelScreenFunction}
-                />
-                <Stack.Screen
-                  name="RegisteredScreen"
-                  component={RegisteredScreenComponent}
-                />
-                <Stack.Screen
-                  name="RegisteredUserScreen"
-                  component={RegistrationUserScreenComponent}
-                />
-                <Stack.Screen
-                  name="RegistrationManufacturer"
-                  component={RegistrationManufacturerComponent}
-                />
-                <Stack.Screen
-                  name="AuthScreen"
-                  component={AuthScreenComponent}
-                />
-                <Stack.Screen
-                  name="GhostPageTwo"
-                  component={GhostPageTwoFunc}
-                />
-                <Stack.Screen
-                  name="ForgetPassword"
-                  component={ForgetPasswordComponent}
-                />
-                <Stack.Screen
-                  name="ForgetPasswordTel"
-                  component={ForgetPasswordTelComponent}
-                />
-                <Stack.Screen
-                  name="NewPassword"
-                  component={NewPasswordComponent}
-                />
-                <Stack.Screen name="Modal" component={ModalComponent} />
-              </Stack.Navigator>
-            ) : (
-              <></>
-            )
+                loginState.userToken == null ? (
+                  <Stack.Navigator
+                    initialRouteName="GhostPage"
+                    screenOptions={({ route }) => ({
+                      tabBarShowLabel: false,
+                      headerShown: false,
+                      tabBarActiveTintColor: "#2EB6A5",
+                      tabBarInactiveTintColor: "gray",
+                      tabBarStyle: tabBarStyle,
+                    })}
+                  >
+                    <Stack.Screen name="GhostPage" component={GhostPageComponent} />
+                    <Stack.Screen
+                      name="LoginScreen"
+                      component={LoginScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="ConfirmTelScreen"
+                      component={ConfirmTelScreenFunction}
+                    />
+                    <Stack.Screen
+                      name="RegisteredScreen"
+                      component={RegisteredScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="RegisteredUserScreen"
+                      component={RegistrationUserScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="RegistrationManufacturer"
+                      component={RegistrationManufacturerComponent}
+                    />
+                    <Stack.Screen
+                      name="AuthScreen"
+                      component={AuthScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="GhostPageTwo"
+                      component={GhostPageTwoFunc}
+                    />
+                    <Stack.Screen
+                      name="ForgetPassword"
+                      component={ForgetPasswordComponent}
+                    />
+                    <Stack.Screen
+                      name="ForgetPasswordTel"
+                      component={ForgetPasswordTelComponent}
+                    />
+                    <Stack.Screen
+                      name="NewPassword"
+                      component={NewPasswordComponent}
+                    />
+                    <Stack.Screen name="Modal" component={ModalComponent} />
+                  </Stack.Navigator>
+                ) : (
+                  <></>
+                )
           }
         </NavigationContainer>
       </AuthContext.Provider>

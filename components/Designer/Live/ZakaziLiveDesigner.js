@@ -54,7 +54,6 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
     fetch(`${APP_URL}GetAllOrderFromDesigner?page=${page}`, requestOptions)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson, 'aaaaaa');
         if (responseJson.status === true) {
           if (responseJson.data.data.length > 0) {
             this.setState({

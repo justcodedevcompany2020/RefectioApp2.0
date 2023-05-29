@@ -48,7 +48,10 @@ export default class PraductiaComponent extends React.Component {
       user_id: "",
 
       bottomSheetBool: false,
-      isLoading: true
+      isLoading: true,
+
+      firstStarModal: false,
+      addStarModal: false
     };
     this.bottomSheetRef = React.createRef(null);
     this.snapPoints = ["20%"];
@@ -78,10 +81,18 @@ export default class PraductiaComponent extends React.Component {
           }
         }
         if (res.data.message !== "no product") {
+          const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
+          let arr = res.data.user_category_for_product
+          if (isFound == 0) {
+            arr = res.data.user_category_for_product
+            let lastItem = res.data.user_category_for_product[0]
+            arr.push(lastItem)
+            arr.shift(res.data.user_category_for_product[0])
+          }
           this.setState({
             user: res.data.user,
             user_bonus_for_designer: res.data.user_bonus_for_designer,
-            user_category_for_product: res.data.user_category_for_product,
+            user_category_for_product: arr,
             city_for_sales_user: res.data.city_for_sales_user,
           });
         }
@@ -257,7 +268,7 @@ export default class PraductiaComponent extends React.Component {
       this.state.user_category_for_product[0]?.category_name
     );
     await this.setState({ active: 0 });
-    this.setState({isLoading: false})
+    this.setState({ isLoading: false })
   };
 
   componentDidMount() {
@@ -299,6 +310,56 @@ export default class PraductiaComponent extends React.Component {
     this.bottomSheetRef?.current?.present();
     this.setState({ bottomSheetBool: true });
   };
+
+  addStar = async (imageItem) => {
+
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    myHeaders.append("Authorization", "Bearer " + userToken);
+
+    let formdata = new FormData();
+    formdata.append("photo_id", imageItem.id);
+    console.log(userToken);
+
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    const value = JSON.parse(await AsyncStorage.getItem('starModal'))
+    if (!value) {
+      this.setState({
+        firstStarModal: true
+      })
+    }
+
+    fetch(`${APP_URL}add_star`, requestOptions)
+      .then((response) => response.json())
+      .then(res => {
+        console.log(res);
+        if (res.status == true) {
+          let myProducts = this.state.products
+          myProducts.forEach((el, i) => {
+            el.product_image.forEach((productImage, j) => {
+              if (productImage == imageItem) {
+                if (res.message == 'added photo star') {
+                  myProducts[i].product_image[j].star = '1'
+                } else if (res.message == 'deleted photo star') {
+                  myProducts[i].product_image[j].star = '0'
+                }
+              }
+            });
+          });
+          this.setState({
+            products: myProducts
+          })
+        } else {
+          this.setState({ addStarModal: true });
+        }
+      })
+  }
 
   render() {
     return (
@@ -410,6 +471,158 @@ export default class PraductiaComponent extends React.Component {
                     >
                       Отменить
                     </Text>
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            </Modal>
+
+            <Modal visible={this.state.firstStarModal}>
+              <ImageBackground
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                source={require("../../assets/image/blurBg.png")}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    width: "90%",
+                    borderRadius: 20,
+                    position: "relative",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ position: "absolute", right: 18, top: 18 }}
+                    onPress={() => {
+                      this.setState({ firstStarModal: false });
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/image/ixs.png")}
+                      style={{ width: 22.5, height: 22.5 }}
+                    />
+                  </TouchableOpacity>
+
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      fontSize: 22,
+                      textAlign: "center",
+                      marginTop: 40,
+                      color: "#2D9EFB",
+                    }}
+                  >
+                    {" "}
+                    Сведение
+                  </Text>
+
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontFamily: "Poppins_400Regular",
+                      marginTop: 10,
+                      fontSize: 16,
+                      marginHorizontal: 20
+                    }}
+                  >
+                    Фотографии со ⭐️ будут отображаться на главной странице.
+                    {"\n"}
+                    {"\n"}
+                    Всего можно выбрать не более 5-ти фото со ⭐️ по каждой категории.
+                  </Text>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ firstStarModal: false });
+                    }}
+                    style={{ alignSelf: "center", marginTop: 20 }}
+                  >
+                    <BlueButton name="Ок" />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={async () => {
+                      this.setState({ firstStarModal: false });
+                      await AsyncStorage.setItem('starModal', 'true')
+                    }}
+                    style={{
+                      borderWidth: 3,
+                      borderColor: "#B5D8FE",
+                      width: 285,
+                      height: 44,
+                      justifyContent: "center",
+                      borderRadius: 20,
+                      alignSelf: "center",
+                      marginTop: 12,
+                      marginBottom: 46,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#B5D8FE",
+                        fontSize: 18,
+                        textAlign: "center",
+                        fontFamily: "Poppins_700Bold",
+                      }}
+                    >
+                      Больше не показывать
+                    </Text>
+                  </TouchableOpacity>
+
+                </View>
+              </ImageBackground>
+            </Modal>
+
+            <Modal visible={this.state.addStarModal}>
+              <ImageBackground
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                source={require("../../assets/image/blurBg.png")}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    width: "90%",
+                    borderRadius: 20,
+                    position: "relative",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ position: "absolute", right: 18, top: 18 }}
+                    onPress={() => {
+                      this.setState({ addStarModal: false });
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/image/ixs.png")}
+                      style={{ width: 22.5, height: 22.5 }}
+                    />
+                  </TouchableOpacity>
+
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontFamily: "Poppins_400Regular",
+                      marginTop: 50,
+                      fontSize: 16,
+                      marginHorizontal: 20
+                    }}
+                  >
+                    Всего можно выбрать не более 5-ти фото со ⭐️ по каждой категории.
+                  </Text>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ addStarModal: false });
+                    }}
+                    style={{ alignSelf: "center", marginVertical: 20 }}
+                  >
+                    <BlueButton name="Ок" />
                   </TouchableOpacity>
                 </View>
               </ImageBackground>
@@ -542,7 +755,7 @@ export default class PraductiaComponent extends React.Component {
                         marginBottom: 18,
                       }}
                     >
-                      <Slider slid={item.product_image} />
+                      <Slider slid={item.product_image} onPressStar={this.addStar} showStars />
                       <View
                         style={{
                           flexDirection: "row",
@@ -636,8 +849,8 @@ export default class PraductiaComponent extends React.Component {
               snapPoints={this.snapPoints}
               onDismiss={() => this.setState({ bottomSheetBool: false })}
 
-              // onChange={handleSheetChanges}
-              // backgroundStyle={{backgroundColor: 'black'}}
+            // onChange={handleSheetChanges}
+            // backgroundStyle={{backgroundColor: 'black'}}
             >
               <View style={styles.contentContainer}>
                 <TouchableOpacity

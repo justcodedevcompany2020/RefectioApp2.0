@@ -116,7 +116,6 @@ export default class LiveZakazchikSinglComponent extends React.Component {
     myHeaders.append("Authorization", "Bearer " + token);
     myHeaders.append("Content-Type", "application/json");
     await this.setState({ isLoading: true, page: 1, data: [] });
-
     let raw = JSON.stringify({
       some_id: item_id,
     });
@@ -182,6 +181,25 @@ export default class LiveZakazchikSinglComponent extends React.Component {
     this.clearAllData();
   }
 
+  async onDeleteTavar(id) {
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
+    console.log(id, 'iddd');
+    await fetch(`${APP_URL}delete_next_order/${id}`, {
+      method: "GET",
+      headers: myHeaders,
+    })
+      .then((response) => response.json())
+      .then(async (res) => {
+        console.log(res)
+        await this.setState({ isLoading: true, page: 1, data: [] })
+        this.fetchData()
+      })
+      .catch((error) => error, "error");
+  }
+
   renderItem = ({ item, index }) => {
     let photo = item.order_photo[0];
     photo = photo.photo;
@@ -205,8 +223,19 @@ export default class LiveZakazchikSinglComponent extends React.Component {
             resizeMode={"contain"}
           />
           <View style={styles.mebelType}>
-            <Text style={styles.mebelName}>{item.name}</Text>
-
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={styles.mebelName}>{item.name}</Text>
+              <TouchableOpacity onPress={() => this.onDeleteTavar(item.id)}>
+                <Image
+                  source={require("../../../assets/image/karzina.png")}
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                  resizeMode={"contain"}
+                />
+              </TouchableOpacity>
+            </View>
             <View style={styles.readyShiping}>
               <Text style={styles.readyText}>
                 Готовность {"\n"}
@@ -309,12 +338,12 @@ export default class LiveZakazchikSinglComponent extends React.Component {
               onEndReached={this.handleLoadMore}
               onEndReachedThreshold={0.5}
               ListFooterComponent={this.renderFooter}
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={this.state.refreshing}
-              //     onRefresh={this.onRefresh}
-              //   />
-              // }
+            // refreshControl={
+            //   <RefreshControl
+            //     refreshing={this.state.refreshing}
+            //     onRefresh={this.onRefresh}
+            //   />
+            // }
             />
           </View>
         </View>
@@ -386,7 +415,7 @@ const styles = StyleSheet.create({
   mebelType: {
     marginLeft: 15,
     justifyContent: "space-between",
-    width: "72%",
+    width: "70%",
   },
   mebelName: {
     fontFamily: "Poppins_500Medium",

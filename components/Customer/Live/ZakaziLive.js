@@ -106,25 +106,28 @@ export default class ZakaziLiveComponent extends React.Component {
           this.clearAllData();
         }}
       >
-        <Image
-          source={{ uri: APP_PUBLIC_URL + item.photo }}
-          style={styles.clounImg}
-          resizeMode="contain"
-        />
+        <View style={{ flexDirection: "row" }}>
+          <Image
+            source={{ uri: APP_PUBLIC_URL + item.photo }}
+            style={styles.clounImg}
+            resizeMode="contain"
+          />
 
-        <View
-          style={{
-            paddingLeft: 10,
-            justifyContent: "space-between",
-            height: 82,
-          }}
-        >
-          <Text style={styles.nickName}>
-            {item.name} {item.surname}
-          </Text>
+          <View
+            style={{
+              paddingLeft: 10,
+              justifyContent: "space-between",
+              height: 82,
+            }}
+          >
+            <Text style={styles.nickName}>
+              {item.name} {item.surname}
+            </Text>
 
-          <Text style={styles.vnestiDanniy}>Внести данные</Text>
+            <Text style={styles.vnestiDanniy}>Внести данные</Text>
+          </View>
         </View>
+        {item.status_notify == '1' && <View style={{ width: 10, height: 10, backgroundColor: 'red', borderRadius: 50 }} />}
       </TouchableOpacity>
     );
   };
@@ -336,9 +339,11 @@ const styles = StyleSheet.create({
   },
   clounParnt: {
     flexDirection: "row",
+    justifyContent: 'space-between',
     height: 99,
     borderBottomWidth: 1,
     borderColor: "#EBEBEB",
     marginTop: 15,
+    alignItems: 'center'
   },
 });

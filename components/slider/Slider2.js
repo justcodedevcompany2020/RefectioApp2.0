@@ -11,7 +11,9 @@ import {
   Animated,
   Platform,
 } from "react-native";
-import { APP_URL, APP_IMAGE_URL } from "@env";
+import { APP_IMAGE_URL } from "@env";
+import ImageViewer from 'react-native-image-zoom-viewer';
+import { SafeAreaView } from "react-native";
 
 const width = Dimensions.get("window").width - 25;
 
@@ -19,7 +21,6 @@ export default function Slider2(props) {
 
   const [sliderModal, setSliderModal] = useState(false);
   const [imgActive, setInmageActive] = useState(0);
-
   const change = (nativeEvent) => {
     const slider = Math.ceil(
       nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
@@ -48,7 +49,7 @@ export default function Slider2(props) {
   return (
     <View>
       <Modal visible={sliderModal}>
-        <View style={styles.sliderModal}>
+        <SafeAreaView style={{ flex: 1 }}>
           <TouchableOpacity
             style={{ position: "absolute", right: 18, top: 18, zIndex: 50 }}
             onPress={() => {
@@ -64,28 +65,24 @@ export default function Slider2(props) {
               ]}
             />
           </TouchableOpacity>
-
-          <View>
-            <FlatList
-              horizontal
-              pagingEnabled
-              style={{width: width}}
-              showsHorizontalScrollIndicator={false}
-              data={props.slid}
-              keyExtractor={(item) => item.id}
-              renderItem={sliderItem}
-              onScroll={({ nativeEvent }) => change(nativeEvent)}
-            />
-            <View style={styles.wrapDot}>
-              {props.slid.map((item, index) => (
-                <Animated.View
-                  style={imgActive === index ? styles.dotActive : styles.dot}
-                  key={index}
-                />
-              ))}
-            </View>
+          <View style={{
+            backgroundColor: 'transparent',
+            flex: 1,
+          }}>
+            <ImageViewer imageUrls={props.slid.map((el, i) => ({ url: `${APP_IMAGE_URL}${el.image}` }))} onChange={(index) => setInmageActive(index)} index={imgActive} renderIndicator={() => null} enableSwipeDown onSwipeDown={() => {
+              setSliderModal(false);
+              setInmageActive(0);
+            }} />
           </View>
-        </View>
+          <View style={styles.wrapDot}>
+            {props.slid.map((item, index) => (
+              <Animated.View
+                style={imgActive === index ? styles.dotActive : styles.dot}
+                key={index}
+              />
+            ))}
+          </View>
+        </SafeAreaView>
       </Modal>
 
       <View>

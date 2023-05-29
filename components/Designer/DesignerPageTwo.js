@@ -151,7 +151,6 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   // stexic sharunakel
-
   getObjectData = async () => {
     let userID = this.props.user_id;
     let myHeaders = new Headers();
@@ -165,10 +164,19 @@ export default class DesignerPageTwoComponent extends React.Component {
     })
       .then((response) => response.json())
       .then((res) => {
+        const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
+        let arr = res.data.user_category_for_product
+        if (isFound == 0) {
+          arr = res.data.user_category_for_product
+          let lastItem = res.data.user_category_for_product[0]
+          arr.push(lastItem)
+          arr.shift(res.data.user_category_for_product[0])
+        }
+
         this.setState({
           user: res.data.user,
           user_bonus_for_designer: res.data.user_bonus_for_designer,
-          user_category_for_product: res.data.user_category_for_product,
+          user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
           favoriteBool: res.data.Favorit_button,
           extract: res.data.user[0].extract,
@@ -190,75 +198,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       })
       .catch((error) => console.log("error", error));
   };
-
-  // DesignerAddBook = async () => {
-  //   let myHeaders = new Headers();
-  //   let userToken = await AsyncStorage.getItem('userToken')
-  //   let AuthStr = "Bearer " + userToken
-  //   myHeaders.append("Authorization", AuthStr);
-
-  //   const { getPraizvaditelMap } = this.state
-
-  //   let result_praizvaditel_map = []
-  //   for (let i = 0; i < getPraizvaditelMap.length; i++) {
-  //     result_praizvaditel_map.push(getPraizvaditelMap[i].proizvodtel_id + '^' + getPraizvaditelMap[i].proizvodtel_name + '^' + getPraizvaditelMap[i].proizvoditel_price)
-  //   }
-
-  //   let formdata = new FormData();
-  //   formdata.append("phone", this.state.phone);
-  //   formdata.append("name", this.state.name);
-  //   formdata.append("dubl_phone", this.state.dubl_phone);
-  //   formdata.append("dubl_name", this.state.dubl_name);
-  //   formdata.append("city", this.state.city);
-  //   formdata.append("category_id", this.state.category_id);
-  //   formdata.append("category_name", this.state.category_name);
-  //   formdata.append("proizvaditel_info[]", result_praizvaditel_map);
-
-  //   let requestOptions = {
-  //     method: 'POST',
-  //     headers: myHeaders,
-  //     body: formdata,
-  //     redirect: 'follow'
-  //   };
-
-  //   fetch("http://80.78.246.59/Refectio/public/api/DesignerAddBook", requestOptions)
-  //     .then(response => response.json())
-  //     .then(result => {
-  //       if (result.status === true && result.message[0] == 'created') {
-  //         this.setState({ bronyModal: false })
-  //       }
-  //     })
-  //     .catch(error => console.log('error', error));
-  // }
-
-  // sendCategoryId = async () => {
-  //   let myHeaders = new Headers();
-  //   let userToken = await AsyncStorage.getItem('userToken')
-  //   let AuthStr = "Bearer " + userToken
-  //   myHeaders.append("Authorization", AuthStr);
-
-  //   let formdata = new FormData();
-  //   formdata.append("category_id", this.state.category_id);
-
-  //   let requestOptions = {
-  //     method: 'POST',
-  //     headers: myHeaders,
-  //     body: formdata,
-  //     redirect: 'follow'
-  //   };
-
-  //   fetch("http://80.78.246.59/Refectio/public/api/CetegoryForBroneProizvoditel", requestOptions)
-  //     .then(response => response.json())
-  //     .then(result => {
-  //       let result_dat = []
-  //       for (let i = 0; i < result.data.length; i++) {
-  //         result_dat.push(result.data[i][0]);
-  //       }
-  //       this.setState({ getPraizvaditel: result_dat })
-
-  //     })
-  //     .catch(error => console.log('error', error));
-  // }
 
   favorite = async () => {
     let userID = this.props.user_id;
@@ -457,6 +396,14 @@ export default class DesignerPageTwoComponent extends React.Component {
     // this.setState({ active: index })
   };
 
+  addProtocol(url) {
+    const protocolRegex = /^https?:\/\//i;
+    if (protocolRegex.test(url)) {
+      return url;
+    }
+    return 'http://' + url;
+  }
+
   loadedDataAfterLoadPage = async () => {
     await this.getCategory();
     await this.getObjectData();
@@ -485,36 +432,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.focusListener();
     }
   }
-
-  // generateShareLink = async (userID) => {
-  //   const shareParams =
-  //     Platform.OS === "android"
-  //       ? {
-  //           url: `https://play.google.com/store/apps/details?id=com.JustCode.Refectio`,
-  //         }
-  //       : {
-  //           url: `https://apps.apple.com/am/app/refectio/id1658981599`,
-  //         };
-  //   const queryParams = Object.keys(shareParams)
-  //     .map(
-  //       (key) =>
-  //         `${encodeURIComponent(key)}=${encodeURIComponent(shareParams[key])}`
-  //     )
-  //     .join("&");
-
-  //   const shareUrl =
-  //     Platform.OS === "android"
-  //       ? `https://play.google.com/store/apps/details?id=com.JustCode.Refectio&hl=en_IN&gl=US?${queryParams}`
-  //       : `https://apps.apple.com/am/app/refectio/id1658981599${queryParams}`;
-
-  //   try {
-  //     await Share.share({
-  //       message: shareUrl,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   render() {
     return (
@@ -588,6 +505,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                       alignItems: "center",
                       marginTop: 12,
                     }}
+                    onPress={() => this.setState({ VipiskaModal: false })}
                   >
                     <Text
                       style={{
@@ -739,12 +657,12 @@ export default class DesignerPageTwoComponent extends React.Component {
 
                         <View style={styles.procent}>
                           <TextInput
-                            style={{color: "#888888"}}
+                            style={{ color: "#888888" }}
                             keyboardType="number-pad"
                             editable={false}
                             value={item.percent}
                           />
-                          <Text style={{color: "#888888"}}>%</Text>
+                          <Text style={{ color: "#888888" }}>%</Text>
                         </View>
                       </View>
                     );
@@ -754,337 +672,21 @@ export default class DesignerPageTwoComponent extends React.Component {
             </ImageBackground>
           </Modal>
 
-          {/* <Modal visible={this.state.bronyModal}>
-            <ImageBackground
-              source={require('../../assets/image/blurBg.png')}
-              style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', }}>
-              <View style={{ width: '90%', height: '90%', backgroundColor: '#fff', borderRadius: 20, position: 'relative' }}>
-
-                <TouchableOpacity
-                  style={{ position: 'absolute', width: 22.5, height: 22.5, right: 21.75, top: 21.75, }}
-                  onPress={() => {
-                    this.setState({ bronyModal: false })
-                  }}>
-                  <Image
-                    source={require('../../assets/image/ixs.png')}
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                </TouchableOpacity>
-                <Text style={{ color: '#2D9EFB', fontSize: 26, marginTop: 70, textAlign: 'center', fontFamily: 'Poppins_500Medium', }}>
-                  Забронировать клиента
-                </Text>
-
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View style={{ paddingHorizontal: 25, }}>
-
-                    <View>
-                      <Text style={[{ fontFamily: 'Poppins_500Medium', lineHeight: 23, fontSize: 15, marginTop: 27, marginBottom: 5 }, this.state.phone_error ? { color: 'red' } : { color: '#5B5B5B' }]}>
-                        *Номер телефона
-                      </Text>
-                      <TextInput
-                        underlineColorAndroid="transparent"
-                        keyboardType="phone-pad"
-                        style={[{ borderWidth: 1, padding: 10, width: '100%', borderRadius: 5, }, this.state.phone_error ? { borderColor: 'red' } : { borderColor: '#F5F5F5' }]}
-                        value={this.state.phone}
-                        onChangeText={(value) => { this.setState({ phone: value }) }}
-                      />
-                    </View>
-
-                    <View>
-                      <Text style={{ fontFamily: 'Poppins_500Medium', lineHeight: 23, fontSize: 15, marginTop: 27, marginBottom: 5, color: '#5B5B5B' }} >
-                        Доп. номер телефона (необязательно)
-                      </Text>
-                      <TextInput
-                        underlineColorAndroid="transparent"
-                        keyboardType="phone-pad"
-                        style={[{ borderWidth: 1, padding: 10, width: '100%', borderRadius: 5, }, this.state.made_in_error ? { borderColor: 'red' } : { borderColor: '#F5F5F5' }]}
-                        value={this.state.dubl_phone}
-                        onChangeText={(value) => { this.setState({ dubl_phone: value }) }}
-                      />
-                    </View>
-
-                    <View>
-                      <Text
-                        style={[{ fontFamily: 'Poppins_500Medium', lineHeight: 23, fontSize: 15, marginTop: 27, marginBottom: 5 }, this.state.name_error ? { color: 'red' } : { color: '#5B5B5B' }]}>
-                        *ФИО
-                      </Text>
-                      <TextInput
-                        underlineColorAndroid="transparent"
-                        style={[{ borderWidth: 1, padding: 10, width: '100%', borderRadius: 5, }, this.state.name_error ? { borderColor: 'red' } : { borderColor: '#F5F5F5' }]}
-                        value={this.state.name}
-                        onChangeText={(value) => { this.setState({ name: value }) }}
-                      />
-                    </View>
-
-                    <View>
-                      <Text
-                        style={{ fontFamily: 'Poppins_500Medium', lineHeight: 23, fontSize: 15, marginTop: 27, marginBottom: 5, color: '#5B5B5B' }}>
-                        Доп. ФИО(необязательно)
-                      </Text>
-                      <TextInput
-                        underlineColorAndroid="transparent"
-                        style={{ borderWidth: 1, padding: 10, width: '100%', borderRadius: 5, borderColor: '#F5F5F5' }}
-                        value={this.state.dubl_name}
-                        onChangeText={(value) => { this.setState({ dubl_name: value }) }}
-                      />
-                    </View>
-
-                    <View>
-                      <Text
-                        style={[{
-                          fontFamily: 'Poppins_500Medium',
-                          lineHeight: 23,
-                          fontSize: 15,
-                          marginTop: 27,
-                          marginBottom: 5
-                        }, this.state.city_error ? { color: 'red' } : { color: '#5B5B5B' }]}
-                      >
-                        *Город
-                      </Text>
-                      <TextInput
-                        underlineColorAndroid="transparent"
-                        style={[{
-                          borderWidth: 1,
-                          padding: 10,
-                          width: '100%',
-                          borderRadius: 5,
-                        }, this.state.city_error ? { borderColor: 'red' } : { borderColor: '#F5F5F5' }]}
-                        value={this.state.city}
-                        onChangeText={(value) => { this.setState({ city: value }) }}
-                      />
-                    </View>
-
-
-
-
-
-                    <View
-                      style={{
-                        position: 'relative',
-                        // marginTop: 9,
-                      }}>
-                      <Text style={[{
-                        fontFamily: 'Poppins_500Medium',
-                        lineHeight: 23,
-                        fontSize: 15,
-                        marginTop: 27,
-                        marginBottom: 5,
-                      }, this.state.category_name_error ? { color: 'red' } : { color: '#5B5B5B' }]}>
-                        Категория продукта
-                      </Text>
-                      <TouchableOpacity
-                        style={[{
-                          borderWidth: 1,
-                          padding: 10,
-                          width: '100%',
-                          borderRadius: 5,
-                          position: 'relative',
-                        }, this.state.category_name_error ? { borderColor: 'red' } : { borderColor: '#F5F5F5' }]}
-                        onPress={() => this.setState({ categorySelect: !this.state.categorySelect })}
-                      >
-                        <Text
-                          style={{
-                            height: 25,
-                            width: '100%',
-                            borderRadius: 5,
-                            fontFamily: 'Poppins_500Medium',
-                            color: '#5B5B5B',
-                          }}>
-                          {this.state.category_name}
-                        </Text>
-                        <View style={{ position: 'absolute', right: 17, bottom: 18 }}>
-                          {!this.state.categorySelect &&
-                            <Svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <Path d="M1 1L9 9L17 1" stroke="#888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </Svg>
-                          }
-                          {this.state.categorySelect &&
-                            <Svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <Path d="M1 9L9 1L17 9" stroke="#888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </Svg>
-                          }
-
-                        </View>
-                      </TouchableOpacity>
-                      <View style={this.state.categorySelect ? styles.categorySelectActive : styles.categorySelect}>
-                        <ScrollView nestedScrollEnabled={true} >
-                          {
-                            this.state.categoryItems.map((item, index) => {
-                              return (
-                                <TouchableOpacity
-                                  key={index}
-                                  style={{
-                                    width: '100%',
-                                    justifyContent: 'center',
-                                    textAlign: 'left',
-                                  }}
-                                  onPress={async () => {
-                                    await this.setState({
-                                      category_id: item.id,
-                                      category_name: item.name,
-                                      categorySelect: false
-                                    })
-                                    await this.sendCategoryId()
-                                  }}
-                                >
-                                  <Text style={{ textAlign: 'left', paddingVertical: 7, fontFamily: 'Poppins_500Medium', borderBottomWidth: 1, borderBottomColor: '#F5F5F5' }}>
-                                    {item.name}
-                                  </Text>
-                                </TouchableOpacity>
-                              )
-                            })
-                          }
-                        </ScrollView>
-                      </View>
-                    </View>
-
-
-                    {
-                      this.state.getPraizvaditel.length > 0 && this.state.getPraizvaditelMap.map((element, ind) => {
-                        return (
-
-                          <View key={ind}>
-
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-
-
-                              <View key={ind} style={{ position: 'relative', marginBottom: 10, width: '87%' }}>
-
-                                <Text style={[{ fontFamily: 'Poppins_500Medium', lineHeight: 23, fontSize: 15, marginTop: 27, marginBottom: 5, }, this.state.proizvaditel_info_error ? { color: 'red' } : { color: '#5B5B5B' }]}>
-                                  Прозводитель
-                                </Text>
-
-                                <TouchableOpacity
-                                  style={[{ borderWidth: 1, padding: 10, width: '100%', borderRadius: 5, position: 'relative', }, this.state.proizvaditel_info_error ? { borderColor: 'red' } : { borderColor: '#F5F5F5' }]}
-                                  onPress={() => {
-
-                                    this.toggleProizvoditelDropdown(ind);
-
-                                    // this.setState({ 
-                                    //   praizvaditelSelect: !this.state.praizvaditelSelect
-                                    // })
-
-                                  }}
-                                >
-                                  <Text style={{ height: 25, width: '100%', borderRadius: 5, fontFamily: 'Poppins_500Medium', color: '#5B5B5B', }}>
-                                    {element.proizvodtel_name}
-                                  </Text>
-
-                                  <View style={{ position: 'absolute', right: 17, bottom: 18 }}>
-                                    {!element.drobdown_is_open &&
-                                      <Svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <Path d="M1 1L9 9L17 1" stroke="#888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                      </Svg>
-                                    }
-                                    {element.drobdown_is_open &&
-                                      <Svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <Path d="M1 9L9 1L17 9" stroke="#888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                      </Svg>
-                                    }
-
-                                  </View>
-                                </TouchableOpacity>
-                                <View style={element.drobdown_is_open ? styles.categorySelectActive : styles.categorySelect}>
-                                  <ScrollView nestedScrollEnabled={true} >
-                                    {
-                                      this.state.getPraizvaditel.map((item, index) => {
-                                        return (
-                                          <TouchableOpacity
-                                            key={index}
-                                            style={{
-                                              width: '100%',
-                                              justifyContent: 'center',
-                                              textAlign: 'left',
-                                            }}
-                                            onPress={() => {
-
-                                              this.setNewPraizvaditelNameAndId(item, ind)
-                                            }}
-                                          >
-                                            <Text style={{ textAlign: 'left', paddingVertical: 7, fontFamily: 'Poppins_500Medium', borderBottomWidth: 1, borderBottomColor: '#F5F5F5' }}>
-                                              {item.company_name}
-                                            </Text>
-                                          </TouchableOpacity>
-                                        )
-                                      })
-                                    }
-                                  </ScrollView>
-                                </View>
-                              </View>
-
-                              {this.state.getPraizvaditelMap.length - 1 == ind ?
-                                <TouchableOpacity style={{ width: 30, height: 48, borderWidth: 1, borderColor: '#E5E5E5', marginBottom: 10, borderRadius: 6, justifyContent: 'center', alignItems: 'center' }}
-                                  onPress={() => {
-                                    ind < 2 && this.addPraizvaditelPrice()
-                                  }}>
-                                  <Svg
-                                    width={24}
-                                    height={24}
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <Path
-                                      d="M12 20v-8m0 0V4m0 8h8m-8 0H4"
-                                      stroke="#888"
-                                      strokeWidth={2}
-                                      strokeLinecap="round"
-                                    />
-                                  </Svg>
-                                </TouchableOpacity>
-                                :
-                                <TouchableOpacity style={{ width: 30, height: 48, borderWidth: 1, borderColor: '#E5E5E5', marginBottom: 10, borderRadius: 6, justifyContent: 'center', alignItems: 'center' }}
-                                  onPress={() => this.delatePraizvaditelPrice(ind)}>
-                                  <Svg
-                                    width={32}
-                                    height={34}
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <Path
-                                      d="M10.343 22.657 16 17m0 0 5.657-5.657M16 17l5.657 5.657M16 17l-5.657-5.657"
-                                      stroke="#888"
-                                      strokeWidth={2}
-                                      strokeLinecap="round"
-                                    />
-                                  </Svg>
-                                </TouchableOpacity>
-                              }
-
-                            </View>
-
-
-                            <TextInput
-                              underlineColorAndroid="transparent"
-                              keyboardType="number-pad"
-                              style={{
-                                borderWidth: 1,
-                                padding: 10,
-                                width: '100%',
-                                borderRadius: 5,
-                                borderColor: '#F5F5F5'
-                              }}
-
-                              value={element.proizvoditel_price}
-                              onChangeText={(value) => {
-
-                                this.setNewPraizvaditelPrice(value, ind)
-
-                              }}
-                            />
-                          </View>
-                        )
-                      })
-                    }
-
-                    <TouchableOpacity style={{ marginTop: 50, marginBottom: 54 }} onPress={() => this.DesignerAddBook()}>
-                      <BlueButton name='Забронировать' />
-                    </TouchableOpacity>
-                  </View>
-
-                </ScrollView>
-              </View>
-            </ImageBackground>
-          </Modal > */}
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={() => this.props.navigation.goBack()}>
+            <Svg
+              width={25}
+              height={30}
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <Path
+                d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+                fill="#94D8F4"
+              />
+            </Svg>
+            <Text style={styles.backText}>Назад</Text>
+          </TouchableOpacity>
 
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -1134,10 +736,10 @@ export default class DesignerPageTwoComponent extends React.Component {
                           marginTop: 4,
                         }}
                       >
-                        {this.state.user[0].saite !== null && (
+                        {`${this.state.user[0].saite}` !== 'null' && (
                           <TouchableOpacity
                             onPress={() => {
-                              Linking.openURL(this.state.user[0].saite);
+                              Linking.openURL(this.addProtocol(this.state.user[0].saite))
                             }}
                           >
                             <Image
@@ -1457,9 +1059,9 @@ export default class DesignerPageTwoComponent extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.info}
-                  // onPress={() => {
-                  //   this.setState({ bronyModal: true })
-                  // }}
+                // onPress={() => {
+                //   this.setState({ bronyModal: true })
+                // }}
                 >
                   <Image
                     source={require("../../assets/image/pcichka.png")}
@@ -1746,4 +1348,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     alignItems: "center",
   },
+  backText: {
+    color: '#94D8F4',
+    fontSize: 16,
+  }
 });

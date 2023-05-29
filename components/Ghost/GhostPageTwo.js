@@ -21,6 +21,7 @@ import BlueButton from "../Component/Buttons/BlueButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider2 from "../slider/Slider2";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import { Linking } from "react-native";
 
 export default class GhostPageTwoComponent extends React.Component {
   constructor(props) {
@@ -72,9 +73,17 @@ export default class GhostPageTwoComponent extends React.Component {
     })
       .then((response) => response.json())
       .then((res) => {
+        const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
+        let arr = res.data.user_category_for_product
+        if (isFound == 0) {
+          arr = res.data.user_category_for_product
+          let lastItem = res.data.user_category_for_product[0]
+          arr.push(lastItem)
+          arr.shift(res.data.user_category_for_product[0])
+        }
         this.setState({
           user: res.data.user,
-          user_category_for_product: res.data.user_category_for_product,
+          user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
         });
       });
@@ -248,6 +257,14 @@ export default class GhostPageTwoComponent extends React.Component {
     }
   }
 
+  addProtocol(url) {
+    const protocolRegex = /^https?:\/\//i;
+    if (protocolRegex.test(url)) {
+      return url;
+    }
+    return 'http://' + url;
+  }
+
   // generateShareLink = async (userID) => {
   //   const shareParams =
   //     Platform.OS === "android"
@@ -282,9 +299,23 @@ export default class GhostPageTwoComponent extends React.Component {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.main}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={() => this.props.navigation.goBack()}>
+            <Svg
+              width={25}
+              height={30}
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <Path
+                d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+                fill="#94D8F4"
+              />
+            </Svg>
+            <Text style={styles.backText}>Назад</Text>
+          </TouchableOpacity>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{ marginTop: 15 }}
           >
             <View style={styles.campaign}>
               {this.state.user.length > 0 && (
@@ -328,10 +359,10 @@ export default class GhostPageTwoComponent extends React.Component {
                           marginTop: 4,
                         }}
                       >
-                        {this.state.user[0].saite !== null && (
+                        {`${this.state.user[0].saite}` !== 'null' && (
                           <TouchableOpacity
                             onPress={() => {
-                              this.props.navigation.navigate("Modal");
+                              Linking.openURL(this.addProtocol(this.state.user[0].saite))
                             }}
                           >
                             <Image
@@ -350,7 +381,9 @@ export default class GhostPageTwoComponent extends React.Component {
                         {this.state.user[0].telegram !== null && (
                           <TouchableOpacity
                             onPress={() => {
-                              this.props.navigation.navigate("Modal");
+                              Linking.openURL(
+                                "https://t.me/" + this.state.user[0].telegram
+                              );
                             }}
                           >
                             <Image
@@ -717,11 +750,6 @@ export default class GhostPageTwoComponent extends React.Component {
                           Длина: {item.length} метров*
                         </Text>
                       )}
-                      {item.price && (
-                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                          Цена: {item.price} руб.
-                        </Text>
-                      )}
                       {item.height && (
                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
                           Высота: {item.height} метров*
@@ -740,6 +768,11 @@ export default class GhostPageTwoComponent extends React.Component {
                       {item.inserciones && (
                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
                           Описание: {item.inserciones}
+                        </Text>
+                      )}
+                      {item.price && (
+                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          Цена: {item.price} руб.
                         </Text>
                       )}
                     </View>
@@ -844,4 +877,8 @@ const styles = StyleSheet.create({
     zIndex: 100,
     backgroundColor: "#fff",
   },
+  backText: {
+    color: '#94D8F4',
+    fontSize: 16,
+  }
 });

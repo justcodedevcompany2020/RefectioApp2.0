@@ -109,25 +109,18 @@ export default class GhostPageComponent extends React.Component {
           let data = res.data.data.data;
 
           if (data?.length > 0) {
-            
             for (let i = 0; i < data.length; i++) {
-              
-              if (data[i].user_product_limit1.length < 1) {
+              if (data[i].slider_photo.length > 0) {
+                let product_image = data[i].slider_photo
+                data[i].images = product_image
+              } else if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
+              } else {
+                let product_image = data[i].user_product_limit1[0].product_image;
+                product_image.length > 5 ? product_image.splice(5) : null;
+                data[i].images = product_image;
               }
-              if (data[i].slider_photo.length > 0) {
-                //todo
-                //   let product_image = data[i].slider_photo[0].product_image;
-                //   data[i].images = product_image;
-                //   continue;
-                console.log(data[i].slider_photo);
-                // console.log('if');
-              }
-
-              let product_image = data[i].user_product_limit1[0].product_image;
-              product_image.length > 5 ? product_image.splice(5) : null;
-              data[i].images = product_image;
             }
             console.log(getAllProducts.length, 'getAllProducts.length');
             console.log(data.length, 'data.length');
