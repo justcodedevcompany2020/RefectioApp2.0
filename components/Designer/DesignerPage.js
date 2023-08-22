@@ -97,6 +97,7 @@ export default class CustomerMainPageComponent extends React.Component {
             for (let i = 0; i < data.length; i++) {
               if (data[i].slider_photo.length > 0) {
                 let product_image = data[i].slider_photo
+                product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image
               } else if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
@@ -216,28 +217,36 @@ export default class CustomerMainPageComponent extends React.Component {
         let filtered_category_name = res.data.returnCategoryNameArray[0];
 
         for (let i = 0; i < data.length; i++) {
-          if (data[i].user_product_limit1.length < 1) {
+          if (data[i].slider_photo.length > 0) {
+            let product_image = data[i].slider_photo
+            product_image.length > 5 ? product_image.splice(5) : null;
+            data[i].images = product_image
+          } else if (data[i].user_product_limit1.length < 1) {
             data[i].images = [];
             continue;
-          }
-          let product_image = data[i].user_product_limit1[0].product_image;
-          data[i].images = product_image;
+          } else {
+            let product_image = data[i].user_product_limit1[0].product_image;
+            product_image.length > 5 ? product_image.splice(5) : null;
+            data[i].images = product_image;
 
-          if (res.data.returnCategoryNameArray.length > 0) {
-            let new_user_product_limit = data[i].user_product_limit1;
+            if (res.data.returnCategoryNameArray.length > 0) {
+              let new_user_product_limit = data[i].user_product_limit1;
 
-            new_user_product_limit.filter((item, index) => {
-              if (item.category_name === filtered_category_name) {
-                let product_image = item.product_image;
-                data[i].images = product_image;
-                console.log("startt", data[i].images, "enddddd");
-              }
-            });
+              new_user_product_limit.filter((item, index) => {
+                if (item.category_name === filtered_category_name) {
+                  let product_image = item.product_image;
+                  product_image.length > 5 ? product_image.splice(5) : null;
+                  data[i].images = product_image;
+                }
+              });
+
+            }
           }
         }
         this.setState({
           getAllProducts: data,
           filter: false,
+          isLastPage: true
         });
       })
       .catch((error) => console.log("error", error));
@@ -356,7 +365,7 @@ export default class CustomerMainPageComponent extends React.Component {
               await this.props.navigation.navigate("DesignerPageTwo", {
                 params: item.id,
               });
-              await this.clearAllData();
+              // await this.clearAllData();
             }}
           >
             <View style={styles.infoCompanyMain}>
@@ -528,9 +537,9 @@ export default class CustomerMainPageComponent extends React.Component {
                     color: "#888888",
                   }}
                 >
-                  Вы прошли модерацию.{"\n"}
+                  Вы зарегистрировались.{"\n"}
                   Теперь вы можете добавить фото и описание продукции в профиле,
-                  чтобы дизайнеры могли вас увидеть.
+                  чтобы вас могли увидеть.
                 </Text>
                 <TouchableOpacity
                   onPress={async () => {

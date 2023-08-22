@@ -47,6 +47,7 @@ export default class DesignerPageTwoComponent extends React.Component {
           percent: "",
         },
       ],
+      whatsapp: "",
 
       urlImage: APP_IMAGE_URL,
       valid_error: false,
@@ -57,6 +58,9 @@ export default class DesignerPageTwoComponent extends React.Component {
 
       userLink: "",
       VipiskaModal: false,
+      designerModal: false,
+      dmodel_popup: false,
+      city_count: null,
     };
   }
 
@@ -67,23 +71,37 @@ export default class DesignerPageTwoComponent extends React.Component {
     })
       .then((response) => response.json())
       .then(async (res) => {
-
         const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
         let arr = res.data.user_category_for_product
         if (isFound == 0) {
           arr = res.data.user_category_for_product
           let lastItem = res.data.user_category_for_product[0]
+          console.log(lastItem);
           arr.push(lastItem)
           arr.shift(res.data.user_category_for_product[0])
         }
+        const isFoundKitchen = arr.findIndex((element) => +element.category_id == 2);
+        if (isFoundKitchen >= 0) {
+          let firstItem = arr.splice(isFoundKitchen, 1)
+          arr.unshift(firstItem[0])
+        }
+
+        const receptionАrea = arr.findIndex((element) => +element.category_id == 12);
+        if (receptionАrea >= 0) {
+          let myItem = arr.splice(receptionАrea, 1)
+          arr.push(myItem[0])
+        }
+
         this.setState({
           user: res.data.user,
           user_bonus_for_designer: res.data.user_bonus_for_designer,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
           user_id_for_search: userID,
-          changed: res.data.city_for_sales_user[0].city_name,
+          changed: res.data.city_for_sales_user.length == res.data.city_count ? 'Все города России' : res.data.city_for_sales_user[0].city_name,
           show_room: res.data.user[0].show_room,
+          whatsapp: res.data.user[0].watsap_phone,
+          city_count: res.data.city_count
         });
       });
   };
@@ -99,7 +117,6 @@ export default class DesignerPageTwoComponent extends React.Component {
   componentDidMount() {
     const { navigation } = this.props;
     // this.loadedDataAfterLoadPage();
-
     this.focusListener = navigation.addListener("focus", () => {
       this.loadedDataAfterLoadPage();
     });
@@ -171,7 +188,7 @@ export default class DesignerPageTwoComponent extends React.Component {
             products: data.products,
             // show_plus_button: false,
             // extract: data.user[0].extract,
-            // whatsapp: res.data.user[0].watsap_phone
+            whatsapp: res.data.user[0].watsap_phone,
             change_category_loaded: false,
           });
         })
@@ -374,135 +391,7 @@ export default class DesignerPageTwoComponent extends React.Component {
     return 'http://' + url;
   }
 
-  // removeInputRow = () => {
 
-  //   let { procentArray } = this.state;
-
-  //   console.log(procentArray, '1')
-  //   procentArray.pop();
-
-  //   this.setState({
-  //     procentArray: procentArray
-  //   })
-  //   console.log(procentArray, '2')
-  // }
-
-  // addInputRow = () => {
-
-  //   let { procentArray } = this.state;
-
-  //   procentArray.push({
-  //     to: '',
-  //     from: '',
-  //     percent: ''
-  //   })
-  //   console.log(procentArray, 'procentArray avel')
-  //   let newProcentArray = procentArray;
-
-  //   this.setState({
-  //     procentArray: newProcentArray
-  //   })
-
-  //   console.log(newProcentArray, 'newProcentArray avel')
-  // }
-
-  // savePercont = () => {
-  //   let { procentArray } = this.state;
-
-  //   let result = [];
-  //   let valid_error = false;
-
-  //   for (let i = 0; i < procentArray.length; i++) {
-
-  //     if (procentArray[i].to == '' || procentArray[i].from == '' || procentArray[i].percent == '') {
-  //       valid_error = true;
-  //       break;
-  //     }
-
-  //     let resultString = procentArray[i].to + '^' + procentArray[i].from + '^' + procentArray[i].percent
-  //     result.push(resultString)
-  //   }
-
-  //   if (valid_error) {
-
-  //     this.setState({
-  //       valid_error: true
-  //     })
-
-  //     setTimeout(() => {
-  //       this.setState({
-  //         valid_error: false
-  //       })
-
-  //     }, 2000)
-
-  //   } else {
-
-  //     // stex grvuma apin
-
-  //     // result
-
-  //   }
-
-  //   console.log(result);
-  // }
-
-  // changeTo = (value, index) => {
-  //   let { procentArray } = this.state;
-  //   procentArray[index].to = value;
-
-  //   this.setState({
-  //     procentArray: procentArray
-  //   })
-  // }
-
-  // changeFrom = (value, index) => {
-  //   let { procentArray } = this.state;
-  //   procentArray[index].from = value;
-
-  //   this.setState({
-  //     procentArray: procentArray
-  //   })
-  // }
-
-  // changePercent = (value, index) => {
-  //   let { procentArray } = this.state;
-  //   procentArray[index].percent = value;
-
-  //   this.setState({
-  //     procentArray: procentArray
-  //   })
-  // }
-
-  // generateShareLink = async (userID) => {
-  //   const shareParams =
-  //     Platform.OS === "android"
-  //       ? {
-  //           url: `https://play.google.com/store/apps/details?id=com.JustCode.Refectio`,
-  //         }
-  //       : {
-  //           url: `https://apps.apple.com/am/app/refectio/id1658981599`,
-  //         };
-  //   const queryParams = Object.keys(shareParams)
-  //     .map(
-  //       (key) =>
-  //         `${encodeURIComponent(key)}=${encodeURIComponent(shareParams[key])}`
-  //     )
-  //     .join("&");
-
-  //   const shareUrl =
-  //     Platform.OS === "android"
-  //       ? `https://play.google.com/store/apps/details?id=com.JustCode.Refectio&hl=en_IN&gl=US?${queryParams}`
-  //       : `https://apps.apple.com/am/app/refectio/id1658981599${queryParams}`;
-
-  //   try {
-  //     await Share.share({
-  //       message: shareUrl,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   render() {
     return (
@@ -592,7 +481,130 @@ export default class DesignerPageTwoComponent extends React.Component {
               </View>
             </ImageBackground>
           </Modal>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={() => this.props.navigation.goBack()}>
+
+          <Modal visible={this.state.dmodel_popup}>
+            <ImageBackground
+              source={require("../../assets/image/blurBg.png")}
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: "90%",
+                  height: "26%",
+                  backgroundColor: "#fff",
+                  borderRadius: 20,
+                  position: "relative",
+                  paddingHorizontal: 15,
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: 18,
+                    top: 18,
+                  }}
+                  onPress={() => this.setState({ dmodel_popup: false })}
+                >
+                  <Image
+                    source={require("../../assets/image/ixs.png")}
+                    style={{
+                      width: 22.5,
+                      height: 22.5,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    marginTop: 60,
+                    fontSize: 22,
+                    textAlign: "center",
+                    color: "#2D9EFB",
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  Предоставляет 3d модели по запросу
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    marginTop: 20,
+                  }}
+                  onPress={() => this.setState({ dmodel_popup: false })}
+                >
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+
+
+          <Modal visible={this.state.designerModal}>
+            <ImageBackground
+              source={require("../../assets/image/blurBg.png")}
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: "90%",
+                  height: "25%",
+                  backgroundColor: "#fff",
+                  borderRadius: 20,
+                  position: "relative",
+                  paddingHorizontal: 15,
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: 18,
+                    top: 18,
+                  }}
+                  onPress={() => this.setState({ designerModal: false })}
+                >
+                  <Image
+                    source={require("../../assets/image/ixs.png")}
+                    style={{
+                      width: 22.5,
+                      height: 22.5,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    marginTop: 60,
+                    fontSize: 22,
+                    textAlign: "center",
+                    color: "#2D9EFB",
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  Сотрудничает с дизайнерами
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    marginTop: 20,
+                  }}
+                  onPress={() => this.setState({ designerModal: false })}
+                >
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={() => this.props.navigation.navigate('CustomerMainPage', { screen: true })}>
             <Svg
               width={25}
               height={30}
@@ -707,6 +719,32 @@ export default class DesignerPageTwoComponent extends React.Component {
                             />
                           </TouchableOpacity>
                         )}
+                        {this.state.user[0].job_with_designer == 'Да' && (
+                          <TouchableOpacity onPress={() => {
+                            this.setState({ designerModal: true })
+                          }}>
+                            <Image
+                              source={require("../../assets/image/design.png")}
+                              style={{
+                                width: 24,
+                                height: 24,
+                                marginRight: 10,
+                              }}
+                            />
+                          </TouchableOpacity>
+                        )}
+                        {this.state.user[0].dmodel == 'Да' && (
+                          <TouchableOpacity
+                            onPress={() => this.setState({ dmodel_popup: true })}>
+                            <Image
+                              source={require("../../assets/image/cube.png")}
+                              style={{
+                                width: 24,
+                                height: 24,
+                              }}
+                            />
+                          </TouchableOpacity>
+                        )}
                       </View>
                     </View>
                     {/* 
@@ -806,34 +844,57 @@ export default class DesignerPageTwoComponent extends React.Component {
                     }
                   >
                     <ScrollView nestedScrollEnabled={true}>
-                      {this.state.city_for_sales_user.map((item, index) => {
-                        return (
-                          <TouchableOpacity
-                            key={index}
+                      {this.state.city_for_sales_user.length == this.state.city_count ?
+                        <TouchableOpacity
+                          style={{
+                            width: "100%",
+                            justifyContent: "center",
+                            textAlign: "left",
+                          }}
+                          onPress={() =>
+                            this.setState({
+                              sOpenCityDropDown: false,
+                            })
+                          }
+                        >
+                          <Text
                             style={{
-                              width: "100%",
-                              justifyContent: "center",
                               textAlign: "left",
+                              paddingVertical: 10,
+                              fontFamily: "Raleway_400Regular",
                             }}
-                            onPress={() =>
-                              this.setState({
-                                changed: item.city_name,
-                                sOpenCityDropDown: false,
-                              })
-                            }
                           >
-                            <Text
+                            {this.state.changed}
+                          </Text>
+                        </TouchableOpacity>
+                        : this.state.city_for_sales_user.map((item, index) => {
+                          return (
+                            <TouchableOpacity
+                              key={index}
                               style={{
+                                width: "100%",
+                                justifyContent: "center",
                                 textAlign: "left",
-                                paddingVertical: 10,
-                                fontFamily: "Raleway_400Regular",
                               }}
+                              onPress={() =>
+                                this.setState({
+                                  changed: item.city_name,
+                                  sOpenCityDropDown: false,
+                                })
+                              }
                             >
-                              {item.city_name}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
+                              <Text
+                                style={{
+                                  textAlign: "left",
+                                  paddingVertical: 10,
+                                  fontFamily: "Raleway_400Regular",
+                                }}
+                              >
+                                {item.city_name}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
                     </ScrollView>
                   </View>
 
@@ -919,9 +980,9 @@ export default class DesignerPageTwoComponent extends React.Component {
                         borderRightColor: "#EEEEEE",
                       },
                     ]}
-                    onPress={() => {
-                      this.setState({ RewardModal: true });
-                    }}
+                  // onPress={() => {
+                  //   this.setState({ RewardModal: true });
+                  // }}
                   >
                     <Image
                       source={require("../../assets/image/la_percent.png")}
@@ -931,24 +992,31 @@ export default class DesignerPageTwoComponent extends React.Component {
                         resizeMode: "contain",
                       }}
                     />
-                    <Text style={styles.infoText}>Вознаграждение</Text>
+                    <Text style={styles.infoText}>Доп. информация</Text>
                   </View>
-                  <View
+                  <TouchableOpacity
                     style={[
                       styles.info,
                       { borderRightWidth: 2, borderRightColor: "#EEEEEE" },
                     ]}
+                    onPress={() => {
+                      Linking.openURL(
+                        `whatsapp://send?text=Здравствуйте!
+
+Пишу из приложения Refectio.&phone=${this.state.whatsapp}`
+                      ).catch(err => console.log(err))
+                    }}
                   >
                     <Image
-                      source={require("../../assets/image/clarity_ruble-line.png")}
+                      source={require("../../assets/image/whatsapp.png")}
                       style={{
                         width: 30,
                         height: 30,
                         resizeMode: "contain",
                       }}
                     />
-                    <Text style={styles.infoText}>Запрос{"\n"}стоимости</Text>
-                  </View>
+                    <Text style={styles.infoText}>Написать в вотсап</Text>
+                  </TouchableOpacity>
                   <View style={styles.info}>
                     <Image
                       source={require("../../assets/image/pcichka.png")}
@@ -958,7 +1026,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                         resizeMode: "contain",
                       }}
                     />
-                    <Text style={styles.infoText}>Бронировать</Text>
+                    <Text style={styles.infoText}>Отзывы</Text>
                   </View>
                 </View>
                 <View style={{ zIndex: -1 }}>
@@ -1036,13 +1104,13 @@ export default class DesignerPageTwoComponent extends React.Component {
                         )}
                         {item.length && (
                           <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Длина: {item.length} метров*
+                            Длина: {item.length} м.
                           </Text>
                         )}
 
                         {item.height && (
                           <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Высота: {item.height} метров*
+                            Высота: {item.height} м.
                           </Text>
                         )}
                         {item.material && (
@@ -1309,5 +1377,6 @@ const styles = StyleSheet.create({
   backText: {
     color: '#94D8F4',
     fontSize: 16,
+    marginTop: 5,
   }
 });

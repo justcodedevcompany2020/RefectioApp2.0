@@ -46,6 +46,9 @@ import EditProductComponent from "./components/Customer/EditProduct";
 import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import { APP_URL } from "@env";
+import SearchScreen from "./components/search/guest/SearchScreen";
+import CategoryScreen from "./components/search/guest/CategoryScreen";
+import CategorySingleScreen from "./components/search/guest/CategorySingleScreen";
 
 const Stack = createStackNavigator();
 
@@ -126,7 +129,6 @@ function GhostPageTwoFunc({ route, navigation }) {
 }
 function DesignerPageTwo({ route, navigation }) {
   const { params } = route.params;
-
   return <DesignerPageTwoComponent user_id={params} navigation={navigation} />;
 }
 
@@ -135,6 +137,19 @@ function CustomerPageTwo({ route, navigation }) {
 
   return <CustomerPageTwoComponent userID={params} navigation={navigation} />;
 }
+
+function SearchScreenComponent({ navigation }) {
+  return <SearchScreen navigation={navigation} />;
+}
+function CategoryScreenComponent({ navigation, route }) {
+  // const { params } = route.params;
+  return <CategoryScreen navigation={navigation} category={route.params.category} />;
+}
+
+function CategorySingleScreenComponent({ navigation, route }) {
+  return <CategorySingleScreen navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+}
+
 
 function ForgetPassword({ navigation }) {
   return <ForgetPasswordComponent navigation={navigation} />;
@@ -351,7 +366,6 @@ export default function App() {
   );
 
   getLiveZakaz = async () => {
-    console.log('getLiveZakaz');
     let token = await AsyncStorage.getItem("userToken");
     let myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -366,7 +380,6 @@ export default function App() {
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.status === true) {
-          console.log(responseJson.notify_count, 'responseJson.notify_count');
 
           if (responseJson.data.data.length > 0) {
             authContext.notify_count = responseJson.notify_count
@@ -469,6 +482,18 @@ export default function App() {
                 />
                 <Stack.Screen name="MyAccaunt" component={MyAccauntComponent} />
                 <Stack.Screen
+                  name="SearchScreen"
+                  component={SearchScreenComponent}
+                />
+                <Stack.Screen
+                  name="CategoryScreen"
+                  component={CategoryScreenComponent}
+                />
+                <Stack.Screen
+                  name="CategorySingleScreen"
+                  component={CategorySingleScreenComponent}
+                />
+                <Stack.Screen
                   name="EditPhoneNumberDesigner"
                   component={EditPhoneNumberDesignerComponent}
                 />
@@ -560,6 +585,18 @@ export default function App() {
                     name="EditProduct"
                     component={EditProductScreen}
                   />
+                  <Stack.Screen
+                    name="SearchScreen"
+                    component={SearchScreenComponent}
+                  />
+                  <Stack.Screen
+                    name="CategoryScreen"
+                    component={CategoryScreenComponent}
+                  />
+                  <Stack.Screen
+                    name="CategorySingleScreen"
+                    component={CategorySingleScreenComponent}
+                  />
                 </Stack.Navigator>
               ) : // Guest pages tabs
 
@@ -598,6 +635,18 @@ export default function App() {
                     <Stack.Screen
                       name="AuthScreen"
                       component={AuthScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="SearchScreen"
+                      component={SearchScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="CategoryScreen"
+                      component={CategoryScreenComponent}
+                    />
+                    <Stack.Screen
+                      name="CategorySingleScreen"
+                      component={CategorySingleScreenComponent}
                     />
                     <Stack.Screen
                       name="GhostPageTwo"

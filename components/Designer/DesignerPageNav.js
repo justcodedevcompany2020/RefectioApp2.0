@@ -37,6 +37,12 @@ export default class DesignerPageNavComponent extends React.Component {
           id: 3,
         },
         // {
+        //   images: require("../../assets/image/icon.png"),
+        //   text: "Поиск",
+        //   change: "SearchScreen",
+        //   id: 4,
+        // },
+        // {
         //   images: require("../../assets/image/broni.png"),
         //   text: "Брони",
         //   change: "DesignerMyBroni",

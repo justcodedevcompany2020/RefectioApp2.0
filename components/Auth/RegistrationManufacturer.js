@@ -30,11 +30,14 @@ export default class RegistrationManufacturerComponent extends Component {
       sOpenCityDropDown1: false,
       sOpenCityDropDown2: false,
       sOpenCityDropDown3: false,
+      sOpenCityDropDown4: false,
+      sOpenCityDropDown5: false,
 
       cityItems: [],
       sales_city: [],
       sales_city_error: false,
       cityChange: "",
+      allCities: false,
 
       getProductCategory: [],
       category: "",
@@ -69,8 +72,6 @@ export default class RegistrationManufacturerComponent extends Component {
       made_in: "",
       made_in_error: false,
 
-      price_of_metr: "",
-      price_of_metr_error: false,
 
       saite: "",
 
@@ -81,8 +82,11 @@ export default class RegistrationManufacturerComponent extends Component {
         { name: "Да", id: 1 },
         { name: "Нет", id: 2 },
       ],
-      show_room: "",
+      show_room: "Нет",
       show_room_error: false,
+
+      collaborate: "Нет",
+      d3model: 'Нет',
 
       percent_bonus: [],
       percent_bonus_error: false,
@@ -245,14 +249,20 @@ export default class RegistrationManufacturerComponent extends Component {
   gorod = async (items, ids) => {
     let filterSort = this.state.sales_city;
     let find = true;
-    filterSort.find((item) => {
-      if (item.id == ids) {
-        find = false;
+    if (ids == 9999) {
+
+      filterSort = this.state.cityItems.filter(el => el.id !== 9999).map((item, i) => ({ name: item.name, id: item.id }))
+      this.setState({ allCities: true, countCity: this.state.cityItems.length - 1 })
+    } else {
+      filterSort.find((item) => {
+        if (item.id == ids) {
+          find = false;
+        }
+      });
+      if (find) {
+        filterSort.push({ name: items, id: ids });
+        this.setState({ countCity: this.state.countCity + 1 });
       }
-    });
-    if (find) {
-      filterSort.push({ name: items, id: ids });
-      this.setState({ countCity: this.state.countCity + 1 });
     }
     await this.setState({ sales_city: filterSort });
   };
@@ -286,7 +296,7 @@ export default class RegistrationManufacturerComponent extends Component {
         if (res.status === true) {
           this.setState({ sOpenCityDropDown3: !this.state.sOpenCityDropDown3 });
         }
-        this.setState({ cityItems: res.data.city });
+        this.setState({ cityItems: [{ name: 'Все города России', id: 9999 }, ...res.data.city] });
       });
   };
 
@@ -355,8 +365,9 @@ export default class RegistrationManufacturerComponent extends Component {
       individual_number,
       watsap_phone,
       made_in,
-      price_of_metr,
       show_room,
+      collaborate,
+      d3model,
       // percent_bonus,
       sales_city,
       product_category,
@@ -380,7 +391,6 @@ export default class RegistrationManufacturerComponent extends Component {
     if (saite === "") {
       saite = null;
     }
-
     this.form_data.append("company_name", company_name);
     this.form_data.append("phone", phone);
     this.form_data.append("password", password);
@@ -390,11 +400,12 @@ export default class RegistrationManufacturerComponent extends Component {
     this.form_data.append("i_agree", this.state.i_agree);
     this.form_data.append("role_id", "3");
     this.form_data.append("made_in", made_in);
-    this.form_data.append("price_of_metr", price_of_metr);
     this.form_data.append("saite", saite);
     this.form_data.append("telegram", telegram);
     this.form_data.append("show_room", show_room);
-    this.form_data.append("sales_city[]", new_sales_city);
+    this.form_data.append("job_with_designer", collaborate)
+    this.form_data.append("dmodel", d3model)
+    this.form_data.append("sales_city", new_sales_city);
     this.form_data.append("product_category[]", new_product_category);
     this.form_data.append("percent_bonus[]", this.state.procentArrayToString);
 
@@ -453,16 +464,6 @@ export default class RegistrationManufacturerComponent extends Component {
             });
           }
 
-          if (res.data.hasOwnProperty("individual_number")) {
-            this.setState({
-              individual_number_error: true,
-            });
-            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
-          } else {
-            this.setState({
-              individual_number_error: false,
-            });
-          }
 
           if (res.data.hasOwnProperty("watsap_phone")) {
             this.setState({
@@ -486,16 +487,6 @@ export default class RegistrationManufacturerComponent extends Component {
             });
           }
 
-          if (res.data.hasOwnProperty("price_of_metr")) {
-            this.setState({
-              price_of_metr_error: true,
-            });
-            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
-          } else {
-            this.setState({
-              price_of_metr_error: false,
-            });
-          }
 
           if (res.data.hasOwnProperty("show_room")) {
             this.setState({
@@ -550,7 +541,7 @@ export default class RegistrationManufacturerComponent extends Component {
           this.setState({
             phone_error: true,
           });
-          this.ref.current.scrollTo({x: 0, y: 0, animated: true})
+          this.ref.current.scrollTo({ x: 0, y: 0, animated: true })
           this.form_data = new FormData();
 
           return false;
@@ -654,9 +645,6 @@ export default class RegistrationManufacturerComponent extends Component {
       made_in: "",
       made_in_error: false,
 
-      price_of_metr: "",
-      price_of_metr_error: false,
-
       saite: "",
       telegram: "",
       tg: "t.me/",
@@ -667,6 +655,9 @@ export default class RegistrationManufacturerComponent extends Component {
       ],
       show_room: "",
       show_room_error: false,
+
+      collaborate: "Нет",
+      d3model: "Нет",
 
       percent_bonus: [],
       percent_bonus_error: false,
@@ -716,12 +707,12 @@ export default class RegistrationManufacturerComponent extends Component {
           <View
             style={{
               width: "100%",
-              height: 150,
+              height: 180,
             }}
           ></View>
 
           <Image
-            source={require("../../assets/image/RefectioWallpaper.png")}
+            source={require("../../assets/background.png")}
             style={{
               width: "95%",
               height: 135,
@@ -756,7 +747,7 @@ export default class RegistrationManufacturerComponent extends Component {
                 color: "#2D9EFB",
                 fontSize: 36,
                 left: 19,
-                top: 58,
+                top: 130,
                 fontFamily: "Poppins_500Medium",
               }}
             >
@@ -827,7 +818,7 @@ export default class RegistrationManufacturerComponent extends Component {
                     : { color: "#5B5B5B" },
                 ]}
               >
-                ИНН*
+                ИНН
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
@@ -868,12 +859,14 @@ export default class RegistrationManufacturerComponent extends Component {
                   this.state.phone_error || this.state.phone_exist
                     ? { color: "red" }
                     : { color: "#5B5B5B" },
-                    this.state.phone_exist && {fontSize: 13}
+                  this.state.phone_exist && { fontSize: 13 }
                 ]}
               >
                 {this.state.phone_exist
                   ? "Этот телефонный номер уже зарегистрирован за другим пользователем"
-                  : "Номер телефона*"}
+                  : `Номер телефона*`}
+
+                {!this.state.phone_exist && <Text style={{ fontSize: 12 }}>{`   (придёт звонок с кодом)`}</Text>}
               </Text>
 
               <MaskInput
@@ -1323,7 +1316,45 @@ export default class RegistrationManufacturerComponent extends Component {
                   height: 50,
                 }}
               >
-                <ScrollView
+                {this.state.allCities ? <View
+                  style={{
+                    position: "relative",
+                    marginRight: 10,
+                    marginTop: 10,
+                    borderRadius: 8,
+                  }}
+                >
+                  <Text
+                    style={{
+                      paddingHorizontal: 16,
+                      paddingVertical: 10,
+                      backgroundColor: "#F5F5F5",
+                      fontFamily: "Poppins_500Medium",
+                    }}
+                  >
+                    Все города России
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ allCities: false, sales_city: [], countCity: 0 })
+                      // this.verifyGorod(item);
+                    }}
+                    style={{
+                      position: "absolute",
+                      right: -5,
+                      top: -5,
+                      // borderWidth: 1,
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/image/ixs.png")}
+                      style={{
+                        width: 12,
+                        height: 12,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View> : <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
                 >
@@ -1370,7 +1401,7 @@ export default class RegistrationManufacturerComponent extends Component {
                       </View>
                     );
                   })}
-                </ScrollView>
+                </ScrollView>}
               </View>
             )}
             {/* cityButons end */}
@@ -1499,49 +1530,6 @@ export default class RegistrationManufacturerComponent extends Component {
               </View>
             </View>
             {/* dropDown city end*/}
-
-            <View>
-              <Text
-                style={[
-                  {
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 15,
-                    marginTop: 27,
-                    marginBottom: 5,
-                  },
-                  this.state.price_of_metr_error
-                    ? { color: "red" }
-                    : { color: "#5B5B5B" },
-                ]}
-              >
-                Стоимость метра*
-              </Text>
-
-              <TextInput
-                placeholder="Кухни 200 000р м2, Прихожые 100 000р м2"
-                underlineColorAndroid="transparent"
-                // keyboardType="number-pad"
-                style={[
-                  {
-                    borderWidth: 1,
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  },
-                  this.state.price_of_metr_error
-                    ? { borderColor: "red" }
-                    : { borderColor: "#F5F5F5" },
-                ]}
-                value={this.state.price_of_metr}
-                onChangeText={(value) =>
-                  this.setState({
-                    price_of_metr: value,
-                    price_of_metr_error: false,
-                  })
-                }
-              />
-            </View>
 
             <View>
               <Text
@@ -1854,257 +1842,261 @@ export default class RegistrationManufacturerComponent extends Component {
             </View>
             {/* dropDown  end*/}
 
-            {/* input type end  */}
-
-            {/*Процент вознаграждения дизайнера start*/}
-
-            <View style={styles.DesignerRemunerationPercentageParent}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 27,
-                  marginBottom: 5,
-                  position: "relative",
-                }}
+            <View
+              style={{
+                position: "relative",
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 15,
+                    color: "#5B5B5B",
+                    marginTop: 27,
+                    marginBottom: 5,
+                  },
+                  { color: "#5B5B5B" },
+                ]}
+              >
+                Сотрудничаете с дизайнерами?
+              </Text>
+              <TouchableOpacity
+                style={[
+                  {
+                    borderWidth: 1,
+                    padding: 10,
+                    width: "100%",
+                    borderColor: "#000",
+                    borderRadius: 5,
+                    position: "relative",
+                  },
+                  { borderColor: "#F5F5F5" },
+                ]}
+                onPress={() =>
+                  this.setState({
+                    sOpenCityDropDown4: !this.state.sOpenCityDropDown4,
+                  })
+                }
               >
                 <Text
-                  style={[
-                    {
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 15,
-
-                      textAlignVertical: "center",
-                    },
-                    this.state.valid_error
-                      ? { color: "red" }
-                      : { color: "#5B5B5B" },
-                  ]}
-                >
-                  Процент вознаграждения дизайнера*
-                </Text>
-                <TouchableOpacity
-                  style={{ marginLeft: 10 }}
-                  onPress={() => this.setState({ information: true })}
-                >
-                  <Svg
-                    width={18}
-                    height={18}
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <Rect width={18} height={18} rx={9} fill="#CCC" />
-                    <Path
-                      d="M6.507 6.18c-.46-.193-.656-.755-.38-1.165C6.685 4.197 7.618 3.6 8.85 3.6c1.353 0 2.28.608 2.751 1.37.403.654.64 1.876.018 2.785-.691 1.006-1.353 1.313-1.71 1.961a1.301 1.301 0 0 0-.173.535.835.835 0 0 1-.823.739c-.5 0-.91-.427-.852-.921a2.29 2.29 0 0 1 .265-.876c.443-.79 1.295-1.256 1.79-1.955.524-.733.23-2.103-1.255-2.103-.673 0-1.11.346-1.381.761-.202.324-.622.427-.973.285Zm3.5 7.083c0 .625-.518 1.137-1.151 1.137a1.148 1.148 0 0 1-1.152-1.137c0-.625.518-1.137 1.152-1.137.633 0 1.15.512 1.15 1.137Z"
-                      fill="#000"
-                    />
-                  </Svg>
-                </TouchableOpacity>
-
-                <Modal
-                  visible={this.state.information}
-                  transparent
-                  animationType="slide"
-                  statusBarTranslucent
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: "center",
-                      backgroundColor: "#00000050",
-                    }}
-                  >
-                    <View style={styles.modalInfoContainer}>
-                      <TouchableOpacity
-                        style={{
-                          position: "absolute",
-                          right: 18,
-                          top: 18,
-                        }}
-                        onPress={() => this.setState({ information: false })}
-                      >
-                        <Image
-                          source={require("../../assets/image/ixs.png")}
-                          style={{
-                            width: 18,
-                            height: 18,
-                          }}
-                          resizeMode={"cover"}
-                        />
-                      </TouchableOpacity>
-
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#2D9EFB",
-                          fontSize: 25,
-                          marginTop: 10,
-                        }}
-                      >
-                        Информация
-                      </Text>
-
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          color: "#5B5B5B",
-                          fontFamily: "Poppins_500Medium",
-                          marginTop: 30,
-                        }}
-                      >
-                        Введите размер вознаграждения дизайнеру, предлагаемый
-                        вашей компанией:
-                        {"\n"}
-                        {"\n"}
-                        Примеры:
-                        {"\n"}
-                        От 0 до 9.999.999 -{" "}
-                        <Text style={styles.bluePercent}>10%</Text>
-                        {"\n"}
-                        {"\n"}
-                        Или
-                        {"\n"}
-                        От 0 до 999.999 -{" "}
-                        <Text style={styles.bluePercent}>10%</Text>
-                        {"\n"}
-                        От 1.000.000 до 4.999.999 -{" "}
-                        <Text style={styles.bluePercent}>11%</Text>
-                        {"\n"}
-                        От 5.000.000 до 9.999.999 -{" "}
-                        <Text style={styles.bluePercent}>12%</Text>
-                      </Text>
-                    </View>
-                  </View>
-                </Modal>
-              </View>
-              {this.state.procentArray.map((item, index) => {
-                return (
-                  <View
-                    style={styles.DesignerRemunerationPercentage}
-                    key={index}
-                  >
-                    <Text style={styles.procentText}>От</Text>
-
-                    <TextInput
-                      editable={index === 0 ? false : true}
-                      keyboardType={"number-pad"}
-                      style={styles.procentInput}
-                      underlineColorAndroid="transparent"
-                      placeholderTextColor={"#aaaaaa"}
-                      placeholder={""}
-                      maxLength={9}
-                      value={item.to !== "datark" ? item.to : ""}
-                      onChangeText={async (value) => {
-                        await this.changeTo(value, index);
-                      }}
-                    />
-
-                    <View style={styles.rubli}>
-                      <Svg
-                        width="11"
-                        height="15"
-                        viewBox="0 0 11 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <Path
-                          d="M6.285 8.99997C7.37392 9.02686 8.42909 8.62091 9.21919 7.8711C10.0093 7.1213 10.4699 6.08881 10.5 4.99997C10.4699 3.91113 10.0093 2.87865 9.21919 2.12884C8.42909 1.37904 7.37392 0.973087 6.285 0.999974H2C1.86739 0.999974 1.74021 1.05265 1.64645 1.14642C1.55268 1.24019 1.5 1.36737 1.5 1.49997V7.99997H0.5C0.367392 7.99997 0.240215 8.05265 0.146447 8.14642C0.0526785 8.24019 0 8.36736 0 8.49997C0 8.63258 0.0526785 8.75976 0.146447 8.85353C0.240215 8.9473 0.367392 8.99997 0.5 8.99997H1.5V9.99997H0.5C0.367392 9.99997 0.240215 10.0527 0.146447 10.1464C0.0526785 10.2402 0 10.3674 0 10.5C0 10.6326 0.0526785 10.7598 0.146447 10.8535C0.240215 10.9473 0.367392 11 0.5 11H1.5V14.5C1.5 14.6326 1.55268 14.7598 1.64645 14.8535C1.74021 14.9473 1.86739 15 2 15C2.13261 15 2.25979 14.9473 2.35355 14.8535C2.44732 14.7598 2.5 14.6326 2.5 14.5V11H7C7.13261 11 7.25979 10.9473 7.35355 10.8535C7.44732 10.7598 7.5 10.6326 7.5 10.5C7.5 10.3674 7.44732 10.2402 7.35355 10.1464C7.25979 10.0527 7.13261 9.99997 7 9.99997H2.5V8.99997H6.285ZM2.5 1.99997H6.285C7.10839 1.9743 7.90853 2.27531 8.51083 2.83733C9.11313 3.39935 9.46872 4.17677 9.5 4.99997C9.47001 5.82362 9.11483 6.60182 8.51223 7.16412C7.90964 7.72642 7.10875 8.02698 6.285 7.99997H2.5V1.99997Z"
-                          fill="#888888"
-                        />
-                      </Svg>
-                    </View>
-
-                    <Text style={styles.procentText}>До</Text>
-
-                    <TextInput
-                      editable={
-                        this.state.procentArray.length <= 1 ? false : true
-                      }
-                      keyboardType={"number-pad"}
-                      style={styles.procentInput}
-                      underlineColorAndroid="transparent"
-                      placeholder={
-                        this.state.procentArray.length <= 1 ? "9.999.999" : ""
-                      }
-                      placeholderTextColor={"#aaaaaa"}
-                      maxLength={9}
-                      value={item.from !== "datark" ? item.from : ""}
-                      onChangeText={async (value) => {
-                        await this.changeFrom(value, index);
-                      }}
-                    />
-
-                    <View style={styles.rubli}>
-                      <Svg
-                        width="11"
-                        height="15"
-                        viewBox="0 0 11 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <Path
-                          d="M6.285 8.99997C7.37392 9.02686 8.42909 8.62091 9.21919 7.8711C10.0093 7.1213 10.4699 6.08881 10.5 4.99997C10.4699 3.91113 10.0093 2.87865 9.21919 2.12884C8.42909 1.37904 7.37392 0.973087 6.285 0.999974H2C1.86739 0.999974 1.74021 1.05265 1.64645 1.14642C1.55268 1.24019 1.5 1.36737 1.5 1.49997V7.99997H0.5C0.367392 7.99997 0.240215 8.05265 0.146447 8.14642C0.0526785 8.24019 0 8.36736 0 8.49997C0 8.63258 0.0526785 8.75976 0.146447 8.85353C0.240215 8.9473 0.367392 8.99997 0.5 8.99997H1.5V9.99997H0.5C0.367392 9.99997 0.240215 10.0527 0.146447 10.1464C0.0526785 10.2402 0 10.3674 0 10.5C0 10.6326 0.0526785 10.7598 0.146447 10.8535C0.240215 10.9473 0.367392 11 0.5 11H1.5V14.5C1.5 14.6326 1.55268 14.7598 1.64645 14.8535C1.74021 14.9473 1.86739 15 2 15C2.13261 15 2.25979 14.9473 2.35355 14.8535C2.44732 14.7598 2.5 14.6326 2.5 14.5V11H7C7.13261 11 7.25979 10.9473 7.35355 10.8535C7.44732 10.7598 7.5 10.6326 7.5 10.5C7.5 10.3674 7.44732 10.2402 7.35355 10.1464C7.25979 10.0527 7.13261 9.99997 7 9.99997H2.5V8.99997H6.285ZM2.5 1.99997H6.285C7.10839 1.9743 7.90853 2.27531 8.51083 2.83733C9.11313 3.39935 9.46872 4.17677 9.5 4.99997C9.47001 5.82362 9.11483 6.60182 8.51223 7.16412C7.90964 7.72642 7.10875 8.02698 6.285 7.99997H2.5V1.99997Z"
-                          fill="#888888"
-                        />
-                      </Svg>
-                    </View>
-
-                    <View
-                      style={[
-                        styles.procent,
-                        this.state.valid_error
-                          ? { borderColor: "red" }
-                          : { borderColor: "#F5F5F5" },
-                      ]}
-                    >
-                      <TextInput
-                        keyboardType="number-pad"
-                        maxLength={2}
-                        value={item.percent}
-                        style={{ width: "100%", height: "100%" }}
-                        onChangeText={async (value) => {
-                          this.changePercent(value, index);
-                        }}
-                      />
-                      <Text style={{ position: "absolute", right: 0 }}>%</Text>
-                    </View>
-                  </View>
-                );
-              })}
-
-              <View
-                View
-                style={{ flexDirection: "row", justifyContent: "flex-end" }}
-              >
-                {/* jnjel */}
-
-                {this.state.procentArray.length > 1 && (
-                  <TouchableOpacity
-                    style={[styles.presoble, { marginRight: 11 }]}
-                    onPress={async () => {
-                      this.removeInputRow();
-                    }}
-                  >
-                    <Text style={styles.procentText}>Удалить</Text>
-                  </TouchableOpacity>
-                )}
-
-                {/* avelacnel */}
-
-                <TouchableOpacity
-                  style={styles.presoble}
-                  onPress={async () => {
-                    this.addInputRow();
+                  style={{
+                    padding: 5,
+                    width: "100%",
+                    borderRadius: 5,
+                    fontFamily: "Poppins_500Medium",
                   }}
                 >
-                  <Text style={styles.procentText}>Добавить</Text>
-                </TouchableOpacity>
-
-                {/* kojak  */}
+                  {this.state.collaborate}
+                </Text>
+                <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                  {!this.state.sOpenCityDropDown4 && (
+                    <Svg
+                      width="18"
+                      height="10"
+                      viewBox="0 0 18 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <Path
+                        d="M1 1L9 9L17 1"
+                        stroke="#888888"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </Svg>
+                  )}
+                  {this.state.sOpenCityDropDown4 && (
+                    <Svg
+                      width="18"
+                      height="10"
+                      viewBox="0 0 18 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <Path
+                        d="M1 9L9 1L17 9"
+                        stroke="#888888"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </Svg>
+                  )}
+                </View>
+              </TouchableOpacity>
+              <View
+                style={
+                  this.state.sOpenCityDropDown4
+                    ? styles.daNetActive
+                    : styles.daNet
+                }
+              >
+                <ScrollView nestedScrollEnabled={true}>
+                  {this.state.show_room_arr.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        style={{
+                          width: "100%",
+                          justifyContent: "center",
+                          textAlign: "left",
+                          borderBottomWidth: 1,
+                          borderBottomColor: "#F5F5F5",
+                        }}
+                        onPress={() =>
+                          this.setState({
+                            collaborate: item.name,
+                            sOpenCityDropDown4: false,
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            textAlign: "left",
+                            paddingVertical: 10,
+                            fontFamily: "Poppins_500Medium",
+                            color: "#888888",
+                          }}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
               </View>
             </View>
-            {/*Процент вознаграждения дизайнера end*/}
+
+            <View
+              style={{
+                position: "relative",
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 15,
+                    color: "#5B5B5B",
+                    marginTop: 27,
+                    marginBottom: 5,
+                  },
+                  { color: "#5B5B5B" },
+                ]}
+              >
+                Предоставляете 3d модели ?
+              </Text>
+              <TouchableOpacity
+                style={[
+                  {
+                    borderWidth: 1,
+                    padding: 10,
+                    width: "100%",
+                    borderColor: "#000",
+                    borderRadius: 5,
+                    position: "relative",
+                  },
+                  { borderColor: "#F5F5F5" },
+                ]}
+                onPress={() =>
+                  this.setState({
+                    sOpenCityDropDown5: !this.state.sOpenCityDropDown5,
+                  })
+                }
+              >
+                <Text
+                  style={{
+                    padding: 5,
+                    width: "100%",
+                    borderRadius: 5,
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  {this.state.d3model}
+                </Text>
+                <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                  {!this.state.sOpenCityDropDown5 && (
+                    <Svg
+                      width="18"
+                      height="10"
+                      viewBox="0 0 18 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <Path
+                        d="M1 1L9 9L17 1"
+                        stroke="#888888"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </Svg>
+                  )}
+                  {this.state.sOpenCityDropDown5 && (
+                    <Svg
+                      width="18"
+                      height="10"
+                      viewBox="0 0 18 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <Path
+                        d="M1 9L9 1L17 9"
+                        stroke="#888888"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </Svg>
+                  )}
+                </View>
+              </TouchableOpacity>
+              <View
+                style={
+                  this.state.sOpenCityDropDown5
+                    ? styles.daNetActive
+                    : styles.daNet
+                }
+              >
+                <ScrollView nestedScrollEnabled={true}>
+                  {this.state.show_room_arr.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        style={{
+                          width: "100%",
+                          justifyContent: "center",
+                          textAlign: "left",
+                          borderBottomWidth: 1,
+                          borderBottomColor: "#F5F5F5",
+                        }}
+                        onPress={() =>
+                          this.setState({
+                            d3model: item.name,
+                            sOpenCityDropDown5: false,
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            textAlign: "left",
+                            paddingVertical: 10,
+                            fontFamily: "Poppins_500Medium",
+                            color: "#888888",
+                          }}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            </View>
 
             <View>
               <Text
@@ -2160,7 +2152,22 @@ export default class RegistrationManufacturerComponent extends Component {
                 />
               )}
             </View>
-
+            {/* <Text
+              style={[
+                {
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 15,
+                  color: "#5B5B5B",
+                  marginTop: 27,
+                  marginBottom: 5,
+                },
+                { color: "#5B5B5B" },
+              ]}
+            >
+              Дополнительная информация
+            </Text> */}
+0
             <View style={styles.checkBox}>
               <TouchableOpacity
                 style={{ marginRight: 10 }}

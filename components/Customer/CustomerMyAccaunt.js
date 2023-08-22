@@ -76,6 +76,8 @@ export default class CustomerMyAccauntComponent extends React.Component {
 
       valid_error: false,
 
+      allCities: false,
+
       procentArray: [
         {
           start_price: "0",
@@ -87,6 +89,17 @@ export default class CustomerMyAccauntComponent extends React.Component {
       delate_category: false,
 
       delate_accaunt: false,
+
+      arrItems: [
+        { name: "Да", id: 1 },
+        { name: "Нет", id: 2 },
+      ],
+
+      collaborate: "",
+      dmodel: '',
+      openDesignerPopup: false,
+      dmodelPopup: false
+
     };
   }
   static contextType = AuthContext;
@@ -107,7 +120,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
         if (res.status === true) {
           this.setState({ sOpenCityDropDown3: !this.state.sOpenCityDropDown3 });
         }
-        this.setState({ cityItems: res.data.city });
+        this.setState({ cityItems: [{ name: 'Все города России', id: 9999 }, ...res.data.city] });
       });
   };
 
@@ -263,8 +276,9 @@ export default class CustomerMyAccauntComponent extends React.Component {
       .then((response) => response.json())
       .then((res) => {
         this.setState({
-          authUserState: res.data,
+          authUserState: res?.data,
           gorodArray: res?.data[0].city_of_sales_manufacturer,
+          allCities: res?.data[0].city_of_sales_manufacturer.length ==  res?.city_count ? true : false,
           id: res?.data[0].id,
           inn: res?.data[0].individual_number,
           strana: res?.data[0].made_in,
@@ -281,6 +295,8 @@ export default class CustomerMyAccauntComponent extends React.Component {
             res?.data[0].telegram !== null
               ? "t.me/" + res?.data[0].telegram
               : "t.me/",
+          collaborate: res?.data[0].job_with_designer,
+          dmodel: res?.data[0].dmodel
         });
       });
   };
@@ -509,19 +525,25 @@ export default class CustomerMyAccauntComponent extends React.Component {
   // gorod startttttttttt
 
   enterCheckBox = (items, index) => {
+    let filterSort = this.state.gorodArray;
+    let find = true;
+
     items.city_id = items.id;
     items.city_name = items.name;
 
-    let filterSort = this.state.gorodArray;
-
-    let find = true;
-    filterSort.find((item) => {
-      if (item.city_id == items.city_id) {
-        find = false;
+    if (items.city_id == 9999) {
+      filterSort = this.state.cityItems.filter(el => el.id !== 9999).map((item, i) => ({ city_name: item.name, city_id: item.id }))
+      this.setState({ allCities: true, countCity: this.state.cityItems.length - 1 })
+    } else {
+      filterSort.find((item) => {
+        if (item.id == items.city_id) {
+          find = false;
+        }
+      });
+      if (find) {
+        filterSort.push({ city_name: items.name, city_id: items.city_id });
+        this.setState({ countCity: this.state.countCity + 1 });
       }
-    });
-    if (find) {
-      filterSort.push(items);
     }
 
     this.setState({ gorodArray: filterSort });
@@ -579,7 +601,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
         if (
           result.status === false &&
           result.message ===
-            "Нельзя удалить заполненную категорию. Сначала удалите объекты в разделе Продукция по данной категории"
+          "Нельзя удалить заполненную категорию. Сначала удалите объекты в разделе Продукция по данной категории"
         ) {
           this.setState({ delate_category: true });
           setTimeout(() => {
@@ -780,6 +802,54 @@ export default class CustomerMyAccauntComponent extends React.Component {
       });
   };
 
+  update_dmodel = async (value) => {
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
+
+    let formdata = new FormData();
+    formdata.append("dmodel", value);
+
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(`${APP_URL}update_dmodel`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  }
+
+  update_job_with_designer = async (value) => {
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
+
+    let formdata = new FormData();
+    formdata.append("job_with_designer", value);
+
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(`${APP_URL}update_job_with_designer`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  }
+
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -840,54 +910,90 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     height: 50,
                   }}
                 >
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
+                  {this.state.allCities ? <View
+                    style={{
+                      position: "relative",
+                      marginRight: 10,
+                      marginTop: 10,
+                      borderRadius: 8,
+                    }}
                   >
-                    {this.state.gorodArray.map((item, index) => {
-                      return (
-                        <View
-                          key={index}
-                          style={{
-                            position: "relative",
-                            marginRight: 10,
-                            marginTop: 10,
-                          }}
-                        >
-                          <Text
+                    <Text
+                      style={{
+                        paddingHorizontal: 16,
+                        paddingVertical: 10,
+                        backgroundColor: "#F5F5F5",
+                        fontFamily: "Poppins_500Medium",
+                      }}
+                    >
+                      Все города России
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.setState({ allCities: false, gorodArray: [], countCity: 0 })
+                      }}
+                      style={{
+                        position: "absolute",
+                        right: -5,
+                        top: -5,
+                      }}
+                    >
+                      <Image
+                        source={require("../../assets/image/ixs.png")}
+                        style={{
+                          width: 12,
+                          height: 12,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  </View> :
+                    <ScrollView
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      {this.state.gorodArray.map((item, index) => {
+                        return (
+                          <View
+                            key={index}
                             style={{
-                              paddingHorizontal: 16,
-                              paddingVertical: 10,
-                              backgroundColor: "#F5F5F5",
-                              borderRadius: 8,
-                              fontFamily: "Poppins_500Medium",
+                              position: "relative",
+                              marginRight: 10,
+                              marginTop: 10,
                             }}
                           >
-                            {item.city_name}
-                          </Text>
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.verifyCheckBox(item);
-                            }}
-                            style={{
-                              position: "absolute",
-                              right: -5,
-                              top: -5,
-                              // borderWidth: 1,
-                            }}
-                          >
-                            <Image
-                              source={require("../../assets/image/ixs.png")}
+                            <Text
                               style={{
-                                width: 12,
-                                height: 12,
+                                paddingHorizontal: 16,
+                                paddingVertical: 10,
+                                backgroundColor: "#F5F5F5",
+                                borderRadius: 8,
+                                fontFamily: "Poppins_500Medium",
                               }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
+                            >
+                              {item.city_name}
+                            </Text>
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.verifyCheckBox(item);
+                              }}
+                              style={{
+                                position: "absolute",
+                                right: -5,
+                                top: -5,
+                              }}
+                            >
+                              <Image
+                                source={require("../../assets/image/ixs.png")}
+                                style={{
+                                  width: 12,
+                                  height: 12,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      })}
+                    </ScrollView>}
                 </View>
 
                 {/* gorod dropDown start */}
@@ -1440,85 +1546,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
             </ImageBackground>
           </Modal>
 
-          <Modal visible={this.state.editModalInn}>
-            <ImageBackground
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              source={require("../../assets/image/blurBg.png")}
-            >
-              <View
-                style={{
-                  width: "90%",
-                  height: 300,
-                  borderRadius: 20,
-                  backgroundColor: "#fff",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "relative",
-                }}
-              >
-                <TouchableOpacity
-                  style={{ position: "absolute", right: 18, top: 18 }}
-                  onPress={() => this.setState({ editModalInn: false })}
-                >
-                  <Image
-                    source={require("../../assets/image/ixs.png")}
-                    style={{ width: 22.5, height: 22.5 }}
-                  />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    marginTop: 30,
-                    width: "90%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      textAlign: "left",
-                    }}
-                  >
-                    ИНН
-                  </Text>
-                </View>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder={this.state.inn}
-                  keyboardType={"number-pad"}
-                  maxLength={12}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "90%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.individual_number}
-                  onChangeText={(text) =>
-                    this.setState({ individual_number: text })
-                  }
-                />
-                <TouchableOpacity
-                  style={{ marginTop: 50 }}
-                  onPress={async () => {
-                    await this.sendInn();
-                    this.setState({ editModalInn: false });
-                  }}
-                >
-                  <BlueButton name="Сохранить" />
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-          </Modal>
-
           <Modal visible={this.state.editUserDataModal}>
             <ImageBackground
               style={[
@@ -1783,6 +1810,266 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         </TouchableOpacity>
                       </View>
                     </View>
+
+                    <View
+                      style={{
+                        position: "relative",
+                      }}
+                    >
+                      <Text
+                        style={[
+                          {
+                            fontFamily: "Poppins_500Medium",
+                            lineHeight: 23,
+                            fontSize: 15,
+                            color: "#5B5B5B",
+                            marginTop: 27,
+                            marginBottom: 5,
+                          },
+                          { color: "#5B5B5B" },
+                        ]}
+                      >
+                        Сотрудничаете с дизайнерами?
+                      </Text>
+                      <TouchableOpacity
+                        style={[
+                          {
+                            borderWidth: 1,
+                            padding: 10,
+                            width: "100%",
+                            borderColor: "#000",
+                            borderRadius: 5,
+                            position: "relative",
+                          },
+                          { borderColor: "#F5F5F5" },
+                        ]}
+                        onPress={() =>
+                          this.setState({
+                            openDesignerPopup: !this.state.openDesignerPopup,
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            padding: 5,
+                            width: "100%",
+                            borderRadius: 5,
+                            fontFamily: "Poppins_500Medium",
+                          }}
+                        >
+                          {this.state.collaborate}
+                        </Text>
+                        <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                          {!this.state.openDesignerPopup && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <Path
+                                d="M1 1L9 9L17 1"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                          {this.state.openDesignerPopup && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <Path
+                                d="M1 9L9 1L17 9"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={
+                          this.state.openDesignerPopup
+                            ? styles.daNetActive
+                            : styles.daNet
+                        }
+                      >
+                        <ScrollView nestedScrollEnabled={true}>
+                          {this.state.arrItems.map((item, index) => {
+                            return (
+                              <TouchableOpacity
+                                key={index}
+                                style={{
+                                  width: "100%",
+                                  justifyContent: "center",
+                                  textAlign: "left",
+                                  borderBottomWidth: 1,
+                                  borderBottomColor: "#F5F5F5",
+                                }}
+                                onPress={() => {
+                                  this.setState({
+                                    collaborate: item.name,
+                                    openDesignerPopup: false,
+                                  })
+                                  this.update_job_with_designer(item.name)
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    textAlign: "left",
+                                    paddingVertical: 10,
+                                    fontFamily: "Poppins_500Medium",
+                                    color: "#888888",
+                                  }}
+                                >
+                                  {item.name}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </ScrollView>
+                      </View>
+                    </View>
+
+                    <View
+                      style={{
+                        position: "relative",
+                      }}
+                    >
+                      <Text
+                        style={[
+                          {
+                            fontFamily: "Poppins_500Medium",
+                            lineHeight: 23,
+                            fontSize: 15,
+                            color: "#5B5B5B",
+                            marginTop: 27,
+                            marginBottom: 5,
+                          },
+                          { color: "#5B5B5B" },
+                        ]}
+                      >
+                        Предоставляете 3d модели ?
+                      </Text>
+                      <TouchableOpacity
+                        style={[
+                          {
+                            borderWidth: 1,
+                            padding: 10,
+                            width: "100%",
+                            borderColor: "#000",
+                            borderRadius: 5,
+                            position: "relative",
+                          },
+                          { borderColor: "#F5F5F5" },
+                        ]}
+                        onPress={() =>
+                          this.setState({
+                            dmodelPopup: !this.state.dmodelPopup,
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            padding: 5,
+                            width: "100%",
+                            borderRadius: 5,
+                            fontFamily: "Poppins_500Medium",
+                          }}
+                        >
+                          {this.state.dmodel}
+                        </Text>
+                        <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                          {!this.state.dmodelPopup && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <Path
+                                d="M1 1L9 9L17 1"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                          {this.state.dmodelPopup && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <Path
+                                d="M1 9L9 1L17 9"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={
+                          this.state.dmodelPopup
+                            ? styles.daNetActive
+                            : styles.daNet
+                        }
+                      >
+                        <ScrollView nestedScrollEnabled={true}>
+                          {this.state.arrItems.map((item, index) => {
+                            return (
+                              <TouchableOpacity
+                                key={index}
+                                style={{
+                                  width: "100%",
+                                  justifyContent: "center",
+                                  textAlign: "left",
+                                  borderBottomWidth: 1,
+                                  borderBottomColor: "#F5F5F5",
+                                }}
+                                onPress={() => {
+                                  console.log('onpress');
+                                  this.setState({
+                                    dmodel: item.name,
+                                    dmodelPopup: false,
+                                  })
+                                  this.update_dmodel(item.name)
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    textAlign: "left",
+                                    paddingVertical: 10,
+                                    fontFamily: "Poppins_500Medium",
+                                    color: "#888888",
+                                  }}
+                                >
+                                  {item.name}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </ScrollView>
+                      </View>
+                    </View>
+
                   </ScrollView>
                 </KeyboardAwareScrollView>
               </View>
@@ -1955,7 +2242,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 }}
               />
             </View>
-            <View>
+            {/* <View>
               <View
                 style={{
                   flexDirection: "row",
@@ -2000,7 +2287,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   borderRadius: 5,
                 }}
               />
-            </View>
+            </View> */}
             <View>
               <View
                 style={{
@@ -2264,7 +2551,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
             {/* dropDown end */}
 
             {/* vajnagrajdenia tpelu start */}
-
+            {/*
             <View
               style={{
                 width: "100%",
@@ -2396,254 +2683,11 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   );
                 })}
               </View>
-            </View>
+            </View> */}
             {/* vajnagrajdenia tpelu end */}
 
             {/* vajnagrajdenia modal start */}
 
-            <Modal visible={this.state.RewardModal}>
-              <ImageBackground
-                source={require("../../assets/image/blurBg.png")}
-                style={[
-                  {
-                    width: "100%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  },
-                  this.state.keyboardOpen === true &&
-                    Platform.OS == "ios" && {
-                      justifyContent: "flex-start",
-                      paddingTop: 40,
-                    },
-                ]}
-              >
-                <View
-                  style={{
-                    width: "90%",
-                    backgroundColor: "#fff",
-                    borderRadius: 20,
-                    position: "relative",
-                    // maxHeight: 500,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      width: 22.5,
-                      height: 22.5,
-                      right: 21.75,
-                      top: 21.75,
-                    }}
-                    onPress={async () => {
-                      await this.getAuthUserProfile();
-                      await this.setState({ RewardModal: false });
-                    }}
-                  >
-                    <Image
-                      source={require("../../assets/image/ixs.png")}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      color: "#2D9EFB",
-                      fontSize: 26,
-                      marginTop: 70,
-                      textAlign: "center",
-                      fontFamily: "Poppins_500Medium",
-                    }}
-                  >
-                    Вознаграждение
-                  </Text>
-
-                  {this.state.valid_error === true && (
-                    <Text
-                      style={{
-                        color: "red",
-                        fontSize: 18,
-                        marginTop: 20,
-                        textAlign: "center",
-                        fontFamily: "Poppins_500Medium",
-                      }}
-                    >
-                      Ошибка: заполните все поля.
-                    </Text>
-                  )}
-
-                  <View style={styles.DesignerRemunerationPercentageParent}>
-                    <ScrollView
-                      style={{ height: 200 }}
-                      showsVerticalScrollIndicator={false}
-                    >
-                      {this.state.procentArray.map((item, index) => {
-                        return (
-                          <View
-                            style={styles.DesignerRemunerationPercentage}
-                            key={index}
-                          >
-                            <Text style={styles.procentText}>От</Text>
-
-                            <TextInput
-                              editable={index === 0 ? false : true}
-                              keyboardType={"number-pad"}
-                              style={styles.procentInput}
-                              underlineColorAndroid="transparent"
-                              placeholderTextColor={"#aaaaaa"}
-                              placeholder={""}
-                              maxLength={9}
-                              value={
-                                item.start_price !== "datark"
-                                  ? item.start_price
-                                  : ""
-                              }
-                              onChangeText={async (value) => {
-                                await this.changeTo(value, index);
-                              }}
-                            />
-
-                            <View style={styles.rubli}>
-                              <Svg
-                                width="11"
-                                height="15"
-                                viewBox="0 0 11 15"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <Path
-                                  d="M6.285 8.99997C7.37392 9.02686 8.42909 8.62091 9.21919 7.8711C10.0093 7.1213 10.4699 6.08881 10.5 4.99997C10.4699 3.91113 10.0093 2.87865 9.21919 2.12884C8.42909 1.37904 7.37392 0.973087 6.285 0.999974H2C1.86739 0.999974 1.74021 1.05265 1.64645 1.14642C1.55268 1.24019 1.5 1.36737 1.5 1.49997V7.99997H0.5C0.367392 7.99997 0.240215 8.05265 0.146447 8.14642C0.0526785 8.24019 0 8.36736 0 8.49997C0 8.63258 0.0526785 8.75976 0.146447 8.85353C0.240215 8.9473 0.367392 8.99997 0.5 8.99997H1.5V9.99997H0.5C0.367392 9.99997 0.240215 10.0527 0.146447 10.1464C0.0526785 10.2402 0 10.3674 0 10.5C0 10.6326 0.0526785 10.7598 0.146447 10.8535C0.240215 10.9473 0.367392 11 0.5 11H1.5V14.5C1.5 14.6326 1.55268 14.7598 1.64645 14.8535C1.74021 14.9473 1.86739 15 2 15C2.13261 15 2.25979 14.9473 2.35355 14.8535C2.44732 14.7598 2.5 14.6326 2.5 14.5V11H7C7.13261 11 7.25979 10.9473 7.35355 10.8535C7.44732 10.7598 7.5 10.6326 7.5 10.5C7.5 10.3674 7.44732 10.2402 7.35355 10.1464C7.25979 10.0527 7.13261 9.99997 7 9.99997H2.5V8.99997H6.285ZM2.5 1.99997H6.285C7.10839 1.9743 7.90853 2.27531 8.51083 2.83733C9.11313 3.39935 9.46872 4.17677 9.5 4.99997C9.47001 5.82362 9.11483 6.60182 8.51223 7.16412C7.90964 7.72642 7.10875 8.02698 6.285 7.99997H2.5V1.99997Z"
-                                  fill="#888888"
-                                />
-                              </Svg>
-                            </View>
-
-                            <Text style={styles.procentText}>До</Text>
-
-                            <TextInput
-                              editable={
-                                this.state.procentArray.length <= 1
-                                  ? false
-                                  : true
-                              }
-                              maxLength={9}
-                              keyboardType={"number-pad"}
-                              style={styles.procentInput}
-                              underlineColorAndroid="transparent"
-                              placeholder={
-                                this.state.procentArray.length <= 1
-                                  ? "9.999.999"
-                                  : ""
-                              }
-                              placeholderTextColor={"#aaaaaa"}
-                              value={
-                                this.state.procentArray.length <= 1
-                                  ? "9.999.999"
-                                  : item.before_price &&
-                                    item.before_price !== "datark"
-                                  ? item.before_price
-                                  : ""
-                              }
-                              onChangeText={async (value) => {
-                                await this.changeFrom(value, index);
-                              }}
-                            />
-
-                            <View style={styles.rubli}>
-                              <Svg
-                                width="11"
-                                height="15"
-                                viewBox="0 0 11 15"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <Path
-                                  d="M6.285 8.99997C7.37392 9.02686 8.42909 8.62091 9.21919 7.8711C10.0093 7.1213 10.4699 6.08881 10.5 4.99997C10.4699 3.91113 10.0093 2.87865 9.21919 2.12884C8.42909 1.37904 7.37392 0.973087 6.285 0.999974H2C1.86739 0.999974 1.74021 1.05265 1.64645 1.14642C1.55268 1.24019 1.5 1.36737 1.5 1.49997V7.99997H0.5C0.367392 7.99997 0.240215 8.05265 0.146447 8.14642C0.0526785 8.24019 0 8.36736 0 8.49997C0 8.63258 0.0526785 8.75976 0.146447 8.85353C0.240215 8.9473 0.367392 8.99997 0.5 8.99997H1.5V9.99997H0.5C0.367392 9.99997 0.240215 10.0527 0.146447 10.1464C0.0526785 10.2402 0 10.3674 0 10.5C0 10.6326 0.0526785 10.7598 0.146447 10.8535C0.240215 10.9473 0.367392 11 0.5 11H1.5V14.5C1.5 14.6326 1.55268 14.7598 1.64645 14.8535C1.74021 14.9473 1.86739 15 2 15C2.13261 15 2.25979 14.9473 2.35355 14.8535C2.44732 14.7598 2.5 14.6326 2.5 14.5V11H7C7.13261 11 7.25979 10.9473 7.35355 10.8535C7.44732 10.7598 7.5 10.6326 7.5 10.5C7.5 10.3674 7.44732 10.2402 7.35355 10.1464C7.25979 10.0527 7.13261 9.99997 7 9.99997H2.5V8.99997H6.285ZM2.5 1.99997H6.285C7.10839 1.9743 7.90853 2.27531 8.51083 2.83733C9.11313 3.39935 9.46872 4.17677 9.5 4.99997C9.47001 5.82362 9.11483 6.60182 8.51223 7.16412C7.90964 7.72642 7.10875 8.02698 6.285 7.99997H2.5V1.99997Z"
-                                  fill="#888888"
-                                />
-                              </Svg>
-                            </View>
-
-                            <View
-                              style={[
-                                styles.procent,
-                                this.state.valid_error
-                                  ? { borderColor: "red" }
-                                  : { borderColor: "#F5F5F5" },
-                              ]}
-                            >
-                              <TextInput 
-                                keyboardType="number-pad"
-                                maxLength={2}
-                                value={item.percent}
-                                style={{
-                                  color: "#888888",
-                                  fontSize: 13,
-                                  width: "70%",
-                                }}
-                                onChangeText={async (value) => {
-                                  this.changePercent(value, index);
-                                }}
-                              />
-                              <Text>%</Text>
-                            </View>
-                          </View>
-                        );
-                      })}
-                    </ScrollView>
-
-                    <View
-                      View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                        marginTop: 15
-                      }}
-                    >
-                      {/* jnjel */}
-
-                      {this.state.procentArray.length > 1 && (
-                        <TouchableOpacity
-                          style={[styles.presoble, { marginRight: 11 }]}
-                          onPress={async () => {
-                            this.removeInputRow();
-                          }}
-                        >
-                          <Text style={styles.procentText}>Удалить</Text>
-                        </TouchableOpacity>
-                      )}
-
-                      {/* avelacnel */}
-
-                      <TouchableOpacity
-                        style={styles.presoble}
-                        onPress={async () => {
-                          this.addInputRow();
-                        }}
-                      >
-                        <Text style={styles.procentText}>Добавить</Text>
-                      </TouchableOpacity>
-
-                      {/* kojak  */}
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={{
-                      alignSelf: "center",
-                      marginTop: 20,
-                      marginBottom: 56,
-                    }}
-                    onPress={() => {
-                      this.savePercont();
-                    }}
-                  >
-                    <BlueButton name="Сохранить" />
-                  </TouchableOpacity>
-                </View>
-              </ImageBackground>
-            </Modal>
             {/* vajnagrajdenia modal end */}
 
             <TouchableOpacity
@@ -2907,5 +2951,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
+  },
+  daNet: {
+    width: "100%",
+    height: 0,
+    zIndex: 100,
+  },
+  daNetActive: {
+    width: "100%",
+    height: 100,
+    elevation: 2,
+    borderColor: "#F5F5F5",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    zIndex: 100,
+    backgroundColor: "#fff",
   },
 });

@@ -259,11 +259,6 @@ export default class AddProductComponent extends React.Component {
             "you already have 3 products under this category"
           ) {
             await this.setState({ limitError: true });
-            let set = setTimeout(() => {
-              this.setState({ limitError: false });
-              this.clearAllData();
-              clearTimeout(set);
-            }, 3000);
           }
         }
         this.formdata = new FormData();

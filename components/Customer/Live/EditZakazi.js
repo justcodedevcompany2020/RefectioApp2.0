@@ -26,6 +26,8 @@ import {
   APP_PUBLIC_URL,
   APP_GET_PUBLIC_URL,
 } from "@env";
+import { Modal } from "react-native";
+import { ImageBackground } from "react-native";
 
 export default class EditZakaziComponent extends React.Component {
   constructor(props) {
@@ -47,6 +49,8 @@ export default class EditZakaziComponent extends React.Component {
 
       photo_bool: true,
       isLoading: false,
+
+      deleteTavarModal: false,
     };
   }
 
@@ -85,10 +89,10 @@ export default class EditZakaziComponent extends React.Component {
         "photo",
         !this.state.photo_bool
           ? {
-              uri: this.state.photo,
-              type: "imarge/jpg",
-              name: "photo.jpg",
-            }
+            uri: this.state.photo,
+            type: "imarge/jpg",
+            name: "photo.jpg",
+          }
           : this.state.photo
       );
     }
@@ -225,79 +229,149 @@ export default class EditZakaziComponent extends React.Component {
     });
   };
 
+  async onDeleteTavar() {
+    const id = this.props.order_id
+    console.log(id);
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
+    await this.setState({ isLoading: true, deleteTavarModal: false })
+    await fetch(`${APP_URL}delete_next_order/${id}`, {
+      method: "GET",
+      headers: myHeaders,
+    })
+      .then((response) => response.json())
+      .then(async (res) => {
+        console.log(res)
+        this.props.navigation.goBack()
+      })
+      .catch((error) => error, "error");
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Text style={styles.pageTitle}>Заказы Live</Text>
 
-          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.imageEmptyParent}>
-              <Text
-                style={[
-                  styles.photoText,
-                  this.state.photo_error
-                    ? { color: "red" }
-                    : { color: "#333333" },
-                ]}
-              >
-                Фото
-              </Text>
-              {this.state.photo === null ? (
-                <TouchableOpacity onPress={() => this.pickImage()}>
-                  <Svg
-                    width={85}
-                    height={85}
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <Rect
-                      x={0.5}
-                      y={0.5}
-                      width={84}
-                      height={84}
-                      rx={17.5}
-                      stroke={this.state.photo_error ? "red" : "#767676"}
-                    />
-                    <Path
-                      stroke={this.state.photo_error ? "red" : "#000"}
-                      d="M42.5 22v40M62 42.5H22"
-                    />
-                  </Svg>
+          <Modal visible={this.state.deleteTavarModal}>
+            <ImageBackground
+              source={require("../../../assets/image/blurBg.png")}
+              style={styles.blurBg}
+            >
+              <View style={styles.whiteBox}>
+                <Text style={styles.info}>
+                  Желаете удалить данный товар?
+                </Text>
+                <TouchableOpacity
+                  style={styles.buttonOk}
+                  onPress={() => {
+                    this.onDeleteTavar()
+                  }}
+                >
+                  <Text style={styles.textOk}>Да</Text>
                 </TouchableOpacity>
-              ) : (
-                <View style={styles.userIconParent}>
-                  <Image
-                    source={{
-                      uri: !this.state.photo_bool
-                        ? this.state.photo
-                        : APP_GET_PUBLIC_URL + this.state.photo,
-                    }}
-                    style={styles.userIcon}
-                    resizeMode={"contain"}
-                  />
 
-                  <TouchableOpacity
-                    style={styles.delateImg}
-                    onPress={() =>
-                      this.setState({ photo: null, photo_bool: false })
-                    }
-                  >
+                <TouchableOpacity
+                  style={styles.dontShow}
+                  onPress={() => {
+                    this.setState({
+                      deleteTavarModal: false
+                    })
+                  }}
+                >
+                  <Text style={styles.dontShowText}>Отмена</Text>
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+
+          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+
+              <View style={styles.imageEmptyParent}>
+                <Text
+                  style={[
+                    styles.photoText,
+                    this.state.photo_error
+                      ? { color: "red" }
+                      : { color: "#333333" },
+                  ]}
+                >
+                  Фото
+                </Text>
+                {this.state.photo === null ? (
+                  <TouchableOpacity onPress={() => this.pickImage()}>
                     <Svg
-                      width={32}
-                      height={32}
+                      width={85}
+                      height={85}
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <Rect width={32} height={32} rx={16} fill="#1571F0" />
+                      <Rect
+                        x={0.5}
+                        y={0.5}
+                        width={84}
+                        height={84}
+                        rx={17.5}
+                        stroke={this.state.photo_error ? "red" : "#767676"}
+                      />
                       <Path
-                        d="M9.413 10.21a.563.563 0 0 1 .796-.796l5.79 5.79 5.789-5.79a.563.563 0 0 1 .796.797L16.794 16l5.79 5.79a.563.563 0 1 1-.796.796l-5.79-5.79-5.788 5.79a.563.563 0 1 1-.797-.797L15.203 16l-5.79-5.79Z"
-                        fill="#fff"
+                        stroke={this.state.photo_error ? "red" : "#000"}
+                        d="M42.5 22v40M62 42.5H22"
                       />
                     </Svg>
                   </TouchableOpacity>
-                </View>
-              )}
+                ) : (
+                  <View style={styles.userIconParent}>
+                    <Image
+                      source={{
+                        uri: !this.state.photo_bool
+                          ? this.state.photo
+                          : APP_GET_PUBLIC_URL + this.state.photo,
+                      }}
+                      style={styles.userIcon}
+                      resizeMode={"contain"}
+                    />
+
+                    <TouchableOpacity
+                      style={styles.delateImg}
+                      onPress={() =>
+                        this.setState({ photo: null, photo_bool: false })
+                      }
+                    >
+                      <Svg
+                        width={32}
+                        height={32}
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <Rect width={32} height={32} rx={16} fill="#378DFE" />
+                        <Path
+                          d="M9.413 10.21a.563.563 0 0 1 .796-.796l5.79 5.79 5.789-5.79a.563.563 0 0 1 .796.797L16.794 16l5.79 5.79a.563.563 0 1 1-.796.796l-5.79-5.79-5.788 5.79a.563.563 0 1 1-.797-.797L15.203 16l-5.79-5.79Z"
+                          fill="#fff"
+                        />
+                      </Svg>
+                    </TouchableOpacity>
+
+                  </View>
+                )}
+              </View>
+              <TouchableOpacity
+                onPress={() => this.setState({
+                  deleteTavarModal: true
+                })}
+              >
+                <Image
+                  source={require("../../../assets/image/karzina.png")}
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                  resizeMode={"contain"}
+                />
+              </TouchableOpacity>
             </View>
 
             <View>
@@ -521,5 +595,56 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -10,
     top: -10,
+  },
+  blurBg: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  whiteBox: {
+    width: "90%",
+    backgroundColor: "#fff",
+    paddingTop: 30,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+  },
+  info: {
+    fontFamily: "Poppins_400Regular",
+    fontSize: 18,
+    textAlign: "center",
+    padding: 5,
+    marginBottom: 20,
+  },
+  buttonOk: {
+    width: "80%",
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#B5D8FE",
+    borderRadius: 20,
+    alignSelf: "center",
+    marginBottom: 12,
+  },
+  textOk: {
+    fontFamily: "Poppins_700Bold",
+    color: "#fff",
+    fontSize: 18,
+  },
+  dontShow: {
+    width: "80%",
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#B5D8FE",
+    borderRadius: 20,
+    alignSelf: "center",
+    marginBottom: 43,
+  },
+  dontShowText: {
+    color: "#B5D8FE",
+    fontFamily: "Poppins_700Bold",
+    fontSize: 18,
   },
 });

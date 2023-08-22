@@ -39,14 +39,15 @@ export default class RegisteredScreenComponent extends Component {
           ></View>
 
           <Image
-            source={require("../../assets/image/Refectio.png")}
+            source={require("../../assets/background.png")}
             style={{
-              width: "95%",
+              width: "93%",
               height: 135,
               resizeMode: "contain",
               position: "absolute",
-              right: 0,
-              top: 23,
+              // right: 10,
+              alignSelf: 'center',
+              top: 30,
               zIndex: -1,
             }}
           />
@@ -72,11 +73,12 @@ export default class RegisteredScreenComponent extends Component {
               fontSize: 32,
               color: "#2D9EFB",
               marginTop: 40,
+              marginBottom: 15
             }}
           >
             Регистрация
           </Text>
-          <View>
+          {/* <View>
             <Text
               style={{
                 color: "#888888",
@@ -90,7 +92,7 @@ export default class RegisteredScreenComponent extends Component {
             >
               Вы к нам в какой роли?
             </Text>
-          </View>
+          </View> */}
 
           <View
             style={{
@@ -107,7 +109,7 @@ export default class RegisteredScreenComponent extends Component {
                 this.goToRegisteredUser();
               }}
             >
-              <BlueButton name="Я-Дизайнер" />
+              <BlueButton name="Пользователь " />
             </TouchableOpacity>
           </View>
           <View
@@ -125,7 +127,7 @@ export default class RegisteredScreenComponent extends Component {
                 this.goToRegisteredManufacturer();
               }}
             >
-              <BlueButton name="Я-Производитель" />
+              <BlueButton name="Производитель" />
             </TouchableOpacity>
           </View>
         </View>

@@ -35,10 +35,16 @@ export default class GhostNavComponent extends React.Component {
           id: 3,
         },
         {
+          images: require("../../assets/image/icon.png"),
+          text: "Поиск",
+          change: "SearchScreen",
+          id: 4,
+        },
+        {
           images: require("../../assets/image/carbon_user-avatar.png"),
           text: "Профиль",
           change: "AuthScreen",
-          id: 4,
+          id: 5,
         },
       ],
     };

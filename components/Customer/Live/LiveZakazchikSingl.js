@@ -181,25 +181,6 @@ export default class LiveZakazchikSinglComponent extends React.Component {
     this.clearAllData();
   }
 
-  async onDeleteTavar(id) {
-    let myHeaders = new Headers();
-    let userToken = await AsyncStorage.getItem("userToken");
-    let AuthStr = "Bearer " + userToken;
-    myHeaders.append("Authorization", AuthStr);
-    console.log(id, 'iddd');
-    await fetch(`${APP_URL}delete_next_order/${id}`, {
-      method: "GET",
-      headers: myHeaders,
-    })
-      .then((response) => response.json())
-      .then(async (res) => {
-        console.log(res)
-        await this.setState({ isLoading: true, page: 1, data: [] })
-        this.fetchData()
-      })
-      .catch((error) => error, "error");
-  }
-
   renderItem = ({ item, index }) => {
     let photo = item.order_photo[0];
     photo = photo.photo;
@@ -225,16 +206,6 @@ export default class LiveZakazchikSinglComponent extends React.Component {
           <View style={styles.mebelType}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={styles.mebelName}>{item.name}</Text>
-              <TouchableOpacity onPress={() => this.onDeleteTavar(item.id)}>
-                <Image
-                  source={require("../../../assets/image/karzina.png")}
-                  style={{
-                    width: 30,
-                    height: 30,
-                  }}
-                  resizeMode={"contain"}
-                />
-              </TouchableOpacity>
             </View>
             <View style={styles.readyShiping}>
               <Text style={styles.readyText}>

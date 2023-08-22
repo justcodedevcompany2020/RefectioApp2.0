@@ -444,45 +444,6 @@ export default class MyAccauntComponent extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 20 }}>
-              <Text style={{ fontFamily: "Poppins_500Medium" }}>
-                Фото диплома/сертификата
-              </Text>
-              <Image
-                source={{ uri: this.state.urlImage + this.state.diplom_photo }}
-                style={{
-                  width: 70,
-                  height: 70,
-                  marginTop: 9,
-                }}
-              />
-
-              <TouchableOpacity
-                style={{
-                  width: 165,
-                  height: 38,
-                  backgroundColor: "#B5D8FE",
-                  borderRadius: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: 16,
-                }}
-                onPress={() => {
-                  this.pickImage();
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontFamily: "Poppins_500Medium",
-                    color: "#FFF",
-                  }}
-                >
-                  Загрузить
-                </Text>
-              </TouchableOpacity>
-            </View>
-
             <TouchableOpacity
               onPress={async () => {
                 await this.logouth();

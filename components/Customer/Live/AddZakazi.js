@@ -243,7 +243,7 @@ export default class AddZakaziComponent extends React.Component {
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <Rect width={32} height={32} rx={16} fill="#1571F0" />
+                      <Rect width={32} height={32} rx={16} fill="#378DFE" />
                       <Path
                         d="M9.413 10.21a.563.563 0 0 1 .796-.796l5.79 5.79 5.789-5.79a.563.563 0 0 1 .796.797L16.794 16l5.79 5.79a.563.563 0 1 1-.796.796l-5.79-5.79-5.788 5.79a.563.563 0 1 1-.797-.797L15.203 16l-5.79-5.79Z"
                         fill="#fff"

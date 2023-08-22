@@ -50,6 +50,9 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
       redirect: "follow",
     };
 
+    if (isLastPage) {
+      return;
+    }
     this.setState({ isLoading: true });
     fetch(`${APP_URL}GetAllOrderFromDesigner?page=${page}`, requestOptions)
       .then((response) => response.json())
@@ -57,7 +60,7 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
         if (responseJson.status === true) {
           if (responseJson.data.data.length > 0) {
             this.setState({
-              data: responseJson?.data?.data,
+              data:  [...data, ...responseJson?.data?.data],
               page: page + 1,
               isLoading: false,
             });
@@ -116,13 +119,14 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
 
   componentDidMount() {
     const { navigation } = this.props;
-    this.fetchData();
+    // this.fetchData();
     this.focusListener = navigation.addListener("focus", () => {
       this.fetchData();
     });
   }
 
   componentWillUnmount() {
+    this.clearAllData()
     if (this.focusListener) {
       this.focusListener();
       console.log(" END");

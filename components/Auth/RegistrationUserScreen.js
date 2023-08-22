@@ -129,8 +129,6 @@ export default class RegistrationUserScreenComponent extends Component {
       phone,
       password,
       password_confirmation,
-      diplom_photo,
-      selfi_photo,
       i_agree,
       role_id,
     } = this.state;
@@ -322,11 +320,11 @@ export default class RegistrationUserScreenComponent extends Component {
           <View
             style={{
               width: "100%",
-              height: 150,
+              height: 180,
             }}
           >
             <Image
-              source={require("../../assets/image/RefectioWallpaper.png")}
+              source={require("../../assets/background.png")}
               style={{
                 width: "95%",
                 height: 135,
@@ -363,7 +361,7 @@ export default class RegistrationUserScreenComponent extends Component {
                   fontSize: 36,
                   lineHeight: 54,
                   left: 19,
-                  top: 58,
+                  top: 130,
                   fontFamily: "Poppins_500Medium",
                 }}
               >
@@ -612,20 +610,20 @@ export default class RegistrationUserScreenComponent extends Component {
                 }}
               />
             </View>
-            <View>
+            {/* <View>
               <Text
                 style={[
                   {
-                    color: "#888888",
                     fontSize: 15,
                     lineHeight: 18,
                     marginLeft: 25,
                     marginTop: 27,
-                    fontFamily: "Raleway_500Medium",
+                    fontFamily: "Poppins_500Medium",
                   },
                   this.state.diplom_photo_error
                     ? { color: "red" }
-                    : { color: "#888888" },
+                    : { color: "#5B5B5B" },
+              
                 ]}
               >
                 Загрузите фото диплома/сертификата*
@@ -675,7 +673,7 @@ export default class RegistrationUserScreenComponent extends Component {
                     lineHeight: 18,
                     marginLeft: 25,
                     marginTop: 15,
-                    fontFamily: "Raleway_500Medium",
+                    fontFamily: "Poppins_500Medium",
                   },
                   this.state.selfi_photo_error
                     ? { color: "red" }
@@ -691,10 +689,10 @@ export default class RegistrationUserScreenComponent extends Component {
                   lineHeight: 13,
                   marginLeft: 25,
                   marginBottom: 10,
-                  fontFamily: "Raleway_400Regular",
+                  fontFamily: "Poppins_500Medium",
                 }}
               >
-                (Можно, чтобы не видно было номер паспорта)
+                (Можно, чтобы видно было только фамилию)
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -726,7 +724,7 @@ export default class RegistrationUserScreenComponent extends Component {
                     style={{ width: 32, height: 32 }}
                   />
                 )}
-            </View>
+            </View> */}
             <View style={styles.checkBox}>
               <TouchableOpacity
                 style={{ marginRight: 10 }}

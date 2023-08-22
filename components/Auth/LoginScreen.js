@@ -205,8 +205,8 @@ export default class LoginScreenComponent extends Component {
           if (
             res.message == "verification error"
           ) {
-            this.props.navigation.navigate('ConfirmTelScreen', {params: res.token})
-          } 
+            this.props.navigation.navigate('ConfirmTelScreen', { params: res.token })
+          }
         } else {
           if (res.message.user.active == "2") {
             let foundUser = {
@@ -219,20 +219,20 @@ export default class LoginScreenComponent extends Component {
           }
         }
       });
-};
+  };
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <ScrollView>
-        <View
-          style={{
-            flex: 1,
+          <View
+            style={{
+              flex: 1,
 
-            position: "relative",
-            alignItems: "center",
-          }}
-        >
-          {/* {Platform.OS === "ios" && (
+              position: "relative",
+              alignItems: "center",
+            }}
+          >
+            {/* {Platform.OS === "ios" && (
             <Modal visible={this.state.designer_or_manufacturer}>
               <View
                 style={{
@@ -346,113 +346,113 @@ export default class LoginScreenComponent extends Component {
               </View>
             </Modal>
           )} */}
-          <Modal visible={this.state.moderacia}>
-            <ImageBackground
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              source={require("../../assets/image/blurBg.png")}
-            >
-              <View
+            <Modal visible={this.state.moderacia}>
+              <ImageBackground
                 style={{
-                  width: "90%",
-                  height: "50%",
-                  backgroundColor: "#fff",
-                  borderRadius: 20,
-                  position: "relative",
-                  paddingHorizontal: 15,
+                  flex: 1,
+                  justifyContent: "center",
                   alignItems: "center",
                 }}
+                source={require("../../assets/image/blurBg.png")}
               >
-                <TouchableOpacity
+                <View
                   style={{
-                    position: "absolute",
-                    right: 18,
-                    top: 18,
+                    width: "90%",
+                    height: "50%",
+                    backgroundColor: "#fff",
+                    borderRadius: 20,
+                    position: "relative",
+                    paddingHorizontal: 15,
+                    alignItems: "center",
                   }}
-                  onPress={() => this.setState({ moderacia: false })}
                 >
-                  <Image
-                    source={require("../../assets/image/ixs.png")}
+                  <TouchableOpacity
                     style={{
-                      width: 22.5,
-                      height: 22.5,
+                      position: "absolute",
+                      right: 18,
+                      top: 18,
                     }}
-                  />
-                </TouchableOpacity>
+                    onPress={() => this.setState({ moderacia: false })}
+                  >
+                    <Image
+                      source={require("../../assets/image/ixs.png")}
+                      style={{
+                        width: 22.5,
+                        height: 22.5,
+                      }}
+                    />
+                  </TouchableOpacity>
 
-                <Text
-                  style={{
-                    marginTop: 70,
-                    fontSize: 26,
-                    textAlign: "center",
-                    color: "#2D9EFB",
-                    fontFamily: "Poppins_500Medium",
-                  }}
-                >
-                  Ваш аккаунт{"\n"}на модерации
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_400Regular",
-                    fontSize: 14,
-                    textAlign: "center",
-                    marginTop: 20,
-                    color: "#888888",
-                  }}
-                >
-                  Просим вас ожидать окончания{"\n"}проверки
-                </Text>
-                <TouchableOpacity
-                  style={{
-                    marginTop: 80,
-                  }}
-                  onPress={() => this.setState({ moderacia: false })}
-                >
-                  <BlueButton name="Закрыть" />
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-          </Modal>
+                  <Text
+                    style={{
+                      marginTop: 70,
+                      fontSize: 26,
+                      textAlign: "center",
+                      color: "#2D9EFB",
+                      fontFamily: "Poppins_500Medium",
+                    }}
+                  >
+                    Ваш аккаунт{"\n"}на модерации
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_400Regular",
+                      fontSize: 14,
+                      textAlign: "center",
+                      marginTop: 20,
+                      color: "#888888",
+                    }}
+                  >
+                    Просим вас ожидать окончания{"\n"}проверки
+                  </Text>
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 80,
+                    }}
+                    onPress={() => this.setState({ moderacia: false })}
+                  >
+                    <BlueButton name="Закрыть" />
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            </Modal>
 
-          <TouchableOpacity
-            // onPress={() => this.setState({ designer_or_manufacturer: true })}
-            onPress={() => this.props.navigation.navigate("AuthScreen")}
-            style={{
-              position: "absolute",
-              left: 10,
-              top: 23,
-              zIndex: 100,
+            <TouchableOpacity
+              // onPress={() => this.setState({ designer_or_manufacturer: true })}
+              onPress={() => this.props.navigation.navigate("AuthScreen")}
+              style={{
+                position: "absolute",
+                left: 10,
+                top: 23,
+                zIndex: 100,
 
 
-            }}
-          >
-            <ArrowGrayComponent />
-          </TouchableOpacity>
-          <View
-            style={{
-              width: "100%",
-              height: 130,
-            }}
-          ></View>
+              }}
+            >
+              <ArrowGrayComponent />
+            </TouchableOpacity>
+            <View
+              style={{
+                width: "100%",
+                height: 130,
+              }}
+            ></View>
 
-          <Image
-            source={require("../../assets/image/RefectioWallpaper.png")}
-            style={{
-              top: 23,
-              height: 135,
-              width: "95%",
-              position: "absolute",
-              right: 0,
-              zIndex: -1,
-              resizeMode: "contain",
-            }}
-          />
-
-          <Text style={styles.vxod}>Вход</Text>
-{/* 
+            <Image
+              source={require("../../assets/background.png")}
+              style={{
+                width: "93%",
+                height: 135,
+                resizeMode: "contain",
+                position: "absolute",
+                // right: 10,
+                alignSelf: 'center',
+                top: 30,
+                zIndex: -1,
+              }}
+            />
+            <Text style={styles.vxod}>Вход</Text>
+            {/* 
           {Platform.OS === "ios" && this.state.i_am_designer === true ? (
             <View style={{ width: "85%" }}>
               <Text
@@ -512,8 +512,8 @@ export default class LoginScreenComponent extends Component {
                   styles.fiealdset,
                   { marginTop: 27 },
                   this.state.login_error ||
-                  this.state.no_user ||
-                  this.state.no_verify
+                    this.state.no_user ||
+                    this.state.no_verify
                     ? { color: "red" }
                     : { color: "#5B5B5B" },
                 ]}
@@ -521,8 +521,8 @@ export default class LoginScreenComponent extends Component {
                 {this.state.no_user
                   ? "По такому номеру телефона пользователь не зарегистрирован"
                   : this.state.no_verify
-                  ? "На данный момент не заходит и не ясна причина"
-                  : "Номер телефона"}
+                    ? "На данный момент не заходит и не ясна причина"
+                    : "Номер телефона"}
               </Text>
               <MaskInput
                 underlineColorAndroid="transparent"
@@ -565,57 +565,57 @@ export default class LoginScreenComponent extends Component {
                 ]}
               />
             </View>
-          {/* )} */}
-          {this.state.i_am_designer !== true && (
-            <View style={{ position: "relative", width: "85%" }}>
-              <Text
-                style={[
-                  styles.fiealdset,
-                  { marginTop: 15 },
-                  this.state.pass_error
-                    ? { color: "red" }
-                    : { color: "#5B5B5B" },
-                ]}
-              >
-                {this.state.pass_error ? this.state.pass_error : 'Пароль'}
-              </Text>
-              <TextInput
-                underlineColorAndroid="transparent"
-                secureTextEntry={this.state.password}
-                style={[
-                  styles.input,
-                  this.state.pass_error
-                    ? { borderColor: "red" }
-                    : { borderColor: "#F5F5F5" },
-                ]}
-                value={this.state.pass}
-                onChangeText={(text) =>
-                  this.setState({ pass: text, pass_error: false })
-                }
-              />
-              <TouchableOpacity
-                style={{ position: "absolute", right: 10, bottom: 10 }}
-                onPress={() =>
-                  this.setState({ password: !this.state.password })
-                }
-              >
-                {this.state.password && (
-                  <Image
-                    source={this.state.achq}
-                    style={{ width: 24, height: 24 }}
-                  />
-                )}
-                {!this.state.password && (
-                  <Image
-                    source={this.state.achqBac}
-                    style={{ width: 24, height: 24 }}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-          )}
+            {/* )} */}
+            {this.state.i_am_designer !== true && (
+              <View style={{ position: "relative", width: "85%" }}>
+                <Text
+                  style={[
+                    styles.fiealdset,
+                    { marginTop: 15 },
+                    this.state.pass_error
+                      ? { color: "red" }
+                      : { color: "#5B5B5B" },
+                  ]}
+                >
+                  {this.state.pass_error ? this.state.pass_error : 'Пароль'}
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  secureTextEntry={this.state.password}
+                  style={[
+                    styles.input,
+                    this.state.pass_error
+                      ? { borderColor: "red" }
+                      : { borderColor: "#F5F5F5" },
+                  ]}
+                  value={this.state.pass}
+                  onChangeText={(text) =>
+                    this.setState({ pass: text, pass_error: false })
+                  }
+                />
+                <TouchableOpacity
+                  style={{ position: "absolute", right: 10, bottom: 10 }}
+                  onPress={() =>
+                    this.setState({ password: !this.state.password })
+                  }
+                >
+                  {this.state.password && (
+                    <Image
+                      source={this.state.achq}
+                      style={{ width: 24, height: 24 }}
+                    />
+                  )}
+                  {!this.state.password && (
+                    <Image
+                      source={this.state.achqBac}
+                      style={{ width: 24, height: 24 }}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
 
-          {/* {this.state.i_am_designer === true ? (
+            {/* {this.state.i_am_designer === true ? (
             <TouchableOpacity
               style={{
                 justifyContent: "center",
@@ -664,8 +664,8 @@ export default class LoginScreenComponent extends Component {
             >
               <BlueButton name="Войти" />
             </TouchableOpacity>
-          {/* )} */}
-          {/* {!this.state.i_am_designer && ( */}
+            {/* )} */}
+            {/* {!this.state.i_am_designer && ( */}
             <View
               style={{
                 justifyContent: "center",
@@ -691,8 +691,8 @@ export default class LoginScreenComponent extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
-          {/* )} */}
-        </View>
+            {/* )} */}
+          </View>
         </ScrollView>
       </SafeAreaView>
     );

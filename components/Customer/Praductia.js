@@ -319,7 +319,7 @@ export default class PraductiaComponent extends React.Component {
 
     let formdata = new FormData();
     formdata.append("photo_id", imageItem.id);
-    console.log(userToken);
+    console.log(imageItem.id);
 
     let requestOptions = {
       method: "POST",
@@ -328,9 +328,9 @@ export default class PraductiaComponent extends React.Component {
       redirect: "follow",
     };
 
-    const value = JSON.parse(await AsyncStorage.getItem('starModal'))
-    if (!value) {
+    if (this.state.user[0].added_star_or_no_added == 'no_added') {
       this.setState({
+        user: [{ ...this.state.user[0], added_star_or_no_added: 'added' }],
         firstStarModal: true
       })
     }
@@ -809,13 +809,13 @@ export default class PraductiaComponent extends React.Component {
                       )}
                       {item.length && (
                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                          Длина: {item.length} метров*
+                          Длина: {item.length} м.
                         </Text>
                       )}
 
                       {item.height && (
                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                          Высота: {item.height} метров*
+                          Высота: {item.height} м.
                         </Text>
                       )}
                       {item.material && (

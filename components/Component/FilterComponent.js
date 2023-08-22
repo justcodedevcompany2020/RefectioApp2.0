@@ -204,11 +204,18 @@ export default class FilterComponent extends React.Component {
             made_in_name: item.made_in,
             checked: false,
           });
-        });
+        });  
+        const cities  = result.city_of_sales
+        let sanktIndex = cities.findIndex((el) => el.city_name == 'Санкт-Петербург')
+        let removed1 = cities.splice(sanktIndex, 1)
+        cities.unshift(removed1[0])
+        let moskvaIndex = cities.findIndex((el) => el.city_name == 'Москва')
+        let removed2 = cities.splice(moskvaIndex, 1)
+        cities.unshift(removed2[0])
 
         this.setState({
           made_in_array: made_in_array,
-          city_name_array: result.city_of_sales,
+          city_name_array: cities,
         });
       })
       .catch((error) => console.log("error", error));
@@ -280,7 +287,7 @@ export default class FilterComponent extends React.Component {
   render() {
     const { resetFilterData, closePopup } = this.props;
     return (
-      <Modal visible={this.state.filter} transparent={true}>
+      <Modal visible={this.state.filter} transparent={true} onRequestClose={() => closePopup(false)}>
         <View style={styles.modalWindow}>
           <View
             style={[

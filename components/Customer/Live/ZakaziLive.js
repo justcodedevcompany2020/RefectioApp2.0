@@ -124,7 +124,7 @@ export default class ZakaziLiveComponent extends React.Component {
               {item.name} {item.surname}
             </Text>
 
-            <Text style={styles.vnestiDanniy}>Внести данные</Text>
+           {item.authusersomeproiz.length > 0 ? null : <Text style={styles.vnestiDanniy}>Внести данные</Text>}
           </View>
         </View>
         {item.status_notify == '1' && <View style={{ width: 10, height: 10, backgroundColor: 'red', borderRadius: 50 }} />}

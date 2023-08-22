@@ -28,16 +28,17 @@ export default function Slider2(props) {
     if (slider !== imgActive) {
       setInmageActive(slider);
     }
-  };
+  }
 
   let sliderItem = ({ item, index }) => {
     return sliderModal === true ? (
+  
       <Image
         source={{ uri: APP_IMAGE_URL + item.image }}
         style={{ height: "100%", width: width, resizeMode: "contain" }}
       />
     ) : (
-      <TouchableOpacity onPress={() => setSliderModal(true)}>
+      <TouchableOpacity onPress={() => setSliderModal(true)} activeOpacity={1}>
         <Image
           source={{ uri: APP_IMAGE_URL + item.image }}
           style={{ height: "100%", width: width, resizeMode: "cover" }}
@@ -48,8 +49,8 @@ export default function Slider2(props) {
 
   return (
     <View>
-      <Modal visible={sliderModal}>
-        <SafeAreaView style={{ flex: 1 }}>
+      <Modal visible={sliderModal} onRequestClose={() => setSliderModal(false)}>
+        <SafeAreaView style={styles.sliderModal}>
           <TouchableOpacity
             style={{ position: "absolute", right: 18, top: 18, zIndex: 50 }}
             onPress={() => {
@@ -66,21 +67,31 @@ export default function Slider2(props) {
             />
           </TouchableOpacity>
           <View style={{
-            backgroundColor: 'transparent',
+            backgroundColor: 'black',
             flex: 1,
           }}>
             <ImageViewer imageUrls={props.slid.map((el, i) => ({ url: `${APP_IMAGE_URL}${el.image}` }))} onChange={(index) => setInmageActive(index)} index={imgActive} renderIndicator={() => null} enableSwipeDown onSwipeDown={() => {
               setSliderModal(false);
               setInmageActive(0);
             }} />
-          </View>
-          <View style={styles.wrapDot}>
+            {/* <FlatList
+              horizontal
+              pagingEnabled
+              style={{ width: width }}
+              showsHorizontalScrollIndicator={false}
+              data={props.slid}
+              keyExtractor={(item) => item.id}
+              renderItem={sliderItem}
+              onScroll={({ nativeEvent }) => change(nativeEvent)}
+            /> */}
+          {props.slid.length > 1 && <View style={styles.wrapDot}>
             {props.slid.map((item, index) => (
               <Animated.View
                 style={imgActive === index ? styles.dotActive : styles.dot}
                 key={index}
               />
             ))}
+          </View>}
           </View>
         </SafeAreaView>
       </Modal>
@@ -96,14 +107,14 @@ export default function Slider2(props) {
           renderItem={sliderItem}
           onScroll={({ nativeEvent }) => change(nativeEvent)}
         />
-        <View style={styles.wrapDot}>
+       {props.slid.length > 1 && <View style={styles.wrapDot}>
           {props.slid.map((item, index) => (
             <Animated.View
               style={imgActive === index ? styles.dotActive : styles.dot}
               key={index}
             />
           ))}
-        </View>
+        </View>}
       </View>
     </View>
   );
@@ -112,7 +123,7 @@ export default function Slider2(props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: width,
-    height: 176,
+    height: 220,
   },
   wrapDot: {
     position: "absolute",
@@ -142,7 +153,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
   },
 });
