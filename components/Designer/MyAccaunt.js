@@ -19,7 +19,7 @@ import DesignerPageNavComponent from "./DesignerPageNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { APP_URL, APP_IMAGE_URL } from "@env";
-
+ 
 export default class MyAccauntComponent extends React.Component {
   constructor(props) {
     super(props);
