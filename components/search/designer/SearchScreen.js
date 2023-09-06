@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import GhostNavComponent from "../../Ghost/GhostNav";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native";
 import { APP_URL } from "@env";
 import Loading from "../../Component/Loading";
+import DesignerPageNavComponent from "../../Designer/DesignerPageNav";
+import { ScrollView } from "react-native";
 
-export default function SearchScreenGuest({ navigation }) {
+export default function SearchScreenDesigner({ navigation }) {
     const [cities, setCities] = useState([])
 
     async function getCategories() {
@@ -33,6 +35,7 @@ export default function SearchScreenGuest({ navigation }) {
             <View style={{
                 flex: 1,
                 paddingHorizontal: 15,
+                position: "relative",
             }}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 30 }}>
                     {cities.length ? cities.map((el, i) => <TouchableOpacity key={i} onPress={() => {
@@ -47,7 +50,7 @@ export default function SearchScreenGuest({ navigation }) {
                     }
                 </ScrollView>
             </View>
-            <GhostNavComponent
+            <DesignerPageNavComponent
                 active_page={"Поиск"}
                 navigation={navigation}
             />

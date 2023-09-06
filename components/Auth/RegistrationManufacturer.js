@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -18,8 +18,8 @@ import Svg, { Path, Rect } from "react-native-svg";
 import BlueButton from "../Component/Buttons/BlueButton";
 import MaskInput from "react-native-mask-input";
 import * as ImagePicker from "expo-image-picker";
-import TextInputMask from "react-native-mask-input";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import RichTextEditorComponent from "./RichTextEditor";
 
 
 export default class RegistrationManufacturerComponent extends Component {
@@ -91,8 +91,8 @@ export default class RegistrationManufacturerComponent extends Component {
       percent_bonus: [],
       percent_bonus_error: false,
 
-      product_category: [],
-      product_category_error: false,
+      // product_category: [],
+      // product_category_error: false,
 
       item_id: null,
 
@@ -114,6 +114,8 @@ export default class RegistrationManufacturerComponent extends Component {
 
       value_length: "",
       information: false,
+
+      dopInfo: ""
     };
     this.ref = React.createRef()
   }
@@ -215,36 +217,36 @@ export default class RegistrationManufacturerComponent extends Component {
     });
   };
 
-  getCategory = async (items, ids) => {
-    let filterSort = this.state.product_category;
-    let find = true;
-    filterSort.find((item) => {
-      if (item.id == ids) {
-        find = false;
-      }
-    });
-    if (find) {
-      filterSort.push({ name: items, id: ids });
-      this.setState({ count: this.state.count + 1 });
-    }
-    await this.setState({ product_category: filterSort });
-  };
+  // getCategory = async (items, ids) => {
+  //   let filterSort = this.state.product_category;
+  //   let find = true;
+  //   filterSort.find((item) => {
+  //     if (item.id == ids) {
+  //       find = false;
+  //     }
+  //   });
+  //   if (find) {
+  //     filterSort.push({ name: items, id: ids });
+  //     this.setState({ count: this.state.count + 1 });
+  //   }
+  //   await this.setState({ product_category: filterSort });
+  // };
 
-  verifyCategory = (items) => {
-    let filterSort = this.state.product_category;
-    let find = false;
-    filterSort.find((item) => {
-      if (item == items) {
-        find = true;
-      }
-    });
-    if (find) {
-      const index = filterSort.indexOf(items);
-      filterSort.splice(index, 1);
-      this.setState({ count: this.state.count - 1 });
-    }
-    this.setState({ product_category: filterSort });
-  };
+  // verifyCategory = (items) => {
+  //   let filterSort = this.state.product_category;
+  //   let find = false;
+  //   filterSort.find((item) => {
+  //     if (item == items) {
+  //       find = true;
+  //     }
+  //   });
+  //   if (find) {
+  //     const index = filterSort.indexOf(items);
+  //     filterSort.splice(index, 1);
+  //     this.setState({ count: this.state.count - 1 });
+  //   }
+  //   this.setState({ product_category: filterSort });
+  // };
 
   gorod = async (items, ids) => {
     let filterSort = this.state.sales_city;
@@ -370,14 +372,17 @@ export default class RegistrationManufacturerComponent extends Component {
       d3model,
       // percent_bonus,
       sales_city,
-      product_category,
+      // product_category,
+      dopInfo
     } = this.state;
 
-    let new_product_category = [];
-    for (let i = 0; i < product_category.length; i++) {
-      let category = product_category[i].id + "^" + product_category[i].name;
-      new_product_category.push(category);
-    }
+    console.log(dopInfo);
+
+    // let new_product_category = [];
+    // for (let i = 0; i < product_category.length; i++) {
+    //   let category = product_category[i].id + "^" + product_category[i].name;
+    //   new_product_category.push(category);
+    // }
 
     let new_sales_city = [];
     for (let i = 0; i < sales_city.length; i++) {
@@ -406,8 +411,9 @@ export default class RegistrationManufacturerComponent extends Component {
     this.form_data.append("job_with_designer", collaborate)
     this.form_data.append("dmodel", d3model)
     this.form_data.append("sales_city", new_sales_city);
-    this.form_data.append("product_category[]", new_product_category);
+    // this.form_data.append("product_category[]", new_product_category);
     this.form_data.append("percent_bonus[]", this.state.procentArrayToString);
+    this.form_data.append("about_us", dopInfo)
 
     let requestOptions = {
       method: "POST",
@@ -509,16 +515,16 @@ export default class RegistrationManufacturerComponent extends Component {
             });
           }
 
-          if (product_category.length == 0) {
-            this.setState({
-              product_category_error: true,
-            });
-            this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
-          } else {
-            this.setState({
-              product_category_error: false,
-            });
-          }
+          // if (product_category.length == 0) {
+          //   this.setState({
+          //     product_category_error: true,
+          //   });
+          //   this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
+          // } else {
+          //   this.setState({
+          //     product_category_error: false,
+          //   });
+          // }
 
           if (sales_city.length == 0) {
             this.setState({
@@ -662,8 +668,8 @@ export default class RegistrationManufacturerComponent extends Component {
       percent_bonus: [],
       percent_bonus_error: false,
 
-      product_category: [],
-      product_category_error: false,
+      // product_category: [],
+      // product_category_error: false,
 
       item_id: null,
 
@@ -1100,7 +1106,7 @@ export default class RegistrationManufacturerComponent extends Component {
                               paddingVertical: 7,
                               fontFamily: "Poppins_500Medium",
                               borderBottomWidth: 1,
-                              borderBottomColor: "#F5F5F5",
+                              borderBottomColor: "#F5F5F5",     
                             },
                           ]}
                         >
@@ -1114,7 +1120,7 @@ export default class RegistrationManufacturerComponent extends Component {
             </View>
 
             {/* categoryButtons start */}
-            {this.state.product_category.length == 0 && <View></View>}
+            {/* {this.state.product_category.length == 0 && <View></View>}
             {this.state.product_category.length !== 0 && (
               <View
                 style={{
@@ -1171,12 +1177,12 @@ export default class RegistrationManufacturerComponent extends Component {
                   })}
                 </ScrollView>
               </View>
-            )}
+            )} */}
             {/* categoryButtons end */}
 
             {/* dropDown  start*/}
 
-            <View
+            {/* <View
               style={{
                 position: "relative",
                 // marginTop: 9,
@@ -1229,7 +1235,7 @@ export default class RegistrationManufacturerComponent extends Component {
                 >
                   указанное количество {this.state.count}
                 </Text>
-                <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                 <View style={{ position: "absolute", right: 17, bottom: 18 }}>
                   {!this.state.sOpenCityDropDown && (
                     <Svg
                       width="18"
@@ -1305,7 +1311,7 @@ export default class RegistrationManufacturerComponent extends Component {
                   })}
                 </ScrollView>
               </View>
-            </View>
+            </View> */}
 
             {/* cityButons start */}
             {this.state.sales_city.length == 0 && <View></View>}
@@ -2152,7 +2158,8 @@ export default class RegistrationManufacturerComponent extends Component {
                 />
               )}
             </View>
-            {/* <Text
+
+            <Text
               style={[
                 {
                   fontFamily: "Poppins_500Medium",
@@ -2166,8 +2173,8 @@ export default class RegistrationManufacturerComponent extends Component {
               ]}
             >
               Дополнительная информация
-            </Text> */}
-0
+            </Text>
+            <RichTextEditorComponent onChange={(value) => this.setState({ dopInfo: value })} value={this.state.dopInfo} />
             <View style={styles.checkBox}>
               <TouchableOpacity
                 style={{ marginRight: 10 }}
@@ -2267,6 +2274,7 @@ export default class RegistrationManufacturerComponent extends Component {
                 justifyContent: "center",
                 width: "100%",
                 flexDirection: "row",
+                marginBottom: 220
               }}
             >
               <TouchableOpacity

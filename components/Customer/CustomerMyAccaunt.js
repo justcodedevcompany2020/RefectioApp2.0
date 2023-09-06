@@ -13,7 +13,6 @@ import {
   Modal,
   ImageBackground,
   Linking,
-  Platform,
 } from "react-native";
 
 import ArrowGrayComponent from "../../assets/image/ArrowGray";
@@ -25,6 +24,8 @@ import { AuthContext } from "../AuthContext/context";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import RichTextEditorComponent from "../Auth/RichTextEditor";
+import HTML from 'react-native-render-html';
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -98,8 +99,10 @@ export default class CustomerMyAccauntComponent extends React.Component {
       collaborate: "",
       dmodel: '',
       openDesignerPopup: false,
-      dmodelPopup: false
-
+      dmodelPopup: false,
+      about_us: "",
+      aboutUsModal: false,
+      updatedAboutUs: ""
     };
   }
   static contextType = AuthContext;
@@ -275,10 +278,14 @@ export default class CustomerMyAccauntComponent extends React.Component {
     })
       .then((response) => response.json())
       .then((res) => {
+        console.log('about_us', res?.data[0].about_us ?? '');
+
         this.setState({
+          about_us: res?.data[0].about_us ?? '',
+          updatedAboutUs: res?.data[0].about_us ?? '',
           authUserState: res?.data,
           gorodArray: res?.data[0].city_of_sales_manufacturer,
-          allCities: res?.data[0].city_of_sales_manufacturer.length ==  res?.city_count ? true : false,
+          allCities: res?.data[0].city_of_sales_manufacturer.length == res?.city_count ? true : false,
           id: res?.data[0].id,
           inn: res?.data[0].individual_number,
           strana: res?.data[0].made_in,
@@ -846,6 +853,31 @@ export default class CustomerMyAccauntComponent extends React.Component {
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  }
+
+  updateAboutUs = async () => {
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
+
+    let formdata = new FormData();
+    formdata.append("about_us", this.state.updatedAboutUs);
+
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(`${APP_URL}update_about_us_user`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        this.setState({ aboutUsModal: false })
       })
       .catch((error) => console.log("error", error));
   }
@@ -2076,6 +2108,78 @@ export default class CustomerMyAccauntComponent extends React.Component {
             </ImageBackground>
           </Modal>
 
+          <Modal visible={this.state.aboutUsModal}>
+            <ImageBackground
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              source={require("../../assets/image/blurBg.png")}
+            >
+              <View
+                style={{
+                  width: "90%",
+                  height: "80%",
+                  backgroundColor: "#fff",
+                  borderRadius: 20,
+                  position: "relative",
+                  paddingHorizontal: 15,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: 18,
+                    top: 18,
+                  }}
+                  onPress={async () => {
+                    await this.setState({
+                      aboutUsModal: false,
+                      updatedAboutUs: this.state.about_us,
+                    });
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/image/ixs.png")}
+                    style={{
+                      width: 22.5,
+                      height: 22.5,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    marginTop: 70,
+                    fontSize: 26,
+                    textAlign: "center",
+                    color: "#2D9EFB",
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  Дополнительная информация
+                </Text>
+
+                <RichTextEditorComponent onChange={(value) => this.setState({ updatedAboutUs: value })} value={'<h1>This is a Heading</h1>'} />
+
+                <TouchableOpacity
+                  style={{
+                    alignSelf: "center",
+                    position: "absolute",
+                    bottom: "10%",
+                  }}
+                  onPress={() => {
+                    this.setState({ about_us: this.state.updatedAboutUs })
+                    this.updateAboutUs();
+                  }}
+                >
+                  <BlueButton name="Сохранить" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("CustomerMainPage")}
             style={{
@@ -2242,52 +2346,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 }}
               />
             </View>
-            {/* <View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 30,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                  }}
-                >
-                  ИНН
-                </Text>
-                <TouchableOpacity
-                  onPress={() => this.setState({ editModalInn: true })}
-                >
-                  <Image
-                    source={require("../../assets/image/ep_edit.png")}
-                    style={{
-                      width: 15,
-                      height: 15,
-                      marginLeft: 5,
-                      marginBottom: 5,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-              <TextInput
-                underlineColorAndroid="transparent"
-                placeholder={this.state.inn}
-                editable={false}
-                style={{
-                  borderWidth: 1,
-                  borderColor: "#F5F5F5",
-                  padding: 10,
-                  width: "100%",
-                  borderRadius: 5,
-                }}
-              />
-            </View> */}
             <View>
               <View
                 style={{
@@ -2548,147 +2606,55 @@ export default class CustomerMyAccauntComponent extends React.Component {
               </View>
             </View>
 
-            {/* dropDown end */}
-
-            {/* vajnagrajdenia tpelu start */}
-            {/*
-            <View
+            <Text
               style={{
-                width: "100%",
-                // height: ,
-                backgroundColor: "#fff",
-                borderRadius: 20,
+                fontFamily: "Poppins_500Medium",
+                lineHeight: 23,
+                fontSize: 16,
+                // color: "#5B5B5B",
+                marginBottom: 5,
+                marginTop: 15,
               }}
             >
-              <View>
-                <View
+              Дополнительная информация
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row', width: '95%', flexDirection: "row",
+                position: "relative", marginTop: 15
+              }}>
+              <View style={{ borderWidth: 1, borderColor: '#F5F5F5', borderRadius: 6, position: "relative", marginRight: 12, width: "83%", padding: 10, }}>
+                <HTML
+                contentWidth={700}
+                  source={{ html: `<div style="font-size: 16px">${this.state.about_us}</div>` }}
+                />
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  // this.setState({ aboutUsModal: true });
+                  this.props.navigation.navigate('AboutUsScreen', {
+                    onPressSave: () => {
+                      this.setState({ about_us: this.state.updatedAboutUs })
+                      this.updateAboutUs();
+                      this.props.navigation.goBack()
+                    },
+                    onChangeText: (value) => {
+                      this.setState({ updatedAboutUs: value })
+                    },
+                    value: this.state.updatedAboutUs
+                  })
+                }}
+              >
+                <Image
+                  source={require("../../assets/image/ep_edit.png")}
                   style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 30,
+                    width: 30,
+                    height: 30,
                   }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                    }}
-                  >
-                    Вознаграждение
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ RewardModal: true });
-                    }}
-                  >
-                    <Image
-                      source={require("../../assets/image/ep_edit.png")}
-                      style={{
-                        width: 15,
-                        height: 15,
-                        marginLeft: 5,
-                        marginBottom: 5,
-                      }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.DesignerRemunerationPercentageParentRead}>
-                {this.state.procentArray.map((item, index) => {
-                  return (
-                    <View
-                      style={styles.DesignerRemunerationPercentage}
-                      key={index}
-                    >
-                      <Text style={styles.procentText}>От</Text>
-
-                      <TextInput
-                        editable={false}
-                        keyboardType={"number-pad"}
-                        style={styles.procentInput}
-                        value={
-                          item.start_price !== "datark" ? item.start_price : ""
-                        }
-                        placeholder={""}
-                      />
-
-                      <View style={styles.rubli}>
-                        <Svg
-                          width="11"
-                          height="15"
-                          viewBox="0 0 11 15"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <Path
-                            d="M6.285 8.99997C7.37392 9.02686 8.42909 8.62091 9.21919 7.8711C10.0093 7.1213 10.4699 6.08881 10.5 4.99997C10.4699 3.91113 10.0093 2.87865 9.21919 2.12884C8.42909 1.37904 7.37392 0.973087 6.285 0.999974H2C1.86739 0.999974 1.74021 1.05265 1.64645 1.14642C1.55268 1.24019 1.5 1.36737 1.5 1.49997V7.99997H0.5C0.367392 7.99997 0.240215 8.05265 0.146447 8.14642C0.0526785 8.24019 0 8.36736 0 8.49997C0 8.63258 0.0526785 8.75976 0.146447 8.85353C0.240215 8.9473 0.367392 8.99997 0.5 8.99997H1.5V9.99997H0.5C0.367392 9.99997 0.240215 10.0527 0.146447 10.1464C0.0526785 10.2402 0 10.3674 0 10.5C0 10.6326 0.0526785 10.7598 0.146447 10.8535C0.240215 10.9473 0.367392 11 0.5 11H1.5V14.5C1.5 14.6326 1.55268 14.7598 1.64645 14.8535C1.74021 14.9473 1.86739 15 2 15C2.13261 15 2.25979 14.9473 2.35355 14.8535C2.44732 14.7598 2.5 14.6326 2.5 14.5V11H7C7.13261 11 7.25979 10.9473 7.35355 10.8535C7.44732 10.7598 7.5 10.6326 7.5 10.5C7.5 10.3674 7.44732 10.2402 7.35355 10.1464C7.25979 10.0527 7.13261 9.99997 7 9.99997H2.5V8.99997H6.285ZM2.5 1.99997H6.285C7.10839 1.9743 7.90853 2.27531 8.51083 2.83733C9.11313 3.39935 9.46872 4.17677 9.5 4.99997C9.47001 5.82362 9.11483 6.60182 8.51223 7.16412C7.90964 7.72642 7.10875 8.02698 6.285 7.99997H2.5V1.99997Z"
-                            fill="#888888"
-                          />
-                        </Svg>
-                      </View>
-
-                      <Text style={styles.procentText}>До</Text>
-
-                      <TextInput
-                        maxLength={10}
-                        keyboardType="number-pad"
-                        style={styles.procentInput}
-                        value={
-                          item.before_price !== "datark"
-                            ? item.before_price
-                            : ""
-                        }
-                        placeholder={
-                          this.state.procentArray.length <= 1 ? "9.999.999" : ""
-                        }
-                        editable={false}
-                      />
-
-                      <View style={styles.rubli}>
-                        <Svg
-                          width="11"
-                          height="15"
-                          viewBox="0 0 11 15"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <Path
-                            d="M6.285 8.99997C7.37392 9.02686 8.42909 8.62091 9.21919 7.8711C10.0093 7.1213 10.4699 6.08881 10.5 4.99997C10.4699 3.91113 10.0093 2.87865 9.21919 2.12884C8.42909 1.37904 7.37392 0.973087 6.285 0.999974H2C1.86739 0.999974 1.74021 1.05265 1.64645 1.14642C1.55268 1.24019 1.5 1.36737 1.5 1.49997V7.99997H0.5C0.367392 7.99997 0.240215 8.05265 0.146447 8.14642C0.0526785 8.24019 0 8.36736 0 8.49997C0 8.63258 0.0526785 8.75976 0.146447 8.85353C0.240215 8.9473 0.367392 8.99997 0.5 8.99997H1.5V9.99997H0.5C0.367392 9.99997 0.240215 10.0527 0.146447 10.1464C0.0526785 10.2402 0 10.3674 0 10.5C0 10.6326 0.0526785 10.7598 0.146447 10.8535C0.240215 10.9473 0.367392 11 0.5 11H1.5V14.5C1.5 14.6326 1.55268 14.7598 1.64645 14.8535C1.74021 14.9473 1.86739 15 2 15C2.13261 15 2.25979 14.9473 2.35355 14.8535C2.44732 14.7598 2.5 14.6326 2.5 14.5V11H7C7.13261 11 7.25979 10.9473 7.35355 10.8535C7.44732 10.7598 7.5 10.6326 7.5 10.5C7.5 10.3674 7.44732 10.2402 7.35355 10.1464C7.25979 10.0527 7.13261 9.99997 7 9.99997H2.5V8.99997H6.285ZM2.5 1.99997H6.285C7.10839 1.9743 7.90853 2.27531 8.51083 2.83733C9.11313 3.39935 9.46872 4.17677 9.5 4.99997C9.47001 5.82362 9.11483 6.60182 8.51223 7.16412C7.90964 7.72642 7.10875 8.02698 6.285 7.99997H2.5V1.99997Z"
-                            fill="#888888"
-                          />
-                        </Svg>
-                      </View>
-
-                      <View style={styles.procent}>
-                        <TextInput
-                          keyboardType="number-pad"
-                          value={item.percent}
-                          editable={false}
-                          style={{
-                            fontSize: 13,
-                            fontFamily: "Poppins_400Regular",
-                            color: "#888888",
-                            width: 23,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        />
-                        <Text>%</Text>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            </View> */}
-            {/* vajnagrajdenia tpelu end */}
-
-            {/* vajnagrajdenia modal start */}
-
-            {/* vajnagrajdenia modal end */}
+                />
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               onPress={async () => {
@@ -2844,6 +2810,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   main: {
     flex: 1,

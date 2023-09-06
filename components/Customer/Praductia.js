@@ -82,6 +82,7 @@ export default class PraductiaComponent extends React.Component {
         }
         if (res.data.message !== "no product") {
           const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
+          console.log(res.data.user_category_for_product);
           let arr = res.data.user_category_for_product
           if (isFound == 0) {
             arr = res.data.user_category_for_product
@@ -89,6 +90,7 @@ export default class PraductiaComponent extends React.Component {
             arr.push(lastItem)
             arr.shift(res.data.user_category_for_product[0])
           }
+
           this.setState({
             user: res.data.user,
             user_bonus_for_designer: res.data.user_bonus_for_designer,
@@ -835,7 +837,7 @@ export default class PraductiaComponent extends React.Component {
                       )}
                       {item.price && (
                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                          Цена: {item.price} руб.
+                          Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                         </Text>
                       )}
                     </View>

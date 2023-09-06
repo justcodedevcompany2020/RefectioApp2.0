@@ -40,17 +40,17 @@ export default class CustomerMainPageNavComponent extends React.Component {
         //   change: "CustomerMyBroni",
         //   id: 4,
         // },
-        // {
-        //   images: require("../../assets/image/icon.png"),
-        //   text: "Поиск",
-        //   change: "SearchScreen",
-        //   id: 3,
-        // },
+        {
+          images: require("../../assets/image/Hashtag.png"),
+          text: "Поиск",
+          change: "SearchScreen",
+          id: 3,
+        },
         {
           images: require("../../assets/image/carbon_user-avatar.png"),
           text: "Профиль",
           change: "CustomerMyAccaunt",
-          id: 3,
+          id: 4,
         },
       ],
     };

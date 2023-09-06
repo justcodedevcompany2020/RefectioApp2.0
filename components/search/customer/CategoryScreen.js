@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, View, ScrollView, TextInput, Keyboard } from "react-native";
+import { Dimensions, FlatList, ScrollView, View, TextInput } from "react-native";
 import { SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Path, Svg } from "react-native-svg";
@@ -8,14 +8,14 @@ import { Text } from "react-native";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import { Image } from "react-native";
 import { RefreshControl } from "react-native";
-import GhostNavComponent from "../../Ghost/GhostNav";
 import Loading from "../../Component/Loading";
+import CustomerMainPageNavComponent from "../../Customer/CustomerMainPageNav";
 import shuffle from "../shuffle";
-import { BackBtn, CloseIcon, FilterIcon, OpenIcon } from "../customer/CategoryScreen";
+import { Keyboard } from "react-native";
 
 const { width } = Dimensions.get('screen')
 
-export default function CategoryScreenGuest({ navigation, category }) {
+export default function CategoryScreenCustomer({ navigation, category }) {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [moreLoading, setMoreLoading] = useState()
@@ -31,25 +31,25 @@ export default function CategoryScreenGuest({ navigation, category }) {
 
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
- useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
 
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     async function getProducts(refresh, clear) {
         let formdata = new FormData();
@@ -139,8 +139,9 @@ export default function CategoryScreenGuest({ navigation, category }) {
             paddingHorizontal: 15,
         }}>
             <BackBtn onPressBack={() => filterMode ? setFilterMode(false) : navigation.goBack()} />
-            {loading ? <Loading /> :
-              ( filterMode ?
+
+            {loading ? <Loading /> : (filterMode ?
+
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Text
                         style={{
@@ -395,7 +396,7 @@ export default function CategoryScreenGuest({ navigation, category }) {
                     </View>
                 </ScrollView>
                 :
-                 <FlatList
+                <FlatList
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index}
                     data={products}
@@ -419,12 +420,82 @@ export default function CategoryScreenGuest({ navigation, category }) {
                 />)
             }
         </View>
-        {!isKeyboardVisible && <GhostNavComponent
+        {!isKeyboardVisible && <CustomerMainPageNavComponent
             active_page={"Поиск"}
             navigation={navigation}
         />}
     </SafeAreaView >
+}
 
+export function BackBtn({ onPressBack }) {
+    return <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10, alignSelf: 'flex-start' }} onPress={onPressBack}>
+        <Svg
+            width={25}
+            height={30}
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <Path
+                d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+                fill="#94D8F4"
+            />
+        </Svg>
+        <Text style={styles.backText}>Назад</Text>
+    </TouchableOpacity>
+}
+
+export function FilterIcon({ onPress }) {
+    return <TouchableOpacity onPress={onPress}>
+        <Svg
+            width="23"
+            height="19"
+            viewBox="0 0 23 19"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <Path
+                d="M22.4375 3.25H19.2344C18.8438 1.45312 17.2812 0.125 15.4062 0.125C13.5312 0.125 11.9688 1.45312 11.5781 3.25H0.5625V4.8125H11.5781C11.9688 6.60938 13.5312 7.9375 15.4062 7.9375C17.2812 7.9375 18.8438 6.60938 19.2344 4.8125H22.4375V3.25ZM15.4062 6.375C14.0781 6.375 13.0625 5.35938 13.0625 4.03125C13.0625 2.70312 14.0781 1.6875 15.4062 1.6875C16.7344 1.6875 17.75 2.70312 17.75 4.03125C17.75 5.35938 16.7344 6.375 15.4062 6.375ZM0.5625 15.75H3.76562C4.15625 17.5469 5.71875 18.875 7.59375 18.875C9.46875 18.875 11.0312 17.5469 11.4219 15.75H22.4375V14.1875H11.4219C11.0312 12.3906 9.46875 11.0625 7.59375 11.0625C5.71875 11.0625 4.15625 12.3906 3.76562 14.1875H0.5625V15.75ZM7.59375 12.625C8.92188 12.625 9.9375 13.6406 9.9375 14.9688C9.9375 16.2969 8.92188 17.3125 7.59375 17.3125C6.26562 17.3125 5.25 16.2969 5.25 14.9688C5.25 13.6406 6.26562 12.625 7.59375 12.625Z"
+                fill="black"
+            />
+        </Svg>
+    </TouchableOpacity>
+}
+
+export function OpenIcon() {
+    return <Svg
+        width="18"
+        height="10"
+        viewBox="0 0 18 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <Path
+            d="M1 9L9 1L17 9"
+            stroke="#888888"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+    </Svg>
+}
+
+export function CloseIcon() {
+    return <Svg
+        width="18"
+        height="10"
+        viewBox="0 0 18 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <Path
+            d="M1 1L9 9L17 1"
+            stroke="#888888"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+    </Svg>
 }
 
 
@@ -438,7 +509,7 @@ const styles = StyleSheet.create({
     sOpenCityDropDown: {
         width: "100%",
         height: 0,
-        // zIndex: 100,
+        zIndex: 100,
     },
     sOpenCityDropDownActive: {
         width: "100%",
@@ -447,7 +518,7 @@ const styles = StyleSheet.create({
         borderColor: "#F5F5F5",
         paddingVertical: 5,
         paddingHorizontal: 10,
-        // zIndex: 100,
+        zIndex: 100,
         backgroundColor: "#fff",
     },
 })

@@ -12,11 +12,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider2 from "../../slider/Slider2";
 import Loading from "../../Component/Loading";
 import GhostNavComponent from "../../Ghost/GhostNav";
+import DesignerPageNavComponent from "../../Designer/DesignerPageNav";
 import shuffle from "../shuffle";
 
 const { WIDTH } = Dimensions.get('screen')
 
-export default function CategorySingleScreenGuest({ navigation, category, mynextUrl, myproducts, product }) {
+export default function CategorySingleScreenDesigner({ navigation, category, mynextUrl, myproducts, product }) {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [moreLoading, setMoreLoading] = useState()
@@ -93,7 +94,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                     renderItem={({ item, }) => {
                         return <View style={{ marginTop: 30 }}>
                             <Slider2 slid={item.product_image} />
-                            <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("GhostPageTwo", {
+                            <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("DesignerPageTwo", {
                                 params: item.user_product.id,
                             })}>
                                 <Image
@@ -158,7 +159,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                                     )}
                                     {item.price && (
                                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")    } руб.
+                                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                                         </Text>
                                     )}
                                 </View>
@@ -173,7 +174,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                 />
             }
         </View>
-        <GhostNavComponent
+        <DesignerPageNavComponent
             active_page={"Поиск"}
             navigation={navigation}
         />

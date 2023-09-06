@@ -5,18 +5,17 @@ import { TouchableOpacity } from "react-native";
 import { Path, Svg } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native";
-import { APP_URL, APP_IMAGE_URL } from "@env";
+import { APP_IMAGE_URL } from "@env";
 import { Image } from "react-native";
 import { RefreshControl } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider2 from "../../slider/Slider2";
 import Loading from "../../Component/Loading";
-import GhostNavComponent from "../../Ghost/GhostNav";
+import CustomerMainPageNavComponent from "../../Customer/CustomerMainPageNav";
 import shuffle from "../shuffle";
 
 const { WIDTH } = Dimensions.get('screen')
 
-export default function CategorySingleScreenGuest({ navigation, category, mynextUrl, myproducts, product }) {
+export default function CategorySingleScreenCustomer({ navigation, category, mynextUrl, myproducts, product }) {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [moreLoading, setMoreLoading] = useState()
@@ -38,6 +37,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
 
     async function getProducts(refresh) {
         let formdata = new FormData();
+        console.log(category);
         formdata.append("category_id", category.id)
         await fetch(refresh ? firstPageUrl : nextUrl, {
             method: 'POST',
@@ -78,6 +78,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
         getProducts('refresh')
     };
 
+
     return <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{
             flex: 1,
@@ -91,9 +92,10 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                     keyExtractor={(item, index) => index}
                     data={products}
                     renderItem={({ item, }) => {
+                        console.log(item.user_product.logo);
                         return <View style={{ marginTop: 30 }}>
                             <Slider2 slid={item.product_image} />
-                            <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("GhostPageTwo", {
+                            <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("CustomerPageTwo", {
                                 params: item.user_product.id,
                             })}>
                                 <Image
@@ -158,7 +160,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                                     )}
                                     {item.price && (
                                         <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")    } руб.
+                                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                                         </Text>
                                     )}
                                 </View>
@@ -173,7 +175,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                 />
             }
         </View>
-        <GhostNavComponent
+        <CustomerMainPageNavComponent
             active_page={"Поиск"}
             navigation={navigation}
         />

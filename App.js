@@ -46,9 +46,19 @@ import EditProductComponent from "./components/Customer/EditProduct";
 import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import { APP_URL } from "@env";
-import SearchScreen from "./components/search/guest/SearchScreen";
-import CategoryScreen from "./components/search/guest/CategoryScreen";
-import CategorySingleScreen from "./components/search/guest/CategorySingleScreen";
+import SearchScreenGuest from "./components/search/guest/SearchScreen";
+import CategoryScreenGuest from "./components/search/guest/CategoryScreen";
+import CategorySingleScreenGuest from "./components/search/guest/CategorySingleScreen";
+import SearchScreenDesigner from "./components/search/designer/SearchScreen";
+import CategoryScreenDesigner from "./components/search/designer/CategoryScreen";
+import CategorySingleScreenDesigner from "./components/search/designer/CategorySingleScreen";
+import SearchScreenCustomer from "./components/search/customer/SearchScreen";
+import CategoryScreenCustomer from "./components/search/customer/CategoryScreen";
+import CategorySingleScreenCustomer from "./components/search/customer/CategorySingleScreen";
+import AboutUsScreen from "./components/Customer/AboutUsScreen";
+import SubCategoryScreenCustomer from "./components/search/customer/SubCategoryScreen";
+import SubCategoryScreenDesigner from "./components/search/designer/SubCategoryScreen";
+import SubCategoryScreenGuest from "./components/search/guest/SubCategoryScreen";
 
 const Stack = createStackNavigator();
 
@@ -138,18 +148,54 @@ function CustomerPageTwo({ route, navigation }) {
   return <CustomerPageTwoComponent userID={params} navigation={navigation} />;
 }
 
-function SearchScreenComponent({ navigation }) {
-  return <SearchScreen navigation={navigation} />;
+function SearchScreenComponentGuest({ navigation }) {
+  return <SearchScreenGuest navigation={navigation} />;
 }
-function CategoryScreenComponent({ navigation, route }) {
-  // const { params } = route.params;
-  return <CategoryScreen navigation={navigation} category={route.params.category} />;
-}
-
-function CategorySingleScreenComponent({ navigation, route }) {
-  return <CategorySingleScreen navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+function CategoryScreenComponentGuest({ navigation, route }) {
+  return <CategoryScreenGuest navigation={navigation} category={route.params.category} />;
 }
 
+function CategorySingleScreenComponentGuest({ navigation, route }) {
+  return <CategorySingleScreenGuest navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+}
+
+
+function SearchScreenComponentDesigner({ navigation }) {
+  return <SearchScreenDesigner navigation={navigation} />;
+}
+function CategoryScreenComponentDesigner({ navigation, route }) {
+  return <CategoryScreenDesigner navigation={navigation} category={route.params.category} />;
+}
+
+function CategorySingleScreenComponentDesigner({ navigation, route }) {
+  return <CategorySingleScreenDesigner navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+}
+
+function SearchScreenComponentCustomer({ navigation }) {
+  return <SearchScreenCustomer navigation={navigation} />;
+}
+function CategoryScreenComponentCustomer({ navigation, route }) {
+  return <CategoryScreenCustomer navigation={navigation} category={route.params.category} />;
+}
+
+function CategorySingleScreenComponentCustomer({ navigation, route }) {
+  return <CategorySingleScreenCustomer navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+}
+
+function SubCategoryScreenComponentCustomer({ navigation, route }) {
+  return <SubCategoryScreenCustomer navigation={navigation} subcategories={route.params.subcategories} categoryName={route.params.categoryName} />
+}
+
+function SubCategoryScreenComponentDesigner({ navigation, route }) {
+  return <SubCategoryScreenDesigner navigation={navigation} subcategories={route.params.subcategories} categoryName={route.params.categoryName} />
+}
+function SubCategoryScreenComponentGuest({ navigation, route }) {
+  return <SubCategoryScreenGuest navigation={navigation} subcategories={route.params.subcategories} categoryName={route.params.categoryName} />
+}
+
+function AboutUsScreenComponent({ navigation, route }) {
+  return <AboutUsScreen navigation={navigation} onPressSave={route.params.onPressSave} onChangeText={route.params.onChangeText} value={route.params.value} />
+}
 
 function ForgetPassword({ navigation }) {
   return <ForgetPasswordComponent navigation={navigation} />;
@@ -483,15 +529,19 @@ export default function App() {
                 <Stack.Screen name="MyAccaunt" component={MyAccauntComponent} />
                 <Stack.Screen
                   name="SearchScreen"
-                  component={SearchScreenComponent}
+                  component={SearchScreenComponentDesigner}
                 />
                 <Stack.Screen
                   name="CategoryScreen"
-                  component={CategoryScreenComponent}
+                  component={CategoryScreenComponentDesigner}
                 />
                 <Stack.Screen
                   name="CategorySingleScreen"
-                  component={CategorySingleScreenComponent}
+                  component={CategorySingleScreenComponentDesigner}
+                />
+                <Stack.Screen
+                  name="SubCategoryScreen"
+                  component={SubCategoryScreenComponentDesigner}
                 />
                 <Stack.Screen
                   name="EditPhoneNumberDesigner"
@@ -587,15 +637,23 @@ export default function App() {
                   />
                   <Stack.Screen
                     name="SearchScreen"
-                    component={SearchScreenComponent}
+                    component={SearchScreenComponentCustomer}
                   />
                   <Stack.Screen
                     name="CategoryScreen"
-                    component={CategoryScreenComponent}
+                    component={CategoryScreenComponentCustomer}
                   />
                   <Stack.Screen
                     name="CategorySingleScreen"
-                    component={CategorySingleScreenComponent}
+                    component={CategorySingleScreenComponentCustomer}
+                  />
+                  <Stack.Screen
+                    name="SubCategoryScreen"
+                    component={SubCategoryScreenComponentCustomer}
+                  />
+                  <Stack.Screen
+                    name="AboutUsScreen"
+                    component={AboutUsScreenComponent}
                   />
                 </Stack.Navigator>
               ) : // Guest pages tabs
@@ -638,15 +696,19 @@ export default function App() {
                     />
                     <Stack.Screen
                       name="SearchScreen"
-                      component={SearchScreenComponent}
+                      component={SearchScreenComponentGuest}
                     />
                     <Stack.Screen
                       name="CategoryScreen"
-                      component={CategoryScreenComponent}
+                      component={CategoryScreenComponentGuest}
                     />
                     <Stack.Screen
                       name="CategorySingleScreen"
-                      component={CategorySingleScreenComponent}
+                      component={CategorySingleScreenComponentGuest}
+                    />
+                    <Stack.Screen
+                      name="SubCategoryScreen"
+                      component={SubCategoryScreenComponentGuest}
                     />
                     <Stack.Screen
                       name="GhostPageTwo"

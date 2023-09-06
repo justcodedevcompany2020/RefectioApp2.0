@@ -22,6 +22,7 @@ import BlueButton from "../../components/Component/Buttons/BlueButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider2 from "../slider/Slider2";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import WebView from "react-native-webview";
 
 export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
@@ -61,6 +62,12 @@ export default class DesignerPageTwoComponent extends React.Component {
       designerModal: false,
       dmodel_popup: false,
       city_count: null,
+      about_us: "",
+      aboutUsPopup: false,
+
+      aboutProductPopup: false,
+      aboutProduct: "",
+
     };
   }
 
@@ -101,7 +108,8 @@ export default class DesignerPageTwoComponent extends React.Component {
           changed: res.data.city_for_sales_user.length == res.data.city_count ? 'Все города России' : res.data.city_for_sales_user[0].city_name,
           show_room: res.data.user[0].show_room,
           whatsapp: res.data.user[0].watsap_phone,
-          city_count: res.data.city_count
+          city_count: res.data.city_count,
+          about_us: res.data.user[0].about_us
         });
       });
   };
@@ -392,11 +400,134 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
 
-
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.main}>
+
+          <Modal visible={this.state.aboutUsPopup}>
+            <ImageBackground
+              source={require("../../assets/image/blurBg.png")}
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: "90%",
+                  height: this.state.about_us ? "60%" : "30%",
+                  backgroundColor: "#fff",
+                  borderRadius: 20,
+                  position: "relative",
+                  paddingHorizontal: 15,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    marginTop: 15,
+                    fontSize: 20,
+                    textAlign: "center",
+                    color: "#2D9EFB",
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  Дополнительная информация
+                </Text>
+
+                {!this.state.about_us ? <Text style={{ marginVertical: 20 }}>Производитель не добавил доп. информацию</Text>
+                  :
+                  <WebView
+                    style={{ height: 100, width: 280, marginTop: 30, zIndex: 99999, }}
+                    source={{ html: `<div style="font-size:50px;">${this.state.about_us}</div>` }}
+                    scrollEnabled={false}
+                  />}
+
+                <TouchableOpacity
+                  style={{
+                    marginVertical: 20,
+                  }}
+                  onPress={() => this.setState({ aboutUsPopup: false })}
+                >
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+
+          <Modal visible={this.state.aboutProductPopup}>
+            <ImageBackground
+              source={require("../../assets/image/blurBg.png")}
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: "90%",
+                  height: this.state.about_us ? "30%" : "22%",
+                  backgroundColor: "#fff",
+                  borderRadius: 20,
+                  position: "relative",
+                  paddingHorizontal: 15,
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: 15,
+                    top: 18,
+                  }}
+                  onPress={() => this.setState({ aboutProductPopup: false })}
+                >
+                  <Image
+                    source={require("../../assets/image/ixs.png")}
+                    style={{
+                      width: 22.5,
+                      height: 22.5,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    marginTop: 15,
+                    fontSize: 20,
+                    textAlign: "center",
+                    color: "#2D9EFB",
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >Дополнительная информация
+                </Text>
+
+                <WebView
+                  style={{ height: 100, width: 280, marginTop: 30, zIndex: 99999 }}
+                  source={{ html: `<div style="font-size:55px;">${this.state.aboutProduct}</div>` }}
+                  scrollEnabled={false}
+                  scalesPageToFit={false}
+                  textZoom={100}
+                  minimumFontSize={30}
+                />
+
+                <TouchableOpacity
+                  style={{
+                    marginVertical: 20,
+                  }}
+                  onPress={() => this.setState({ aboutProductPopup: false })}
+                >
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+
           <Modal visible={this.state.VipiskaModal}>
             <ImageBackground
               source={require("../../assets/image/blurBg.png")}
@@ -715,6 +846,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               style={{
                                 width: 18,
                                 height: 24,
+                                marginRight: 14,
                               }}
                             />
                           </TouchableOpacity>
@@ -972,7 +1104,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                     zIndex: -1,
                   }}
                 >
-                  <View
+                  <TouchableOpacity
                     style={[
                       styles.info,
                       {
@@ -980,9 +1112,9 @@ export default class DesignerPageTwoComponent extends React.Component {
                         borderRightColor: "#EEEEEE",
                       },
                     ]}
-                  // onPress={() => {
-                  //   this.setState({ RewardModal: true });
-                  // }}
+                    onPress={() => {
+                      this.setState({ aboutUsPopup: true })
+                    }}
                   >
                     <Image
                       source={require("../../assets/image/la_percent.png")}
@@ -993,7 +1125,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                       }}
                     />
                     <Text style={styles.infoText}>Доп. информация</Text>
-                  </View>
+                  </TouchableOpacity>
                   <TouchableOpacity
                     style={[
                       styles.info,
@@ -1077,62 +1209,67 @@ export default class DesignerPageTwoComponent extends React.Component {
                     return (
                       <View key={index} style={{ marginTop: 18 }}>
                         <Slider2 slid={item.product_image} />
-                        <Text
-                          style={{
-                            fontFamily: "Raleway_600SemiBold",
-                            fontSize: 13,
-                            marginTop: 5,
-                            marginBottom: 4,
-                          }}
-                        >
-                          {item.name}
-                        </Text>
-                        {item.facades && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Фасады : {item.facades}
+                        <View>
+                          <Text
+                            style={{
+                              fontFamily: "Raleway_600SemiBold",
+                              fontSize: 13,
+                              marginTop: 5,
+                              marginBottom: 4,
+                            }}
+                          >
+                            {item.name}
                           </Text>
-                        )}
-                        {item.frame && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Корпус: {item.frame}
-                          </Text>
-                        )}
-                        {item.tabletop && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Столешница: {item.tabletop}
-                          </Text>
-                        )}
-                        {item.length && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Длина: {item.length} м.
-                          </Text>
-                        )}
+                          {item.facades && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Фасады : {item.facades}
+                            </Text>
+                          )}
+                          {item.frame && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Корпус: {item.frame}
+                            </Text>
+                          )}
+                          {item.tabletop && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Столешница: {item.tabletop}
+                            </Text>
+                          )}
+                          {item.length && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Длина: {item.length} м.
+                            </Text>
+                          )}
 
-                        {item.height && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Высота: {item.height} м.
-                          </Text>
-                        )}
-                        {item.material && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Материал: {item.material}
-                          </Text>
-                        )}
-                        {item.description && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Описание: {item.description}
-                          </Text>
-                        )}
-                        {item.inserciones && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Описание: {item.inserciones}
-                          </Text>
-                        )}
-                        {item.price && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
-                            Цена: {item.price} руб.
-                          </Text>
-                        )}
+                          {item.height && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Высота: {item.height} м.
+                            </Text>
+                          )}
+                          {item.material && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Материал: {item.material}
+                            </Text>
+                          )}
+                          {item.description && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Описание: {item.description}
+                            </Text>
+                          )}
+                          {item.inserciones && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Описание: {item.inserciones}
+                            </Text>
+                          )}
+                          {item.price && (
+                            <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                              Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
+                            </Text>
+                          )}
+                          {item.about && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.setState({ aboutProduct: item.about, aboutProductPopup: true })}>
+                            <Image source={require('../../assets/image/Screenshot_2.png')} style={{ width: 27, height: 27 }} width={27} height={27} />
+                          </TouchableOpacity>}
+                        </View>
                       </View>
                     );
                   })}

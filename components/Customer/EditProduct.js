@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import Loading from "../Component/Loading";
+import RichTextEditorComponent from "../Auth/RichTextEditor";
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -217,7 +218,8 @@ export default class EditProductComponent extends React.Component {
       buttonSend: true,
 
       image_boolean: false,
-      isLoading: true
+      isLoading: true,
+      about: ""
     });
   };
 
@@ -240,12 +242,13 @@ export default class EditProductComponent extends React.Component {
     formdata.append("facades", this.state.facades);
     formdata.append("length", this.state.length);
     formdata.append("height", this.state.height);
-    formdata.append("price", this.state.price);
+    let myPrice = this.state.price.replaceAll('.', '')
+    formdata.append("price", myPrice);
     formdata.append("tabletop", this.state.tabletop);
     formdata.append("material", this.state.material);
     formdata.append("inserciones", this.state.inserciones);
     formdata.append("description", this.state.description);
-
+    formdata.append("about", this.state.about)
     if (delate_photo.length > 0) {
       await delate_photo.map((item) => {
         formdata.append("Deletephoto[]", item.id);
@@ -359,6 +362,7 @@ export default class EditProductComponent extends React.Component {
       .then((response) => response.json())
       .then((result) => {
         if (result.status === true) {
+          console.log(result.data[0].about)
           this.setState({
             name:
               result.data[0].name === "null" || result.data[0].name === null
@@ -372,7 +376,7 @@ export default class EditProductComponent extends React.Component {
 
             facades:
               result.data[0].facades === "null" ||
-              result.data[0].facades === null
+                result.data[0].facades === null
                 ? ""
                 : result.data[0].facades,
 
@@ -389,35 +393,36 @@ export default class EditProductComponent extends React.Component {
             price:
               result.data[0].price === "null" || result.data[0].price === null
                 ? ""
-                : result.data[0].price,
+                : result.data[0].price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, "."),
 
             material:
               result.data[0].material === "null" ||
-              result.data[0].material === null
+                result.data[0].material === null
                 ? ""
                 : result.data[0].material,
             inserciones:
               result.data[0].inserciones === "null" ||
-              result.data[0].inserciones === null
+                result.data[0].inserciones === null
                 ? ""
                 : result.data[0].inserciones,
             description:
               result.data[0].description === "null" ||
-              result.data[0].description === null
+                result.data[0].description === null
                 ? ""
                 : result.data[0].description,
 
             tabletop:
               result.data[0].tabletop === "null" ||
-              result.data[0].tabletop === null
+                result.data[0].tabletop === null
                 ? ""
                 : result.data[0].tabletop,
 
             categoryChanged:
               result.data[0].category_name === "null" ||
-              result.data[0].category_name === null
+                result.data[0].category_name === null
                 ? ""
                 : result.data[0].category_name,
+            about: result.data[0].about
           });
           let new_all_images = [];
           result.data[0].product_image.map((item) => {
@@ -425,7 +430,7 @@ export default class EditProductComponent extends React.Component {
           });
           this.setState({ get_old_image: new_all_images });
         }
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
       })
       .catch((error) => console.log("error", error));
   };
@@ -743,349 +748,349 @@ export default class EditProductComponent extends React.Component {
               "Гостиные",
               "Кабинеты",
             ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Корпус
-                </Text>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Корпус
+                  </Text>
 
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="ДСП"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.frame}
-                  onChangeText={(text) => this.setState({ frame: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Столешница
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Камень"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.tabletop}
-                  onChangeText={(text) => this.setState({ tabletop: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Гардеробные",
-              "Гостиные",
-              "Кабинеты",
-              "Детские",
-              "Мебель для спальни ",
-              "Межкомнатные перегородки",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Длина
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="8 метров"
-                  keyboardType="numeric"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.length}
-                  onChangeText={(text) => this.setState({ length: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Прихожие",
-              "Гардеробные",
-              "Детские",
-              "Межкомнатные перегородки",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Высота
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="0.5 метров"
-                  keyboardType="decimal-pad"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.height}
-                  onChangeText={(text) => this.setState({ height: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Гардеробные",
-              "Гостиные",
-              "Кабинеты",
-              "Детские",
-              "Мебель для спальни ",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Фасады
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Эмаль"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.facades}
-                  onChangeText={(text) => this.setState({ facades: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Межкомнатные перегородки",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Материал
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Эмаль"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.material}
-                  onChangeText={(text) => this.setState({ material: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Межкомнатные перегородки",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Вставки
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Эмаль"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.inserciones}
-                  onChangeText={(text) => this.setState({ inserciones: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Островные павильоны",
-              "Выставочные стенды",
-              "Зоны ресепшн",
-            ]) && (
-              <View>
-                <Text
-                  underlineColorAndroid={"transparent"}
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Описание
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  // placeholder="Эмаль"
-                  keyboardType="default"
-                  multiline
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.description}
-                  onChangeText={(text) => this.setState({ description: text })}
-                />
-              </View>
-            )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Детские",
-              "Гардеробные",
-              "Мебель для спальни ",
-              "Гостиные",
-              "Кабинеты",
-              "Межкомнатные перегородки",
-              "Островные павильоны",
-              "Выставочные стенды",
-              "Зоны ресепшн",
-            ]) && (
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Цена
-                </Text>
-                <View style={{ flexDirection: "row" }}>
                   <TextInput
                     underlineColorAndroid="transparent"
-                    placeholder="1.000.000"
-                    keyboardType="number-pad"
-                    maxLength={9}
+                    placeholder="ДСП"
+                    keyboardType="default"
                     style={{
                       borderWidth: 1,
                       borderColor: "#F5F5F5",
                       padding: 10,
-                      width: "89%",
+                      width: "100%",
                       borderRadius: 5,
-                      marginRight: 5,
                     }}
-                    value={this.state.price}
-                    onChangeText={(text) => {
-                      let without_dots = text.split(".").join("");
-                      let with_dots = without_dots
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-                      this.setState({ price: with_dots });
-                    }}
-                  />
-                  <Image
-                    source={require("../../assets/image/apranqiGin.png")}
-                    style={{ width: 30, height: 50 }}
+                    value={this.state.frame}
+                    onChangeText={(text) => this.setState({ frame: text })}
                   />
                 </View>
-              </View>
-            )}
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Кухни",
+              "Мебель для ванной",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Столешница
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Камень"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.tabletop}
+                    onChangeText={(text) => this.setState({ tabletop: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Кухни",
+              "Мебель для ванной",
+              "Прихожие",
+              "Гардеробные",
+              "Гостиные",
+              "Кабинеты",
+              "Детские",
+              "Мебель для спальни ",
+              "Межкомнатные перегородки",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Длина
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="8 метров"
+                    keyboardType="numeric"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.length}
+                    onChangeText={(text) => this.setState({ length: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Прихожие",
+              "Гардеробные",
+              "Детские",
+              "Межкомнатные перегородки",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Высота
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="0.5 метров"
+                    keyboardType="decimal-pad"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.height}
+                    onChangeText={(text) => this.setState({ height: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Кухни",
+              "Мебель для ванной",
+              "Прихожие",
+              "Гардеробные",
+              "Гостиные",
+              "Кабинеты",
+              "Детские",
+              "Мебель для спальни ",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Фасады
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Эмаль"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.facades}
+                    onChangeText={(text) => this.setState({ facades: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Межкомнатные перегородки",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Материал
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Эмаль"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.material}
+                    onChangeText={(text) => this.setState({ material: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Межкомнатные перегородки",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Вставки
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Эмаль"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.inserciones}
+                    onChangeText={(text) => this.setState({ inserciones: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Островные павильоны",
+              "Выставочные стенды",
+              "Зоны ресепшн",
+            ]) && (
+                <View>
+                  <Text
+                    underlineColorAndroid={"transparent"}
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Описание
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    // placeholder="Эмаль"
+                    keyboardType="default"
+                    multiline
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.description}
+                    onChangeText={(text) => this.setState({ description: text })}
+                  />
+                </View>
+              )}
+
+            {this.findInstring(this.state.categoryChanged, [
+              "Кухни",
+              "Мебель для ванной",
+              "Прихожие",
+              "Детские",
+              "Гардеробные",
+              "Мебель для спальни ",
+              "Гостиные",
+              "Кабинеты",
+              "Межкомнатные перегородки",
+              "Островные павильоны",
+              "Выставочные стенды",
+              "Зоны ресепшн",
+            ]) && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Цена
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <TextInput
+                      underlineColorAndroid="transparent"
+                      placeholder="1.000.000"
+                      keyboardType="number-pad"
+                      maxLength={9}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#F5F5F5",
+                        padding: 10,
+                        width: "89%",
+                        borderRadius: 5,
+                        marginRight: 5,
+                      }}
+                      value={this.state.price}
+                      onChangeText={(text) => {
+                        let without_dots = text.split(".").join("");
+                        let with_dots = without_dots
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+                        this.setState({ price: with_dots });
+                      }}
+                    />
+                    <Image
+                      source={require("../../assets/image/apranqiGin.png")}
+                      style={{ width: 30, height: 50 }}
+                    />
+                  </View>
+                </View>
+              )}
             <Text
               style={[
                 {
@@ -1260,6 +1265,20 @@ export default class EditProductComponent extends React.Component {
                 Максимальное количество из. 5 шт
               </Text>
             )}
+
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: "Poppins_500Medium",
+                marginTop: 15,
+                color: "#5B5B5B"
+              }}
+            >
+              Дополнительная информация
+            </Text>
+
+           {!this.state.isLoading && <RichTextEditorComponent onChange={(value) => this.setState({ about: value })} value={this.state.about} />}
+
             <TouchableOpacity
               onPress={() => {
                 this.sendProduct();
@@ -1267,7 +1286,7 @@ export default class EditProductComponent extends React.Component {
               style={{
                 alignSelf: "center",
                 marginTop: 60,
-                marginBottom: 60,
+                marginBottom: 250,
               }}
             >
               <BlueButton name="Изменить" />

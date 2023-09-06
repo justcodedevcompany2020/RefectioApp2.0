@@ -36,12 +36,12 @@ export default class DesignerPageNavComponent extends React.Component {
           change: "DesignerSaved",
           id: 3,
         },
-        // {
-        //   images: require("../../assets/image/icon.png"),
-        //   text: "Поиск",
-        //   change: "SearchScreen",
-        //   id: 4,
-        // },
+        {
+          images: require("../../assets/image/Hashtag.png"),
+          text: "Поиск",
+          change: "SearchScreen",
+          id: 4,
+        },
         // {
         //   images: require("../../assets/image/broni.png"),
         //   text: "Брони",
@@ -52,7 +52,7 @@ export default class DesignerPageNavComponent extends React.Component {
           images: require("../../assets/image/carbon_user-avatar.png"),
           text: "Профиль",
           change: "MyAccaunt",
-          id: 4,
+          id: 5,
         },
       ],
     };
@@ -81,12 +81,12 @@ export default class DesignerPageNavComponent extends React.Component {
                     : styles.navIcons,
                   index === 1
                     ? {
-                        width: 40,
-                        height: 14,
-                        resizeMode: "contain",
-                        marginBottom: 5,
-                        marginTop: 9,
-                      }
+                      width: 40,
+                      height: 14,
+                      resizeMode: "contain",
+                      marginBottom: 5,
+                      marginTop: 9,
+                    }
                     : { width: 25, height: 25 },
                 ]}
               />
