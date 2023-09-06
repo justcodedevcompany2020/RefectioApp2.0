@@ -12,7 +12,7 @@ export default function SubCategoryScreen({ navigation, subcategories, categoryN
                 flex: 1,
                 paddingHorizontal: 15,
                 position: "relative",
-            }}>
+            }}> 
                 <BackBtn onPressBack={() => navigation.goBack()} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 15 }}>
                     <Text style={{ marginBottom: 15, fontSize: 23, color: '#445391', fontWeight: '500', }}>{categoryName}</Text>
