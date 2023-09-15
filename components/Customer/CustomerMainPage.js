@@ -423,10 +423,10 @@ export default class CustomerMainPageComponent extends React.Component {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             >
-              {item.user_category_product.map((ite, ind) => {
+              {item.parent_category.map((item, ind) => {
                 return (
-                  <Text key={ite.id} style={styles.categoriesName}>
-                    {ite.category_name}
+                  <Text key={ind} style={styles.categoriesName}>
+                    {item.parent_category_name}
                   </Text>
                 );
               })}

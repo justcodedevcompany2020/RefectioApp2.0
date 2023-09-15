@@ -60,7 +60,7 @@ export default function Slider(props) {
         onScroll={({ nativeEvent }) => change(nativeEvent)}
       />
       <View style={styles.wrapDot}>
-        {props.slid.map((item, index) => (
+        {props.slid.length > 1 && props.slid.map((item, index) => (
           <View
             style={imgActive === index ? styles.dotActive : styles.dot}
             key={index}
@@ -74,7 +74,7 @@ export default function Slider(props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: width,
-    height: 220,
+    height: (width + 220) / 2,
   },
   wrapDot: {
     position: "absolute",

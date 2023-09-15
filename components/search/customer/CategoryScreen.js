@@ -59,7 +59,6 @@ export default function CategoryScreenCustomer({ navigation, category }) {
             formdata.append("category_id", category.id)
         } else {
             formdata.append("parent_category_id", category.id)
-            console.log('category');
         }
 
         !clear && (

@@ -4,7 +4,6 @@ import {
   View,
   Image,
   Text,
-  Touchable,
   TouchableOpacity,
   TextInput,
   ScrollView,
@@ -65,7 +64,13 @@ export default class AddProductComponent extends React.Component {
 
       buttonSend: true,
       isLoading: false,
-      dopInfo: ""
+      dopInfo: "",
+
+      hasFacades: false,
+      hasFrame: false,
+      hasTableTop: false,
+      hasLength: false,
+      hasHeight: false,
     };
   }
   formdata = new FormData();
@@ -138,7 +143,12 @@ export default class AddProductComponent extends React.Component {
       limitError: false,
       isLoading: false,
 
-      dopInfo: ""
+      dopInfo: "",
+      hasFacades: false,
+      hasFrame: false,
+      hasTableTop: false,
+      hasLength: false,
+      hasHeight: false,
     });
   };
 
@@ -159,33 +169,16 @@ export default class AddProductComponent extends React.Component {
     });
   };
 
-  getAuthUserProfile = async () => {
-    let myHeaders = new Headers();
-    let userToken = await AsyncStorage.getItem("userToken");
-    let AuthStr = "Bearer " + userToken;
-    myHeaders.append("Authorization", AuthStr);
-    myHeaders.append("Content-Type", "multipart/form-data");
-    await fetch(`${APP_URL}AuthUserProfile`, {
-      method: "GET",
-      headers: myHeaders,
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        this.setState({
-          categoryArray: res?.data[0].user_category_product,
-        });
-      });
-  };
-
   sendProduct = async () => {
     let { all_images } = this.state;
-    if (this.state.all_images.length === 0) {
+    console.log('all_images', all_images.length);
+    if (all_images.length === 0) {
       this.setState({ all_images_error: true });
     }
     if (
-      this.state.all_images.length > 0 &&
-      this.state.name !== "" &&
-      this.state.categoryChanged !== ""
+      this.state.all_images.length > 0
+      // this.state.name !== ""
+      // this.state.categoryChanged !== ""
     ) {
       await all_images.map((element, index) => {
         this.formdata.append("photo[]", element);
@@ -199,8 +192,22 @@ export default class AddProductComponent extends React.Component {
     myHeaders.append("Authorization", AuthStr);
     myHeaders.append("Content-Type", "multipart/form-data");
 
-    this.formdata.append("category_id", this.state.categoryId);
-    this.formdata.append("category_name", this.state.categoryChanged);
+
+    console.log(this.props.category.id, this.props.category.name, this.props.category.parent);
+
+    if (this.props.category.parent) {
+      console.log('if');
+      this.formdata.append("parent_category_id", this.props.category.parent.id)
+      this.formdata.append("parent_category_name", this.props.category.parent.name)
+
+      this.formdata.append("category_id", this.props.category.id);
+      this.formdata.append("category_name", this.props.category.name);
+    } else {
+      console.log(123123);
+      this.formdata.append("parent_category_id", this.props.category.id)
+      this.formdata.append("parent_category_name", this.props.category.name)
+    }
+
     this.formdata.append("name", this.state.name);
     this.formdata.append("frame", this.state.frame);
     this.formdata.append("facades", this.state.facades);
@@ -225,6 +232,7 @@ export default class AddProductComponent extends React.Component {
     await fetch(`${APP_URL}createnewproductProizvoditel`, requestOptions)
       .then((response) => response.json())
       .then(async (result) => {
+        console.log(result);
         this.setState({ isLoading: false });
         if (result.status === true) {
           (await this.setState({
@@ -274,13 +282,6 @@ export default class AddProductComponent extends React.Component {
   };
 
   componentDidMount() {
-    const { navigation } = this.props;
-    this.getAuthUserProfile();
-
-    this.focusListener = navigation.addListener("focus", () => {
-      this.getAuthUserProfile();
-    });
-
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this._keyboardDidShow
@@ -289,6 +290,90 @@ export default class AddProductComponent extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
+
+    this.setState({
+      hasFacades:
+        this.props.category.id == 28 ||
+        this.props.category.id == 30 ||
+        this.props.category.id == 31 ||
+        this.props.category.id == 36 ||
+        this.props.category.parent_id == 4 ||
+        this.props.category.id == 42 ||
+        this.props.category.id == 43 ||
+        this.props.category.id == 45 ||
+        this.props.category.id == 46 ||
+        this.props.category.id == 50 ||
+        this.props.category.id == 51 ||
+        this.props.category.id == 57 ||
+        this.props.category.id == 63 ||
+        this.props.category.id == 65,
+      hasFrame:
+        this.props.category.id == 28 ||
+        this.props.category.id == 30 ||
+        this.props.category.id == 31 ||
+        this.props.category.id == 36 ||
+        this.props.category.parent_id == 4 ||
+        this.props.category.id == 42 ||
+        this.props.category.id == 43 ||
+        this.props.category.id == 94 ||
+        this.props.category.id == 45 ||
+        this.props.category.id == 46 ||
+        this.props.category.id == 50 ||
+        this.props.category.id == 51 ||
+        this.props.category.id == 95 ||
+        this.props.category.id == 58 ||
+        this.props.category.id == 96 ||
+        this.props.category.id == 63 ||
+        this.props.category.id == 97 ||
+        this.props.category.id == 65 ||
+        this.props.category.id == 66 ||
+        this.props.category.id == 98,
+      hasTableTop:
+        this.props.category.id == 28 ||
+        this.props.category.id == 30 ||
+        this.props.category.id == 40 ||
+        this.props.category.id == 50,
+      hasLength:
+        this.props.category.id == 28 ||
+        this.props.category.id == 30 ||
+        this.props.category.id == 31 ||
+        this.props.category.id == 36 ||
+        this.props.category.parent_id == 4 ||
+        this.props.category.id == 42 ||
+        this.props.category.id == 43 ||
+        this.props.category.id == 94 ||
+        this.props.category.id == 45 ||
+        this.props.category.id == 46 ||
+        this.props.category.id == 50 ||
+        this.props.category.id == 51 ||
+        this.props.category.id == 95 ||
+        this.props.category.id == 57 ||
+        this.props.category.id == 58 ||
+        this.props.category.id == 96 ||
+        this.props.category.id == 63 ||
+        this.props.category.id == 97 ||
+        this.props.category.id == 65 ||
+        this.props.category.id == 66 ||
+        this.props.category.id == 98,
+      hasHeight:
+        this.props.category.id == 31 ||
+        this.props.category.id == 36 ||
+        this.props.category.id == 37 ||
+        this.props.category.id == 41 ||
+        this.props.category.id == 43 ||
+        this.props.category.id == 94 ||
+        this.props.category.id == 50 ||
+        this.props.category.id == 51 ||
+        this.props.category.id == 95 ||
+        this.props.category.id == 57 ||
+        this.props.category.id == 58 ||
+        this.props.category.id == 96 ||
+        this.props.category.id == 63 ||
+        this.props.category.id == 66 ||
+        this.props.category.id == 98
+    })
+
+    console.log(this.props.category.parent?.id, this.props.category.id);
   }
 
   componentWillUnmount() {
@@ -355,9 +440,7 @@ export default class AddProductComponent extends React.Component {
               <TouchableOpacity
                 style={{ marginTop: 170 }}
                 onPress={async () => {
-                  await this.props.navigation.navigate("Praductia", {
-                    params: this.props.user_id,
-                  });
+                  this.props.navigation.goBack()
                   await this.clearAllData();
                 }}
               >
@@ -368,9 +451,7 @@ export default class AddProductComponent extends React.Component {
 
           <TouchableOpacity
             onPress={() => {
-              this.props.navigation.navigate("Praductia", {
-                params: this.props.user_id,
-              });
+              this.props.navigation.goBack()
               this.clearAllData();
             }}
             style={{
@@ -395,6 +476,61 @@ export default class AddProductComponent extends React.Component {
             </Text>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Категория */}
+            <View>
+              <Text
+                style={[
+                  {
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: "#5B5B5B",
+                    marginBottom: 5,
+                    marginTop: 12,
+                  },
+                  this.state.categoryChanged_error
+                    ? { color: "red" }
+                    : { color: "#5B5B5B" },
+                ]}
+              >
+                Категория
+              </Text>
+              <View
+                style={{
+                  position: "relative",
+                }}
+              >
+                <View
+                  style={[
+                    {
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 6,
+                      position: "relative",
+                      height: 45,
+                      marginRight: 12,
+                    },
+                    this.state.categoryChanged_error
+                      ? { borderColor: "red" }
+                      : { borderColor: "#F5F5F5" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: "#5B5B5B",
+                      fontFamily: "Poppins_500Medium",
+                    }}
+                  >
+                    {this.props.category.parent && this.props.category.parent?.name + ' -> '}{this.props.category.name}
+                  </Text>
+                </View>
+              </View>
+
+            </View>
+   
+            {/* Название */}
             <View>
               <Text
                 style={[
@@ -411,7 +547,7 @@ export default class AddProductComponent extends React.Component {
                     : { color: "#5B5B5B" },
                 ]}
               >
-                Имя продукции*
+                Название*
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
@@ -439,495 +575,233 @@ export default class AddProductComponent extends React.Component {
               />
             </View>
 
+            {/* Цена */}
             <View>
               <Text
-                style={[
-                  {
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  },
-                  this.state.categoryChanged_error
-                    ? { color: "red" }
-                    : { color: "#5B5B5B" },
-                ]}
-              >
-                Категории*
-              </Text>
-              <View
                 style={{
-                  position: "relative",
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
                 }}
               >
-                <TouchableOpacity
-                  style={[
-                    {
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 6,
-                      position: "relative",
-                      height: 45,
-                      marginRight: 12,
-                    },
-                    this.state.categoryChanged_error
-                      ? { borderColor: "red" }
-                      : { borderColor: "#F5F5F5" },
-                  ]}
-                  onPress={() => {
-                    // if (this.state.categoryChanged == '') {
-                    //   this.setState({ categoryChanged: '' })
-                    // }
-                    this.setState({
-                      category: !this.state.category,
-                      categoryChanged_error: false,
-                    });
+                Цена
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="1.000.000"
+                  keyboardType="number-pad"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#F5F5F5",
+                    padding: 10,
+                    width: "89%",
+                    borderRadius: 5,
+                    marginRight: 5,
                   }}
-                >
-                  <Text
-                    style={{
-                      color: "#5B5B5B",
-                      fontFamily: "Poppins_500Medium",
-                    }}
-                  >
-                    {this.state.categoryChanged}
-                  </Text>
+                  value={this.state.price}
+                  maxLength={9}
+                  onChangeText={(text) => {
+                    let without_dots = text.split(".").join("");
+                    let with_dots = without_dots
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-                  <View style={{ position: "absolute", right: 17, bottom: 18 }}>
-                    {!this.state.category && (
-                      <Svg
-                        width="18"
-                        height="10"
-                        viewBox="0 0 18 10"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <Path
-                          d="M1 1L9 9L17 1"
-                          stroke="#888888"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </Svg>
-                    )}
-                    {this.state.category && (
-                      <Svg
-                        width="18"
-                        height="10"
-                        viewBox="0 0 18 10"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <Path
-                          d="M1 9L9 1L17 9"
-                          stroke="#888888"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </Svg>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={
-                  this.state.category
-                    ? styles.sOpenCityDropDownActive
-                    : styles.sOpenCityDropDown
-                }
-              >
-                <ScrollView nestedScrollEnabled={true}>
-                  {this.state.categoryArray.map((item, index) => {
-                    return (
-                      <TouchableOpacity
-                        key={index}
-                        style={{
-                          width: "100%",
-                          justifyContent: "center",
-                          textAlign: "left",
-                        }}
-                        onPress={async () =>
-                          await this.setState({
-                            categoryChanged: item.category_name,
-                            category: false,
-                            categoryId: item.category_id,
-                            categoryChanged_error: false,
-                          })
-                        }
-                      >
-                        <Text
-                          style={{
-                            textAlign: "left",
-                            paddingVertical: 10,
-                            fontFamily: "Poppins_500Medium",
-                          }}
-                        >
-                          {item.category_name}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </ScrollView>
+                    this.setState({ price: with_dots });
+                  }}
+                />
+                <Image
+                  source={require("../../assets/image/apranqiGin.png")}
+                  style={{ width: 30, height: 50 }}
+                />
               </View>
             </View>
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Гардеробные",
-              "Гостиные",
-              "Кабинеты",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Корпус
-                  </Text>
+            {/* Материал */}
+            <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Материал
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="Эмаль"
+                keyboardType="default"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.material}
+                onChangeText={(text) => this.setState({ material: text })}
+              />
+            </View>
 
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="ДСП"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.frame}
-                    onChangeText={(text) => this.setState({ frame: text })}
-                  />
-                </View>
-              )}
+            {/* Фасады */}
+            {this.state.hasFacades ? <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Фасады
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="Эмаль"
+                keyboardType="default"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.facades}
+                onChangeText={(text) => this.setState({ facades: text })}
+              />
+            </View> : null}
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Столешница
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Камень"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.tabletop}
-                    onChangeText={(text) => this.setState({ tabletop: text })}
-                  />
-                </View>
-              )}
+            {/* Корпус */}
+            {this.state.hasFrame && <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Корпус
+              </Text>
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Гардеробные",
-              "Гостиные",
-              "Кабинеты",
-              "Детские",
-              "Мебель для спальни ",
-              "Межкомнатные перегородки",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Длина
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="8 метров"
-                    keyboardType="numeric"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.length}
-                    onChangeText={(text) => this.setState({ length: text })}
-                  />
-                </View>
-              )}
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="ДСП"
+                keyboardType="default"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.frame}
+                onChangeText={(text) => this.setState({ frame: text })}
+              />
+            </View>}
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Прихожие",
-              "Гардеробные",
-              "Детские",
-              "Межкомнатные перегородки",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Высота
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="0.5 метров"
-                    keyboardType="decimal-pad"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.height}
-                    onChangeText={(text) => this.setState({ height: text })}
-                  />
-                </View>
-              )}
+            {/* Столешница */}
+            {this.state.hasTableTop && <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Столешница
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="Камень"
+                keyboardType="default"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.tabletop}
+                onChangeText={(text) => this.setState({ tabletop: text })}
+              />
+            </View>}
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Гардеробные",
-              "Гостиные",
-              "Кабинеты",
-              "Детские",
-              "Мебель для спальни ",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Фасады
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Эмаль"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.facades}
-                    onChangeText={(text) => this.setState({ facades: text })}
-                  />
-                </View>
-              )}
+            {/* Длина */}
+            {this.state.hasLength && <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Длина
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="8 метров"
+                keyboardType="numeric"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.length}
+                onChangeText={(text) => this.setState({ length: text })}
+              />
+            </View>}
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Межкомнатные перегородки",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Материал
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Эмаль"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.material}
-                    onChangeText={(text) => this.setState({ material: text })}
-                  />
-                </View>
-              )}
+            {/* Высота */}
+            {this.state.hasHeight && <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Высота
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="0.5 метров"
+                keyboardType="decimal-pad"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.height}
+                onChangeText={(text) => this.setState({ height: text })}
+              />
+            </View>}
 
-            {this.findInstring(this.state.categoryChanged, [
-              "Межкомнатные перегородки",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Вставки
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Эмаль"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.inserciones}
-                    onChangeText={(text) => this.setState({ inserciones: text })}
-                  />
-                </View>
-              )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Островные павильоны",
-              "Выставочные стенды",
-              "Зоны ресепшн",
-            ]) && (
-                <View>
-                  <Text
-                    underlineColorAndroid={"transparent"}
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Описание
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    // placeholder="Эмаль"
-                    keyboardType="default"
-                    multiline
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "100%",
-                      borderRadius: 5,
-                    }}
-                    value={this.state.description}
-                    onChangeText={(text) => this.setState({ description: text })}
-                  />
-                </View>
-              )}
-
-            {this.findInstring(this.state.categoryChanged, [
-              "Кухни",
-              "Мебель для ванной",
-              "Прихожие",
-              "Детские",
-              "Гардеробные",
-              "Мебель для спальни ",
-              "Гостиные",
-              "Кабинеты",
-              "Межкомнатные перегородки",
-              "Островные павильоны",
-              "Выставочные стенды",
-              "Зоны ресепшн",
-            ]) && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: "#5B5B5B",
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}
-                  >
-                    Цена
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <TextInput
-                      underlineColorAndroid="transparent"
-                      placeholder="1.000.000"
-                      keyboardType="number-pad"
-                      style={{
-                        borderWidth: 1,
-                        borderColor: "#F5F5F5",
-                        padding: 10,
-                        width: "89%",
-                        borderRadius: 5,
-                        marginRight: 5,
-                      }}
-                      value={this.state.price}
-                      maxLength={9}
-                      onChangeText={(text) => {
-                        let without_dots = text.split(".").join("");
-                        let with_dots = without_dots
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-                        this.setState({ price: with_dots });
-                      }}
-                    />
-                    <Image
-                      source={require("../../assets/image/apranqiGin.png")}
-                      style={{ width: 30, height: 50 }}
-                    />
-                  </View>
-                </View>
-              )}
+            {/* imageeeee */}
             <Text
               style={[
                 {
@@ -944,7 +818,6 @@ export default class AddProductComponent extends React.Component {
                 ? "Загрузите фотографию"
                 : "Фотографии продукта*"}
             </Text>
-
             <TouchableOpacity
               onPress={() => this.pickImage()}
               style={{
@@ -967,7 +840,6 @@ export default class AddProductComponent extends React.Component {
                 Загрузить
               </Text>
             </TouchableOpacity>
-
             {this.state.all_images.length > 0 && (
               <ScrollView
                 horizontal={true}
@@ -1026,7 +898,6 @@ export default class AddProductComponent extends React.Component {
                 </View>
               </ScrollView>
             )}
-
             {this.state.limitError === true && (
               <Text
                 style={{ color: "red", textAlign: "center", marginTop: 10 }}
@@ -1034,6 +905,8 @@ export default class AddProductComponent extends React.Component {
                 Превышен лимит добавления товаров в данной категории
               </Text>
             )}
+
+            {/* dop info */}
             <Text
               style={{
                 fontFamily: "Poppins_500Medium",
@@ -1046,9 +919,9 @@ export default class AddProductComponent extends React.Component {
             >
               Дополнительная информация
             </Text>
-
             <RichTextEditorComponent onChange={(value) => this.setState({ dopInfo: value })} value={this.state.dopInfo} />
 
+            {/*button */}
             <TouchableOpacity
               onPress={() => {
                 if (this.state.buttonSend === true) {

@@ -32,16 +32,16 @@ export default function Slider2(props) {
 
   let sliderItem = ({ item, index }) => {
     return sliderModal === true ? (
-  
+
       <Image
         source={{ uri: APP_IMAGE_URL + item.image }}
-        style={{ height: "100%", width: width, resizeMode: "contain" }}
+        style={{ height: "100%", width: props.searchMode ? width : width, resizeMode: "contain" }}
       />
     ) : (
       <TouchableOpacity onPress={() => setSliderModal(true)} activeOpacity={1}>
         <Image
           source={{ uri: APP_IMAGE_URL + item.image }}
-          style={{ height: "100%", width: width, resizeMode: "cover" }}
+          style={{ height: "100%", width: props.searchMode ? width : width, resizeMode: "cover" }}
         />
       </TouchableOpacity>
     );
@@ -84,14 +84,14 @@ export default function Slider2(props) {
               renderItem={sliderItem}
               onScroll={({ nativeEvent }) => change(nativeEvent)}
             /> */}
-          {props.slid.length > 1 && <View style={styles.wrapDot}>
-            {props.slid.map((item, index) => (
-              <Animated.View
-                style={imgActive === index ? styles.dotActive : styles.dot}
-                key={index}
-              />
-            ))}
-          </View>}
+            {props.slid.length > 1 && <View style={styles.wrapDot}>
+              {props.slid.map((item, index) => (
+                <Animated.View
+                  style={imgActive === index ? styles.dotActive : styles.dot}
+                  key={index}
+                />
+              ))}
+            </View>}
           </View>
         </SafeAreaView>
       </Modal>
@@ -100,14 +100,17 @@ export default function Slider2(props) {
         <FlatList
           horizontal
           pagingEnabled
-          style={styles.wrapper}
+          style={{
+            width: props.searchMode ? width : width,
+            height: props.searchMode ? width : (width + 220) / 2,
+          }}
           showsHorizontalScrollIndicator={false}
           data={props.slid}
           keyExtractor={(item) => item.id}
           renderItem={sliderItem}
           onScroll={({ nativeEvent }) => change(nativeEvent)}
         />
-       {props.slid.length > 1 && <View style={styles.wrapDot}>
+        {props.slid.length > 1 && <View style={styles.wrapDot}>
           {props.slid.map((item, index) => (
             <Animated.View
               style={imgActive === index ? styles.dotActive : styles.dot}
@@ -123,7 +126,7 @@ export default function Slider2(props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: width,
-    height: 220,
+    height: width,
   },
   wrapDot: {
     position: "absolute",

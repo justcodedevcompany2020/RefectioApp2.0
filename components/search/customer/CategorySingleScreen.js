@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { Path, Svg } from "react-native-svg";
+import { ClipPath, Defs, G, LinearGradient, Mask, Path, Stop, Svg, } from "react-native-svg";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native";
 import { APP_IMAGE_URL } from "@env";
@@ -12,8 +12,6 @@ import Slider2 from "../../slider/Slider2";
 import Loading from "../../Component/Loading";
 import CustomerMainPageNavComponent from "../../Customer/CustomerMainPageNav";
 import shuffle from "../shuffle";
-
-const { WIDTH } = Dimensions.get('screen')
 
 export default function CategorySingleScreenCustomer({ navigation, category, mynextUrl, myproducts, product }) {
     const [products, setProducts] = useState([])
@@ -92,9 +90,8 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
                     keyExtractor={(item, index) => index}
                     data={products}
                     renderItem={({ item, }) => {
-                        console.log(item.user_product.logo);
-                        return <View style={{ marginTop: 30 }}>
-                            <Slider2 slid={item.product_image} />
+                        return <View style={{ marginTop: 15 }}>
+                            <Slider2 slid={item.product_image} searchMode />
                             <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("CustomerPageTwo", {
                                 params: item.user_product.id,
                             })}>
@@ -167,7 +164,7 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
                             </TouchableOpacity>
                         </View>
                     }}
-                    ListHeaderComponent={() => <Text style={{ marginVertical: 20, fontSize: 20 }}>{category.name}</Text>}
+                    ListHeaderComponent={() => <Text style={{ marginTop: 20, fontSize: 20 }}>{category.name}</Text>}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.1}
                     ListFooterComponent={renderFooter}

@@ -115,7 +115,7 @@ export default class GhostPageTwoComponent extends React.Component {
       });
   };
 
-  updateProduct = async (category_name) => {
+  updateProduct = async (parent_category_name) => {
     await this.setState({
       change_category_loaded: true,
     });
@@ -127,7 +127,7 @@ export default class GhostPageTwoComponent extends React.Component {
     myHeaders.append("Authorization", "Bearer " + userToken);
 
     let formdata = new FormData();
-    formdata.append("category_name", category_name);
+    formdata.append("parent_category_name", parent_category_name);
     formdata.append("user_id", userID);
 
     let requestOptions = {
@@ -179,7 +179,7 @@ export default class GhostPageTwoComponent extends React.Component {
       .catch((error) => console.log("error", error));
   };
 
-  updateProductAfterClickToCategory = async (category_name, index) => {
+  updateProductAfterClickToCategory = async (parent_category_name, index) => {
     await this.setState({
       change_category_loaded: true,
     });
@@ -201,7 +201,7 @@ export default class GhostPageTwoComponent extends React.Component {
       myHeaders.append("Authorization", "Bearer " + userToken);
 
       let formdata = new FormData();
-      formdata.append("category_name", category_name);
+      formdata.append("parent_category_name", parent_category_name);
       formdata.append("user_id", userID);
 
       let requestOptions = {
@@ -260,7 +260,7 @@ export default class GhostPageTwoComponent extends React.Component {
   loadedDataAfterLoadPage = async () => {
     await this.getObjectData();
     await this.updateProduct(
-      this.state.user_category_for_product[0].category_name
+      this.state.user_category_for_product[0].parent_category_name
     );
     await this.setState({
       changed: this.state.city_for_sales_user.length == this.state.city_count ? 'Все города России' : this.state.city_for_sales_user[0].city_name,
@@ -944,7 +944,7 @@ export default class GhostPageTwoComponent extends React.Component {
                         key={index}
                         onPress={async () => {
                           await this.updateProductAfterClickToCategory(
-                            item.category_name
+                            item.parent_category_name
                           );
                           this.setState({ active: index });
                         }}
@@ -961,7 +961,7 @@ export default class GhostPageTwoComponent extends React.Component {
                               : styles.categoriesName
                           }
                         >
-                          {item.category_name}
+                          {item.parent_category_name}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -1036,7 +1036,7 @@ export default class GhostPageTwoComponent extends React.Component {
                             Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                           </Text>
                         )}
-                        {item.about && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.setState({ aboutProduct: item.about, aboutProductPopup: true })}>
+                        {item.about && item.about != 'null' && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.setState({ aboutProduct: item.about, aboutProductPopup: true })}>
                           <Image source={require('../../assets/image/Screenshot_2.png')} style={{ width: 27, height: 27 }} width={27} height={27} />
                         </TouchableOpacity>}
                       </View>

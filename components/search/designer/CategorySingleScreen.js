@@ -92,8 +92,8 @@ export default function CategorySingleScreenDesigner({ navigation, category, myn
                     keyExtractor={(item, index) => index}
                     data={products}
                     renderItem={({ item, }) => {
-                        return <View style={{ marginTop: 30 }}>
-                            <Slider2 slid={item.product_image} />
+                        return <View style={{ marginTop: 15 }}>
+                            <Slider2 slid={item.product_image} searchMode />
                             <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("DesignerPageTwo", {
                                 params: item.user_product.id,
                             })}>
@@ -166,7 +166,7 @@ export default function CategorySingleScreenDesigner({ navigation, category, myn
                             </TouchableOpacity>
                         </View>
                     }}
-                    ListHeaderComponent={() => <Text style={{ marginVertical: 20, fontSize: 20 }}>{category.name}</Text>}
+                    ListHeaderComponent={() => <Text style={{ marginTop: 20, fontSize: 20 }}>{category.name}</Text>}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.1}
                     ListFooterComponent={renderFooter}

@@ -59,6 +59,8 @@ import AboutUsScreen from "./components/Customer/AboutUsScreen";
 import SubCategoryScreenCustomer from "./components/search/customer/SubCategoryScreen";
 import SubCategoryScreenDesigner from "./components/search/designer/SubCategoryScreen";
 import SubCategoryScreenGuest from "./components/search/guest/SubCategoryScreen";
+import SelectCategoryScreen from "./components/Customer/SelectCategoryScreen";
+import SelectSubCategoryScreen from "./components/Customer/SelectSubCategoryScreen";
 
 const Stack = createStackNavigator();
 
@@ -96,11 +98,12 @@ function GhostPage({ navigation }) {
   return <GhostPageComponent navigation={navigation} />;
 }
 
-function DesignerPage({ navigation }) {
-  return <DesignerPageComponent navigation={navigation} />;
+function SelectCategoryScreenComponent({ navigation }) {
+  return <SelectCategoryScreen navigation={navigation} />;
 }
-function EditPhoneNumber({ navigation }) {
-  return <EditPhoneNumberComponent navigation={navigation} />;
+
+function SelectSubCategoryScreenComponent({ navigation, route }) {
+  return <SelectSubCategoryScreen navigation={navigation} category={route.params.category} />;
 }
 function EditPhoneNumberConfirmFunc({ route, navigation }) {
   const { params } = route.params;
@@ -183,14 +186,14 @@ function CategorySingleScreenComponentCustomer({ navigation, route }) {
 }
 
 function SubCategoryScreenComponentCustomer({ navigation, route }) {
-  return <SubCategoryScreenCustomer navigation={navigation} subcategories={route.params.subcategories} categoryName={route.params.categoryName} />
+  return <SubCategoryScreenCustomer navigation={navigation} category={route.params.category} />
 }
 
 function SubCategoryScreenComponentDesigner({ navigation, route }) {
-  return <SubCategoryScreenDesigner navigation={navigation} subcategories={route.params.subcategories} categoryName={route.params.categoryName} />
+  return <SubCategoryScreenDesigner navigation={navigation} category={route.params.category} />
 }
 function SubCategoryScreenComponentGuest({ navigation, route }) {
-  return <SubCategoryScreenGuest navigation={navigation} subcategories={route.params.subcategories} categoryName={route.params.categoryName} />
+  return <SubCategoryScreenGuest navigation={navigation} category={route.params.category} />
 }
 
 function AboutUsScreenComponent({ navigation, route }) {
@@ -249,9 +252,8 @@ function PraductiaFunc({ route, navigation }) {
 }
 
 function AddProductScreen({ route, navigation }) {
-  const { params } = route.params;
-
-  return <AddProductComponent user_id={params} navigation={navigation} />;
+  const { category } = route.params;
+  return <AddProductComponent category={category} navigation={navigation} />;
 }
 
 function EditProductScreen({ route, navigation }) {
@@ -595,18 +597,18 @@ export default function App() {
                     name="CustomerMyAccaunt"
                     component={CustomerMyAccauntComponent}
                   />
-                  {/* <Stack.Screen
-                  name="CustomerMyBroni"
-                  component={CustomerMyBroniComponent}
-                /> */}
+                  <Stack.Screen
+                    name="SelectSubCategoryScreen"
+                    component={SelectSubCategoryScreenComponent}
+                  />
                   <Stack.Screen
                     name="CustomerPageTwo"
                     component={CustomerPageTwo}
                   />
-                  {/* <Stack.Screen
-                  name="CustomerRewards"
-               //   component={CustomerRewardsComponent}
-                /> */}
+                  <Stack.Screen
+                    name="SelectCategoryScreen"
+                    component={SelectCategoryScreenComponent}
+                  />
                   <Stack.Screen name="Praductia" component={PraductiaFunc} />
                   <Stack.Screen
                     name="EditPhoneNumber"

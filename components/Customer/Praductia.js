@@ -81,20 +81,20 @@ export default class PraductiaComponent extends React.Component {
           }
         }
         if (res.data.message !== "no product") {
-          const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
+          // const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
           console.log(res.data.user_category_for_product);
-          let arr = res.data.user_category_for_product
-          if (isFound == 0) {
-            arr = res.data.user_category_for_product
-            let lastItem = res.data.user_category_for_product[0]
-            arr.push(lastItem)
-            arr.shift(res.data.user_category_for_product[0])
-          }
+          // let arr = res.data.user_category_for_product
+          // if (isFound == 0) {
+          //   arr = res.data.user_category_for_product
+          //   let lastItem = res.data.user_category_for_product[0]
+          //   arr.push(lastItem)
+          //   arr.shift(res.data.user_category_for_product[0])
+          // }
 
           this.setState({
             user: res.data.user,
             user_bonus_for_designer: res.data.user_bonus_for_designer,
-            user_category_for_product: arr,
+            user_category_for_product: res.data.user_category_for_product,
             city_for_sales_user: res.data.city_for_sales_user,
           });
         }
@@ -130,7 +130,7 @@ export default class PraductiaComponent extends React.Component {
           });
 
           await this.updateProduct(
-            this.state.user_category_for_product[0]?.category_name
+            this.state.user_category_for_product[0]?.parent_category_name
           );
           await this.getObjectData();
         }
@@ -138,7 +138,7 @@ export default class PraductiaComponent extends React.Component {
       .catch((error) => console.log("error", error));
   };
 
-  updateProduct = async (category_name) => {
+  updateProduct = async (parent_category_name) => {
     await this.setState({
       change_category_loaded: true,
     });
@@ -148,7 +148,7 @@ export default class PraductiaComponent extends React.Component {
     myHeaders.append("Authorization", "Bearer " + userToken);
 
     let formdata = new FormData();
-    formdata.append("category_name", category_name);
+    formdata.append("parent_category_name", parent_category_name);
     formdata.append("user_id", userID);
 
     let requestOptions = {
@@ -195,7 +195,7 @@ export default class PraductiaComponent extends React.Component {
       .catch((error) => console.log("error", error));
   };
 
-  updateProductAfterClickToCategory = async (category_name, index) => {
+  updateProductAfterClickToCategory = async (parent_category_name, index) => {
     await this.setState({
       change_category_loaded: true,
     });
@@ -217,7 +217,7 @@ export default class PraductiaComponent extends React.Component {
       myHeaders.append("Authorization", "Bearer " + userToken);
 
       let formdata = new FormData();
-      formdata.append("category_name", category_name);
+      formdata.append("parent_category_name", parent_category_name);
       formdata.append("user_id", userID);
 
       let requestOptions = {
@@ -267,7 +267,7 @@ export default class PraductiaComponent extends React.Component {
   loadedDataAfterLoadPage = async () => {
     await this.getObjectData();
     await this.updateProduct(
-      this.state.user_category_for_product[0]?.category_name
+      this.state.user_category_for_product[0]?.parent_category_name
     );
     await this.setState({ active: 0 });
     this.setState({ isLoading: false })
@@ -665,9 +665,7 @@ export default class PraductiaComponent extends React.Component {
 
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("AddProduct", {
-                    params: this.props.user_id,
-                  });
+                  this.props.navigation.navigate("SelectCategoryScreen")
                   this.clearAllData();
                 }}
                 style={{
@@ -701,7 +699,7 @@ export default class PraductiaComponent extends React.Component {
                     <TouchableOpacity
                       onPress={async () => {
                         await this.updateProductAfterClickToCategory(
-                          item.category_name
+                          item.parent_category_name
                         );
                         this.bottomSheetRef?.current?.dismiss();
                         this.setState({ active: index });
@@ -720,7 +718,7 @@ export default class PraductiaComponent extends React.Component {
                             : styles.slideText
                         }
                       >
-                        {item.category_name}
+                        {item.parent_category_name}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -909,7 +907,7 @@ export default class PraductiaComponent extends React.Component {
               </View>
             </BottomSheetModal>
           </View>
-          <CustomerMainPageNavComponent navigation={this.props.navigation} />
+          <CustomerMainPageNavComponent navigation={this.props.navigation} active_page={"Профиль"} />
           {this.state.isLoading && <Loading />}
         </SafeAreaView>
       </BottomSheetModalProvider>
