@@ -437,7 +437,6 @@ export default class DesignerPageTwoComponent extends React.Component {
                   <WebView
                     style={{ height: 100, width: 280, marginTop: 30, zIndex: 99999, }}
                     source={{ html: `<div style="font-size:50px;">${this.state.about_us}</div>` }}
-                    scrollEnabled={false}
                   />}
 
                 <TouchableOpacity

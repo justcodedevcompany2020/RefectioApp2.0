@@ -440,7 +440,9 @@ export default class AddProductComponent extends React.Component {
               <TouchableOpacity
                 style={{ marginTop: 170 }}
                 onPress={async () => {
-                  this.props.navigation.goBack()
+                  await this.props.navigation.navigate("Praductia", {
+                    params: this.props.user_id,
+                  });
                   await this.clearAllData();
                 }}
               >

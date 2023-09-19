@@ -665,7 +665,7 @@ export default class PraductiaComponent extends React.Component {
 
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("SelectCategoryScreen")
+                  this.props.navigation.navigate("SelectCategoryScreen", {user_id: this.props.user_id})
                   this.clearAllData();
                 }}
                 style={{

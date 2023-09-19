@@ -7,7 +7,7 @@ import Loading from "../Component/Loading";
 import CustomerMainPageNavComponent from "./CustomerMainPageNav";
 import { BackBtn } from "../search/customer/CategorySingleScreen";
 
-export default function SelectCategoryScreen({ navigation }) {
+export default function SelectCategoryScreen({ navigation, user_id }) {
     const [categories, setCategories] = useState([])
 
     async function getCategories() {
@@ -16,7 +16,6 @@ export default function SelectCategoryScreen({ navigation }) {
             method: "GET",
             headers: myHeaders,
             redirect: "follow",
-
         };
         await fetch(`${APP_URL}GetProductCategory`, requestOptions)
             .then((response) => response.json())
@@ -41,19 +40,18 @@ export default function SelectCategoryScreen({ navigation }) {
                     {categories.length ? categories.map((el, i) => {
                         console.log(el.name, el.id, el.childrens.length);
                         return (
-                            <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexShrink: 1  }} key={i}
+                            <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexShrink: 1 }} key={i}
                                 onPress={() => {
                                     el.childrens.length ?
-                                        navigation.navigate('SelectSubCategoryScreen', { category: el })
-                                        : navigation.navigate('AddProduct', { category: el })
+                                        navigation.navigate('SelectSubCategoryScreen', { category: el, user_id: user_id })
+                                        : navigation.navigate('AddProduct', { category: el, user_id: user_id })
 
                                 }}>
                                 <View style={{ flexDirection: 'row', flexShrink: 1, marginBottom: 10, }}>
                                     <Image style={{ width: 35, height: 35, marginRight: 15 }} source={{ uri: `${APP_IMAGE_URL}${el.icon}` }} />
-                                    <Text style={{ fontSize: 21, color: '#445391', flexShrink: 1 }}>{el.name}</Text>
+                                    <Text style={{ fontSize: 21, color: 'black', flexShrink: 1 }}>{el.name}</Text>
                                 </View>
-                                {/* <Text style={{ marginBottom: 5, fontSize: 21, color: '#445391', flexShrink: 1 }}>{el.name}</Text> */}
-                                <Image source={require("../../assets/image/right-arrow.png")} style={{ width: 20, height: 20 }} />
+                                <Image source={require("../../assets/image/right-arrow1.png")} style={{ width: 20, height: 20 }} />
                             </TouchableOpacity>
                         )
                     }) :

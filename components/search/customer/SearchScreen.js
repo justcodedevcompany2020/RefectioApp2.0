@@ -36,7 +36,7 @@ export default function SearchScreenCustomer({ navigation }) {
                 paddingHorizontal: 15,
                 position: "relative",
             }}>
-                <Text style={{ fontSize: 25, color: '#445391', fontWeight: '600' }}>Поиск</Text>
+                <Text style={{ fontSize: 25, color: 'black', fontWeight: '600' }}>Поиск</Text>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 20 }}>
                     {categories.length ? categories.map((el, i) => <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} key={i}
                         onPress={() => {
@@ -45,9 +45,9 @@ export default function SearchScreenCustomer({ navigation }) {
                         }}>
                         <View style={{flexDirection: 'row', flexShrink: 1, marginBottom: 10,}}>
                             <Image style={{width: 35, height: 35, marginRight: 15}} source={{uri: `${APP_IMAGE_URL}${el.icon}`}}/>
-                            <Text style={{  fontSize: 21, color: '#445391', flexShrink: 1 }}>{el.name}</Text>
+                            <Text style={{  fontSize: 21, color: 'black', flexShrink: 1 }}>{el.name}</Text>
                         </View>
-                        <Image source={require("../../../assets/image/right-arrow.png")} style={{ width: 20, height: 20 }} />
+                        <Image source={require("../../../assets/image/right-arrow1.png")} style={{ width: 20, height: 20 }} />
                     </TouchableOpacity>
                     ) :
                         <View style={{ marginTop: 30 }}>

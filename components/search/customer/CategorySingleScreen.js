@@ -92,9 +92,12 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
                     renderItem={({ item, }) => {
                         return <View style={{ marginTop: 15 }}>
                             <Slider2 slid={item.product_image} searchMode />
-                            <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("CustomerPageTwo", {
-                                params: item.user_product.id,
-                            })}>
+                            <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => {
+                                navigation.navigate("CustomerPageTwo", {
+                                    params: item.user_product.id,
+                                })
+                                
+                            }}>
                                 <Image
                                     source={{ uri: APP_IMAGE_URL + item.user_product.logo }}
                                     style={{

@@ -98,12 +98,12 @@ function GhostPage({ navigation }) {
   return <GhostPageComponent navigation={navigation} />;
 }
 
-function SelectCategoryScreenComponent({ navigation }) {
-  return <SelectCategoryScreen navigation={navigation} />;
+function SelectCategoryScreenComponent({ navigation, route }) {
+  return <SelectCategoryScreen navigation={navigation} user_id={route.params.user_id}/>;
 }
 
 function SelectSubCategoryScreenComponent({ navigation, route }) {
-  return <SelectSubCategoryScreen navigation={navigation} category={route.params.category} />;
+  return <SelectSubCategoryScreen navigation={navigation} category={route.params.category} user_id={route.params.user_id} />;
 }
 function EditPhoneNumberConfirmFunc({ route, navigation }) {
   const { params } = route.params;
@@ -252,8 +252,8 @@ function PraductiaFunc({ route, navigation }) {
 }
 
 function AddProductScreen({ route, navigation }) {
-  const { category } = route.params;
-  return <AddProductComponent category={category} navigation={navigation} />;
+  const { category, user_id } = route.params;
+  return <AddProductComponent category={category} navigation={navigation} user_id={user_id} />;
 }
 
 function EditProductScreen({ route, navigation }) {

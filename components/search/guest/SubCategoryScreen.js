@@ -15,12 +15,12 @@ export default function SubCategoryScreen({ navigation, category }) {
             }}>
                 <BackBtn onPressBack={() => navigation.goBack()} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 15 }}>
-                    <Text style={{ marginBottom: 15, fontSize: 23, color: '#445391', fontWeight: '500' }}>{category.name}</Text>
+                    <Text style={{ marginBottom: 15, fontSize: 23, color: 'black', fontWeight: '500' }}>{category.name}</Text>
                     <TouchableOpacity onPress={() => navigation.navigate('CategoryScreen', { category: category })}>
-                        <Text style={{ color: '#445391', fontSize: 20, marginBottom: 10 }}>Всё по кухням</Text>
+                        <Text style={{ color: 'black', fontSize: 20, marginBottom: 10 }}>Всё по кухням</Text>
                     </TouchableOpacity>
                     {category.childrens.length ? category.childrens.map((el, i) => <TouchableOpacity key={i} onPress={() => navigation.navigate('CategoryScreen', { category: el })}>
-                        <Text style={{ color: '#445391', fontSize: 20, marginBottom: 10 }}>{el.name}</Text>
+                        <Text style={{ color: 'black', fontSize: 20, marginBottom: 10 }}>{el.name}</Text>
                     </TouchableOpacity>) :
                         <View style={{ marginTop: 30 }}>
                             <Text>Нечего не найдено</Text>
