@@ -117,47 +117,47 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                                         {item.name}
                                     </Text>
                                     {item.facades && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Фасады : {item.facades}
                                         </Text>
                                     )}
                                     {item.frame && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Корпус: {item.frame}
                                         </Text>
                                     )}
                                     {item.tabletop && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Столешница: {item.tabletop}
                                         </Text>
                                     )}
                                     {item.length && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Длина: {item.length} м.
                                         </Text>
                                     )}
                                     {item.height && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Высота: {item.height} м.
                                         </Text>
                                     )}
                                     {item.material && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Материал: {item.material}
                                         </Text>
                                     )}
                                     {item.description && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Описание: {item.description}
                                         </Text>
                                     )}
                                     {item.inserciones && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Описание: {item.inserciones}
                                         </Text>
                                     )}
                                     {item.price && (
-                                        <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                                        <Text>
                                             Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")    } руб.
                                         </Text>
                                     )}

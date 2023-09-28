@@ -74,7 +74,7 @@ export default function Slider(props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: width,
-    height: (width + 220) / 2,
+    height: width / 7 * 5,
   },
   wrapDot: {
     position: "absolute",

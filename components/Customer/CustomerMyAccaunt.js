@@ -24,7 +24,6 @@ import { AuthContext } from "../AuthContext/context";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { APP_URL, APP_IMAGE_URL } from "@env";
-import RichTextEditorComponent from "../Auth/RichTextEditor";
 import HTML from 'react-native-render-html';
 
 export default class CustomerMyAccauntComponent extends React.Component {
@@ -101,7 +100,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
       openDesignerPopup: false,
       dmodelPopup: false,
       about_us: "",
-      aboutUsModal: false,
       updatedAboutUs: ""
     };
   }
@@ -857,30 +855,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
       .catch((error) => console.log("error", error));
   }
 
-  updateAboutUs = async () => {
-    let myHeaders = new Headers();
-    let userToken = await AsyncStorage.getItem("userToken");
-    let AuthStr = "Bearer " + userToken;
-    myHeaders.append("Authorization", AuthStr);
-
-    let formdata = new FormData();
-    formdata.append("about_us", this.state.updatedAboutUs);
-
-    let requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-
-    fetch(`${APP_URL}update_about_us_user`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        this.setState({ aboutUsModal: false })
-      })
-      .catch((error) => console.log("error", error));
-  }
 
   render() {
     return (
@@ -1154,252 +1128,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
             </ImageBackground>
           </Modal>
 
-          <Modal visible={this.state.categoryModal}>
-            <ImageBackground
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              source={require("../../assets/image/blurBg.png")}
-            >
-              <View
-                style={{
-                  width: "90%",
-                  height: "90%",
-                  backgroundColor: "#fff",
-                  borderRadius: 20,
-                  position: "relative",
-                  paddingHorizontal: 15,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    right: 18,
-                    top: 18,
-                  }}
-                  onPress={async () => {
-                    await this.getAuthUserProfile();
-
-                    await this.setState({
-                      categoryModal: false,
-                      delate_category: false,
-                    });
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/image/ixs.png")}
-                    style={{
-                      width: 22.5,
-                      height: 22.5,
-                    }}
-                  />
-                </TouchableOpacity>
-
-                <Text
-                  style={{
-                    marginTop: 70,
-                    fontSize: 26,
-                    textAlign: "center",
-                    color: "#2D9EFB",
-                    fontFamily: "Poppins_500Medium",
-                  }}
-                >
-                  Категории
-                </Text>
-                <View
-                  style={{
-                    marginTop: 41,
-                    height: 50,
-                  }}
-                >
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {this.state.categoryArray.map((item, index) => {
-                      return (
-                        <View
-                          key={index}
-                          style={{
-                            position: "relative",
-                            marginRight: 10,
-                            marginTop: 10,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              paddingHorizontal: 16,
-                              paddingVertical: 10,
-                              backgroundColor: "#F5F5F5",
-                              borderRadius: 8,
-                              fontFamily: "Poppins_500Medium",
-                            }}
-                          >
-                            {item.category_name}
-                          </Text>
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.categoryDelate(item);
-                            }}
-                            style={{
-                              position: "absolute",
-                              right: -5,
-                              top: -5,
-                              // borderWidth: 1,
-                            }}
-                          >
-                            <Image
-                              source={require("../../assets/image/ixs.png")}
-                              style={{
-                                width: 12,
-                                height: 12,
-                              }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
-                </View>
-
-                {/* dropDown category start*/}
-
-                <View style={styles.gorodFilter}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      position: "relative",
-                      alignItems: "center",
-                    }}
-                  >
-                    <TouchableOpacity
-                      style={{
-                        borderWidth: 1,
-                        borderColor: "#F5F5F5",
-                        padding: 10,
-                        width: "100%",
-                        borderRadius: 6,
-                        position: "relative",
-                        height: 45,
-                        marginRight: 12,
-                      }}
-                      onPress={() =>
-                        this.setState({
-                          categoryFilter: !this.state.categoryFilter,
-                        })
-                      }
-                    >
-                      <Text
-                        style={{
-                          color: "#000",
-                          fontFamily: "Poppins_500Medium",
-                        }}
-                      >
-                        Категории
-                      </Text>
-                      <View
-                        style={{ position: "absolute", right: 17, bottom: 18 }}
-                      >
-                        {!this.state.categoryFilter && (
-                          <Svg
-                            width="18"
-                            height="10"
-                            viewBox="0 0 18 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <Path
-                              d="M1 1L9 9L17 1"
-                              stroke="#888888"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </Svg>
-                        )}
-                        {this.state.categoryFilter && (
-                          <Svg
-                            width="18"
-                            height="10"
-                            viewBox="0 0 18 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <Path
-                              d="M1 9L9 1L17 9"
-                              stroke="#888888"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </Svg>
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View
-                    style={
-                      this.state.categoryFilter
-                        ? styles.setGorodFilterActive
-                        : styles.setGorodFilter
-                    }
-                  >
-                    <ScrollView nestedScrollEnabled={true}>
-                      {this.state.categoryItems.map((item, index) => {
-                        return (
-                          <TouchableOpacity
-                            key={index}
-                            style={{
-                              width: "100%",
-                              justifyContent: "space-between",
-                              textAlign: "left",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
-                            onPress={() => {
-                              this.categoryAdd(item, index);
-                            }}
-                          >
-                            <Text
-                              style={{
-                                textAlign: "left",
-                                paddingVertical: 10,
-                                fontFamily: "Poppins_500Medium",
-                              }}
-                            >
-                              {item.name}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </ScrollView>
-                  </View>
-                </View>
-                {this.state.delate_category && (
-                  <Text style={{ color: "red", marginTop: 40 }}>
-                    Нельзя удалить заполненную категорию. Сначала удалите
-                    объекты в разделе Продукция по данной категории
-                  </Text>
-                )}
-                {/* dropDown category end */}
-
-                <TouchableOpacity
-                  style={{
-                    alignSelf: "center",
-                    position: "absolute",
-                    bottom: "20%",
-                  }}
-                  onPress={() => {
-                    this.updateCategory();
-                  }}
-                >
-                  <BlueButton name="Сохранить" />
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-          </Modal>
 
           <Modal visible={this.state.editModal}>
             <ImageBackground
@@ -2108,77 +1836,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
             </ImageBackground>
           </Modal>
 
-          <Modal visible={this.state.aboutUsModal}>
-            <ImageBackground
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              source={require("../../assets/image/blurBg.png")}
-            >
-              <View
-                style={{
-                  width: "90%",
-                  height: "80%",
-                  backgroundColor: "#fff",
-                  borderRadius: 20,
-                  position: "relative",
-                  paddingHorizontal: 15,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    right: 18,
-                    top: 18,
-                  }}
-                  onPress={async () => {
-                    await this.setState({
-                      aboutUsModal: false,
-                      updatedAboutUs: this.state.about_us,
-                    });
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/image/ixs.png")}
-                    style={{
-                      width: 22.5,
-                      height: 22.5,
-                    }}
-                  />
-                </TouchableOpacity>
-
-                <Text
-                  style={{
-                    marginTop: 70,
-                    fontSize: 26,
-                    textAlign: "center",
-                    color: "#2D9EFB",
-                    fontFamily: "Poppins_500Medium",
-                  }}
-                >
-                  Дополнительная информация
-                </Text>
-
-                <RichTextEditorComponent onChange={(value) => this.setState({ updatedAboutUs: value })} value={'<h1>This is a Heading</h1>'} />
-
-                <TouchableOpacity
-                  style={{
-                    alignSelf: "center",
-                    position: "absolute",
-                    bottom: "10%",
-                  }}
-                  onPress={() => {
-                    this.setState({ about_us: this.state.updatedAboutUs })
-                    this.updateAboutUs();
-                  }}
-                >
-                  <BlueButton name="Сохранить" />
-                </TouchableOpacity>
-              </View>
-            </ImageBackground>
-          </Modal>
 
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("CustomerMainPage")}
@@ -2548,63 +2205,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
 
             {/* dropDown end */}
 
-            {/* dropDown  start*/}
-
-            <View style={styles.cityFilter}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "Poppins_500Medium",
-                  marginBottom: 11,
-                  color: "#333333",
-                }}
-              >
-                Категории ({this.state.categoryArray.length})
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  position: "relative",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "83%",
-                    borderRadius: 6,
-                    position: "relative",
-                    height: 45,
-                    marginRight: 12,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      color: "#888888",
-                    }}
-                  >
-                    Кухня
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.getAllCategory();
-                    this.setState({ categoryModal: true });
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/image/ep_edit.png")}
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
 
             <Text
               style={{
@@ -2623,26 +2223,17 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 flexDirection: 'row', width: '95%', flexDirection: "row",
                 position: "relative", marginTop: 15
               }}>
-              <View style={{ borderWidth: 1, borderColor: '#F5F5F5', borderRadius: 6, position: "relative", marginRight: 12, width: "83%", padding: 10, }}>
+              <View style={{ borderWidth: 1, borderColor: '#F5F5F5', borderRadius: 6, position: "relative", marginRight: 12, width: "88%", padding: 10, }}>
                 <HTML
-                contentWidth={700}
+                  contentWidth={700}
                   source={{ html: `<div style="font-size: 16px">${this.state.about_us}</div>` }}
                 />
               </View>
 
               <TouchableOpacity
                 onPress={() => {
-                  // this.setState({ aboutUsModal: true });
                   this.props.navigation.navigate('AboutUsScreen', {
-                    onPressSave: () => {
-                      this.setState({ about_us: this.state.updatedAboutUs })
-                      this.updateAboutUs();
-                      this.props.navigation.goBack()
-                    },
-                    onChangeText: (value) => {
-                      this.setState({ updatedAboutUs: value })
-                    },
-                    value: this.state.updatedAboutUs
+                    value: this.state.about_us
                   })
                 }}
               >

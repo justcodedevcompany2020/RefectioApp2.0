@@ -41,7 +41,7 @@ export default class CustomerMainPageNavComponent extends React.Component {
         //   id: 4,
         // },
         {
-          images: require("../../assets/image/Hashtag.png"),
+          images: require("../../assets/image/Menu.png"),
           text: "Поиск",
           change: "SearchScreen",
           id: 3,

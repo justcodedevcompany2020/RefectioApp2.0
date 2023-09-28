@@ -84,7 +84,7 @@ export default class GhostPageTwoComponent extends React.Component {
       .then((response) => response.json())
       .then((res) => {
         let arr = res.data.user_category_for_product
-        const isFound = res.data.user_category_for_product.findIndex((element) => +element.category_id == 10);
+        const isFound = res.data.user_category_for_product.findIndex((element) => +element.parent_category_id == 10);
         if (isFound == 0) {
           arr = res.data.user_category_for_product
           let lastItem = res.data.user_category_for_product[0]
@@ -92,13 +92,13 @@ export default class GhostPageTwoComponent extends React.Component {
           arr.push(lastItem)
         }
 
-        const isFoundKitchen = arr.findIndex((element) => +element.category_id == 2);
+        const isFoundKitchen = arr.findIndex((element) => +element.parent_category_id == 2);
         if (isFoundKitchen >= 0) {
           let firstItem = arr.splice(isFoundKitchen, 1)
           arr.unshift(firstItem[0])
         }
 
-        const receptionАrea = arr.findIndex((element) => +element.category_id == 12);
+        const receptionАrea = arr.findIndex((element) => +element.parent_category_id == 12);
         if (receptionАrea >= 0) {
           let myItem = arr.splice(receptionАrea, 1)
           arr.push(myItem[0])
@@ -992,47 +992,47 @@ export default class GhostPageTwoComponent extends React.Component {
                           {item.name}
                         </Text>
                         {item.facades && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Фасады : {item.facades}
                           </Text>
                         )}
                         {item.frame && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Корпус: {item.frame}
                           </Text>
                         )}
                         {item.tabletop && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Столешница: {item.tabletop}
                           </Text>
                         )}
                         {item.length && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Длина: {item.length} м.
                           </Text>
                         )}
                         {item.height && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Высота: {item.height} м.
                           </Text>
                         )}
                         {item.material && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Материал: {item.material}
                           </Text>
                         )}
                         {item.description && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Описание: {item.description}
                           </Text>
                         )}
                         {item.inserciones && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Описание: {item.inserciones}
                           </Text>
                         )}
                         {item.price && (
-                          <Text style={{ fontFamily: "Raleway_400Regular" }}>
+                          <Text>
                             Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                           </Text>
                         )}

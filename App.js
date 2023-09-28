@@ -197,7 +197,7 @@ function SubCategoryScreenComponentGuest({ navigation, route }) {
 }
 
 function AboutUsScreenComponent({ navigation, route }) {
-  return <AboutUsScreen navigation={navigation} onPressSave={route.params.onPressSave} onChangeText={route.params.onChangeText} value={route.params.value} />
+  return <AboutUsScreen navigation={navigation} value={route.params.value} />
 }
 
 function ForgetPassword({ navigation }) {

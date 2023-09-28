@@ -15,12 +15,12 @@ import {
 import ArrowGrayComponent from "../../assets/image/ArrowGray";
 import BlueButton from "../Component/Buttons/BlueButton";
 import CustomerMainPageNavComponent from "./CustomerMainPageNav";
-import Svg, { Path, Rect } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import Loading from "../Component/Loading";
-import RichTextEditorComponent from "../Auth/RichTextEditor";
+import HTML from 'react-native-render-html';
+import { Dimensions } from "react-native";
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -74,9 +74,14 @@ export default class EditProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+
+      max_image_error: false,
     };
     this.delate_images = [];
+    this.richText = React.createRef();
   }
+
+  handleHead = ({ tintColor }) => <Text style={{ color: tintColor }}>H1</Text>
 
   pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -352,7 +357,7 @@ export default class EditProductComponent extends React.Component {
     myHeaders.append("Content-Type", "application/json");
 
     let raw = JSON.stringify({
-      product_id: this.props.user_id.product_id,
+      product_id: this.props.user_id?.product_id,
     });
 
     let requestOptions = {
@@ -418,16 +423,7 @@ export default class EditProductComponent extends React.Component {
             parentCategory: result.data[0].parent_category_name,
             categoryId: result.data[0].category_id ?? null,
             parentCategoryId: result.data[0].parent_category_id,
-            // categoryChanged:
-            //   result.data[0].category_name === "null" ||
-            //     result.data[0].category_name === null
-            //     ? ""
-            //     : result.data[0].category_name,
-            about: result.data[0].about
-          });
-
-          console.log(result.data[0].parent_category_id, typeof result.data[0].category_id, typeof result.data[0].category_name);
-          this.setState({
+            about: (result.data[0].about == 'null' || result.data[0].about == null) ? '' : result.data[0].about,
             hasFacades:
               result.data[0].category_id == 28 ||
               result.data[0].category_id == 30 ||
@@ -507,7 +503,9 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 63 ||
               result.data[0].category_id == 66 ||
               result.data[0].category_id == 98
-          })
+          });
+
+          console.log(result.data[0].parent_category_id, typeof result.data[0].category_id, typeof result.data[0].category_name);
 
           let new_all_images = [];
           result.data[0].product_image.map((item) => {
@@ -854,7 +852,7 @@ export default class EditProductComponent extends React.Component {
                   onChangeText={(text) => this.setState({ frame: text })}
                 />
               </View> : null}
-              
+
               {this.state.hasTableTop ? <View>
                 <Text
                   style={{
@@ -1126,8 +1124,12 @@ export default class EditProductComponent extends React.Component {
               >
                 Дополнительная информация
               </Text>
-              {!this.state.isLoading && <RichTextEditorComponent onChange={(value) => this.setState({ about: value })} value={this.state.about} />}
-
+              <View style={{ borderWidth: 1, borderColor: '#F5F5F5', borderRadius: 6, position: "relative", marginRight: 12, width: "100%", minHeight: 100, padding: 10, }}>
+                <HTML
+                  contentWidth={Dimensions.get('screen').width}
+                  source={{ html: `<div style="font-size: 16px">${this.state.about}</div>` }}
+                />
+              </View>
               {/* button */}
               <TouchableOpacity
                 onPress={() => {

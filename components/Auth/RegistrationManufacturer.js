@@ -47,6 +47,7 @@ export default class RegistrationManufacturerComponent extends Component {
 
       company_name: "",
       company_name_error: false,
+      name_exists_error: false,
 
       phone: "",
       phone_error: false,
@@ -433,9 +434,19 @@ export default class RegistrationManufacturerComponent extends Component {
               company_name_error: true,
             });
             this.ref.current.scrollTo({ x: 0, y: 0, animated: true });
+            if (res.data.company_name[0] == 'The company name has already been taken.') {
+              this.setState({
+                name_exists_error: true
+              })
+            } else {
+              this.setState({
+                name_exists_error: false
+              })
+            }
           } else {
             this.setState({
               company_name_error: false,
+              name_exists_error: false
             });
           }
 
@@ -807,6 +818,22 @@ export default class RegistrationManufacturerComponent extends Component {
                   });
                 }}
               />
+              {this.state.name_exists_error && <Text
+                style={[
+                  {
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 13,
+                    // color: "#5B5B5B",
+                    marginTop: 10,
+                    marginBottom: 5,
+                    color: "red"
+                  },
+                ]}
+              >
+                Производитель с таким именем уже существует.
+              </Text>}
+
             </View>
 
             <View>
@@ -1106,7 +1133,7 @@ export default class RegistrationManufacturerComponent extends Component {
                               paddingVertical: 7,
                               fontFamily: "Poppins_500Medium",
                               borderBottomWidth: 1,
-                              borderBottomColor: "#F5F5F5",     
+                              borderBottomColor: "#F5F5F5",
                             },
                           ]}
                         >

@@ -37,7 +37,7 @@ export default class DesignerPageNavComponent extends React.Component {
           id: 3,
         },
         {
-          images: require("../../assets/image/Hashtag.png"),
+          images: require("../../assets/image/Menu.png"),
           text: "Поиск",
           change: "SearchScreen",
           id: 4,

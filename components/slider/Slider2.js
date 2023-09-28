@@ -102,7 +102,7 @@ export default function Slider2(props) {
           pagingEnabled
           style={{
             width: props.searchMode ? width : width,
-            height: props.searchMode ? width : (width + 220) / 2,
+            height: props.searchMode ? width : width/7*5,
           }}
           showsHorizontalScrollIndicator={false}
           data={props.slid}

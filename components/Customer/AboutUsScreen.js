@@ -10,11 +10,41 @@ import { Text } from "react-native";
 import RichTextEditorComponent from "../Auth/RichTextEditor";
 import { TouchableOpacity } from "react-native";
 import BlueButton from "../Component/Buttons/BlueButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { APP_URL } from "@env";
 
 
-export default function AboutUsScreen({ navigation, onPressSave, onChangeText, value }) {
+export default function AboutUsScreen({ navigation, value }) {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [disabled, setDisabled] = useState(false)
+  const [aboutUs, setAboutUs] = useState(value)
+
+  updateAboutUs = async () => {
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
+
+    let formdata = new FormData();
+    console.log(userToken);
+    console.log('aboutUs',aboutUs);
+    formdata.append("about_us", aboutUs);
+
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(`${APP_URL}update_about_us_user`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        navigation.goBack()
+      })
+      .catch((error) => console.log("error", error));
+  }
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -29,7 +59,6 @@ export default function AboutUsScreen({ navigation, onPressSave, onChangeText, v
         setKeyboardVisible(false); // or some other action
       }
     );
-    console.log(onChangeText, value);
 
     return () => {
       keyboardDidHideListener.remove();
@@ -38,16 +67,12 @@ export default function AboutUsScreen({ navigation, onPressSave, onChangeText, v
   }, []);
 
 
-
-
   return <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
     <View style={{
       flex: 1,
       paddingHorizontal: 15,
     }}>
       <BackBtn onPressBack={() => navigation.goBack()} />
-
-      {/* {loading ? <Loading /> : null } */}
       <Text
         style={{
           marginTop: 20,
@@ -60,7 +85,7 @@ export default function AboutUsScreen({ navigation, onPressSave, onChangeText, v
         Дополнительная информация
       </Text>
 
-      <RichTextEditorComponent onChange={onChangeText} value={value} />
+      <RichTextEditorComponent onChange={setAboutUs} value={aboutUs} />
 
       <TouchableOpacity
         style={{
@@ -69,7 +94,7 @@ export default function AboutUsScreen({ navigation, onPressSave, onChangeText, v
           bottom: "10%",
         }}
         disabled={disabled}
-        onPress={() => { onPressSave(); setDisabled(true) ; console.log('pressed');}}
+        onPress={updateAboutUs}
       >
         <BlueButton name="Сохранить" />
       </TouchableOpacity>
@@ -77,7 +102,7 @@ export default function AboutUsScreen({ navigation, onPressSave, onChangeText, v
     {!isKeyboardVisible && <CustomerMainPageNavComponent
       active_page={"Поиск"}
       navigation={navigation}
-    />} 
+    />}
   </SafeAreaView >
 }
 
