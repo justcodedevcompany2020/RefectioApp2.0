@@ -770,6 +770,7 @@ export default class PraductiaComponent extends React.Component {
                             fontSize: 13,
                             marginTop: 5,
                             marginBottom: 4,
+                            width: '90%'
                           }}
                         >
                           {item.name}

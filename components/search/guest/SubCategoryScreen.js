@@ -17,14 +17,14 @@ export default function SubCategoryScreen({ navigation, category }) {
                 <BackBtn onPressBack={() => navigation.goBack()} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 15 }}>
                     <Text style={{ marginBottom: 15, fontSize: 23, color: 'black', fontWeight: '500' }}>{category.name}</Text>
-                    {category.id != 27 && <TouchableOpacity style={{borderBottomWidth: 1, borderColor: 'lightgray', marginBottom: 10}}  onPress={() => navigation.navigate('CategoryScreen', { category: category })}>
+                    <TouchableOpacity style={{ borderBottomWidth: 1, borderColor: 'lightgray', marginBottom: 10 }} onPress={() => navigation.navigate('CategoryScreen', { category: category })}>
                         <Text style={{ color: 'black', fontSize: 20, marginBottom: 10 }}>{renderSwitch(category.id)}</Text>
-                    </TouchableOpacity>}
-                    {category.childrens.length ? category.childrens.map((el, i) => <TouchableOpacity style={{borderBottomWidth: 1, borderColor: 'lightgray', marginBottom: 10}}  key={i} onPress={() => navigation.navigate('CategoryScreen', { category: el })}>
+                    </TouchableOpacity>
+                    {category.childrens.length ? category.childrens.map((el, i) => <TouchableOpacity style={{ borderBottomWidth: 1, borderColor: 'lightgray', marginBottom: 10 }} key={i} onPress={() => navigation.navigate('CategoryScreen', { category: el })}>
                         <Text style={{ color: 'black', fontSize: 20, marginBottom: 10 }}>{el.name}</Text>
                     </TouchableOpacity>) :
                         <View style={{ marginTop: 30 }}>
-                            <Text>Нечего не найдено</Text>
+                            <Text>Ничего не найдено</Text>
                         </View>
                     }
                 </ScrollView>

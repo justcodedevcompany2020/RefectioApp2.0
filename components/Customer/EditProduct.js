@@ -21,6 +21,7 @@ import { APP_URL, APP_IMAGE_URL } from "@env";
 import Loading from "../Component/Loading";
 import HTML from 'react-native-render-html';
 import { Dimensions } from "react-native";
+import RichTextEditorComponent from "../Auth/RichTextEditor";
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -257,7 +258,7 @@ export default class EditProductComponent extends React.Component {
     formdata.append("tabletop", this.state.tabletop);
     formdata.append("material", this.state.material);
     formdata.append("inserciones", this.state.inserciones);
-    formdata.append("about", this.state.about)
+    // formdata.append("about", this.state.about)
     if (delate_photo.length > 0) {
       await delate_photo.map((item) => {
         formdata.append("Deletephoto[]", item.id);
@@ -1124,12 +1125,7 @@ export default class EditProductComponent extends React.Component {
               >
                 Дополнительная информация
               </Text>
-              <View style={{ borderWidth: 1, borderColor: '#F5F5F5', borderRadius: 6, position: "relative", marginRight: 12, width: "100%", minHeight: 100, padding: 10, }}>
-                <HTML
-                  contentWidth={Dimensions.get('screen').width}
-                  source={{ html: `<div style="font-size: 16px">${this.state.about}</div>` }}
-                />
-              </View>
+              <RichTextEditorComponent value={this.state.about}/>
               {/* button */}
               <TouchableOpacity
                 onPress={() => {

@@ -2186,7 +2186,7 @@ export default class RegistrationManufacturerComponent extends Component {
               )}
             </View>
 
-            <Text
+            {/* <Text
               style={[
                 {
                   fontFamily: "Poppins_500Medium",
@@ -2201,7 +2201,7 @@ export default class RegistrationManufacturerComponent extends Component {
             >
               Дополнительная информация
             </Text>
-            <RichTextEditorComponent onChange={(value) => this.setState({ dopInfo: value })} value={this.state.dopInfo} />
+            <RichTextEditorComponent onChange={(value) => this.setState({ dopInfo: value })} value={this.state.dopInfo} /> */}
             <View style={styles.checkBox}>
               <TouchableOpacity
                 style={{ marginRight: 10 }}

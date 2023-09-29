@@ -19,6 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import Loading from "../Component/Loading";
+import RichTextEditorComponent from "../Auth/RichTextEditor";
 
 export default class AddProductComponent extends React.Component {
   constructor(props) {
@@ -527,7 +528,7 @@ export default class AddProductComponent extends React.Component {
               </View>
 
             </View>
-   
+
             {/* Название */}
             <View>
               <Text
@@ -903,6 +904,20 @@ export default class AddProductComponent extends React.Component {
                 Превышен лимит добавления товаров в данной категории
               </Text>
             )}
+
+            {/* <Text
+              style={{
+                fontFamily: "Poppins_500Medium",
+                lineHeight: 23,
+                fontSize: 16,
+                color: "#5B5B5B",
+                marginBottom: 5,
+                marginTop: 15,
+              }}
+            >
+              Дополнительная информация
+            </Text>
+            <RichTextEditorComponent /> */}
 
             <TouchableOpacity
               onPress={() => {

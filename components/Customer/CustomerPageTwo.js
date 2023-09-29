@@ -597,7 +597,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               <View
                 style={{
                   width: "90%",
-                  height: "26%",
+                  height: "30%",
                   backgroundColor: "#fff",
                   borderRadius: 20,
                   position: "relative",
@@ -659,7 +659,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               <View
                 style={{
                   width: "90%",
-                  height: "25%",
+                  height: "28%",
                   backgroundColor: "#fff",
                   borderRadius: 20,
                   position: "relative",
@@ -885,7 +885,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                     style={{
                       borderWidth: 1,
                       borderColor: "#F5F5F5",
-                      width: "50%",
+                      width: "60%",
                       borderRadius: 5,
                       position: "relative",
                       height: 24,
@@ -1187,6 +1187,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               fontSize: 13,
                               marginTop: 5,
                               marginBottom: 4,
+                              width: '90%'
                             }}
                           >
                             {item.name}
@@ -1312,7 +1313,7 @@ const styles = StyleSheet.create({
     fontFamily: "Raleway_500Medium",
   },
   sOpenCityDropDown: {
-    width: "50%",
+    width: "60%",
     height: 0,
     left: 0,
     position: "absolute",
@@ -1320,7 +1321,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   sOpenCityDropDownActive: {
-    width: "50%",
+    width: "60%",
     height: 120,
     left: 0,
     position: "absolute",

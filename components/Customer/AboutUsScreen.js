@@ -19,32 +19,32 @@ export default function AboutUsScreen({ navigation, value }) {
   const [disabled, setDisabled] = useState(false)
   const [aboutUs, setAboutUs] = useState(value)
 
-  updateAboutUs = async () => {
-    let myHeaders = new Headers();
-    let userToken = await AsyncStorage.getItem("userToken");
-    let AuthStr = "Bearer " + userToken;
-    myHeaders.append("Authorization", AuthStr);
+  // updateAboutUs = async () => {
+  //   let myHeaders = new Headers();
+  //   let userToken = await AsyncStorage.getItem("userToken");
+  //   let AuthStr = "Bearer " + userToken;
+  //   myHeaders.append("Authorization", AuthStr);
 
-    let formdata = new FormData();
-    console.log(userToken);
-    console.log('aboutUs',aboutUs);
-    formdata.append("about_us", aboutUs);
+  //   let formdata = new FormData();
+  //   console.log(userToken);
+  //   console.log('aboutUs',aboutUs);
+  //   formdata.append("about_us", aboutUs);
 
-    let requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
+  //   let requestOptions = {
+  //     method: "POST",
+  //     headers: myHeaders,
+  //     body: formdata,
+  //     redirect: "follow",
+  //   };
 
-    fetch(`${APP_URL}update_about_us_user`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        navigation.goBack()
-      })
-      .catch((error) => console.log("error", error));
-  }
+  //   fetch(`${APP_URL}update_about_us_user`, requestOptions)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       console.log(result);
+  //       navigation.goBack()
+  //     })
+  //     .catch((error) => console.log("error", error));
+  // }
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -85,7 +85,7 @@ export default function AboutUsScreen({ navigation, value }) {
         Дополнительная информация
       </Text>
 
-      <RichTextEditorComponent onChange={setAboutUs} value={aboutUs} />
+      <RichTextEditorComponent value={aboutUs} hideIcon />
 
       <TouchableOpacity
         style={{
@@ -94,9 +94,9 @@ export default function AboutUsScreen({ navigation, value }) {
           bottom: "10%",
         }}
         disabled={disabled}
-        onPress={updateAboutUs}
+        onPress={() => navigation.goBack()}
       >
-        <BlueButton name="Сохранить" />
+        <BlueButton name="Ок" />
       </TouchableOpacity>
     </View>
     {!isKeyboardVisible && <CustomerMainPageNavComponent

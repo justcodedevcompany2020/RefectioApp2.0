@@ -40,7 +40,7 @@ export default function SearchScreenDesigner({ navigation }) {
             }}>
                 <Text style={{ fontSize: 25, color: 'black', fontWeight: '600' }}>Поиск</Text>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 30 }}>
-                    {categories.length ? categories.map((el, i) => <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, paddingBottom: 5, borderBottomWidth: 1, borderColor: 'lightgray'  }} key={i}
+                    {categories.length ? categories.map((el, i) => <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  marginBottom: 10, paddingBottom: 5, borderBottomWidth: 1, borderColor: 'lightgray'  }} key={i}
                         onPress={() => {
                             el.childrens.length ? navigation.navigate('SubCategoryScreen', { category: el })
                             : navigation.navigate('CategoryScreen', { category: el })
@@ -52,7 +52,7 @@ export default function SearchScreenDesigner({ navigation }) {
                         {el.childrens.length ? <Image source={require("../../../assets/image/right-arrow1.png")} style={{ width: 20, height: 20 }} />: null}
                     </TouchableOpacity>
                     ) :
-                        <View style={{ marginTop: 30 }}>
+                        <View style={{ marginVertical: 30 }}>
                             <Loading />
                         </View>
                     }

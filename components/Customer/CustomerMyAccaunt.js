@@ -25,6 +25,7 @@ import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import HTML from 'react-native-render-html';
+import RichTextEditorComponent from "../Auth/RichTextEditor";
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -100,7 +101,8 @@ export default class CustomerMyAccauntComponent extends React.Component {
       openDesignerPopup: false,
       dmodelPopup: false,
       about_us: "",
-      updatedAboutUs: ""
+      updatedAboutUs: "",
+      // aboutUsModal: false
     };
   }
   static contextType = AuthContext;
@@ -1837,6 +1839,56 @@ export default class CustomerMyAccauntComponent extends React.Component {
           </Modal>
 
 
+          {/* <Modal visible={this.state.aboutUsModal}>
+            <ImageBackground
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              source={require("../../assets/image/blurBg.png")}
+            >
+              <View
+                style={{
+                  width: "90%",
+                  height: "40%",
+                  backgroundColor: "#fff",
+                  borderRadius: 20,
+                  position: "relative",
+                  paddingHorizontal: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    marginVertical: 20,
+                    fontSize: 26,
+                    textAlign: "center",
+                    color: "#2D9EFB",
+                    fontFamily: "Poppins_500Medium",
+                  }}
+                >
+                  Дополнительная информация
+                </Text>
+
+                <RichTextEditorComponent />
+
+                <TouchableOpacity
+                  style={{
+                    alignSelf: "center",
+                    position: "absolute",
+                    bottom: "10%",
+                  }}
+                  onPress={() => {
+                    this.setState({ aboutUsModal: false })
+                  }}
+                >
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal> */}
+
+
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("CustomerMainPage")}
             style={{
@@ -2232,9 +2284,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
 
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate('AboutUsScreen', {
-                    value: this.state.about_us
-                  })
+                  this.props.navigation.navigate('AboutUsScreen', {value: this.state.about_us})
                 }}
               >
                 <Image

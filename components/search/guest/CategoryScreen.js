@@ -411,7 +411,7 @@ export default function CategoryScreenGuest({ navigation, category }) {
                             <FilterIcon onPress={() => setFilterMode(true)} />
                         </View>
                     }}
-                    ListEmptyComponent={() => <Text style={{ textAlign: 'center', fontSize: 18, }}>Нечего не найдено</Text>}
+                    ListEmptyComponent={() => <Text style={{ textAlign: 'center', fontSize: 18, }}>Ничего не найдено</Text>}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.1}
                     ListFooterComponent={renderFooter}

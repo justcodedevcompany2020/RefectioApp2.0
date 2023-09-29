@@ -22,7 +22,7 @@ export default function SelectSubCategoryScreen({ navigation, category, user_id 
                         <Text style={{ color: 'black', fontSize: 20, marginBottom: 15 }}>{el.name}</Text>
                     </TouchableOpacity>) :
                         <View style={{ marginTop: 30 }}>
-                            <Text>Нечего не найдено</Text>
+                            <Text>Ничего не найдено</Text>
                         </View>
                     }
                 </ScrollView>
