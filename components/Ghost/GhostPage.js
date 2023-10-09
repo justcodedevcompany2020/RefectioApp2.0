@@ -160,7 +160,7 @@ export default class GhostPageComponent extends React.Component {
 
     let formdata = new FormData();
     formdata.append("meshok", meshok); //Ценовая категория
-    formdata.append("category_name", category_name); //Категории
+    formdata.append("parent_category_name", category_name); //Категории
     formdata.append("city_name", city_name); // Город
     formdata.append("made_in", made_in_result); // Страна произволства
     formdata.append("show_room", show_room);
@@ -521,7 +521,6 @@ export default class GhostPageComponent extends React.Component {
                 </Svg>
               </TouchableOpacity>
             </View>
-
             {this.state.getAllProducts.length == 0 &&
               this.state.isLoading === false && (
                 <Text
@@ -530,7 +529,6 @@ export default class GhostPageComponent extends React.Component {
                   Данных не найдено
                 </Text>
               )}
-
             <FlatList
               showsVerticalScrollIndicator={false}
               renderItem={this.renderItem}

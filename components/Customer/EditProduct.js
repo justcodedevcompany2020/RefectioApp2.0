@@ -213,7 +213,7 @@ export default class EditProductComponent extends React.Component {
 
       image_boolean: false,
       isLoading: true,
-      about: "",
+      about: null,
 
       hasFacades: false,
       hasFrame: false,
@@ -424,7 +424,7 @@ export default class EditProductComponent extends React.Component {
             parentCategory: result.data[0].parent_category_name,
             categoryId: result.data[0].category_id ?? null,
             parentCategoryId: result.data[0].parent_category_id,
-            about: (result.data[0].about == 'null' || result.data[0].about == null) ? '' : result.data[0].about,
+            about: (result.data[0].about == 'null' || result.data[0].about == null || result.data[0].about == '<p><br></p>') ? null : result.data[0].about,
             hasFacades:
               result.data[0].category_id == 28 ||
               result.data[0].category_id == 30 ||

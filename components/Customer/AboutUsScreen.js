@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL } from "@env";
 
 
-export default function AboutUsScreen({ navigation, value }) {
+export default function AboutUsScreen({ navigation, value, hideText }) {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [disabled, setDisabled] = useState(false)
   const [aboutUs, setAboutUs] = useState(value)
@@ -75,7 +75,7 @@ export default function AboutUsScreen({ navigation, value }) {
       <BackBtn onPressBack={() => navigation.goBack()} />
       <Text
         style={{
-          marginTop: 20,
+          marginVertical: 20,
           fontSize: 20,
           // textAlign: "center/",
           // color: "#2D9EFB",
@@ -84,9 +84,7 @@ export default function AboutUsScreen({ navigation, value }) {
       >
         Дополнительная информация
       </Text>
-
-      <RichTextEditorComponent value={aboutUs} hideIcon />
-
+      <RichTextEditorComponent value={aboutUs} hideIcon hideText={hideText} />
       <TouchableOpacity
         style={{
           alignSelf: "center",

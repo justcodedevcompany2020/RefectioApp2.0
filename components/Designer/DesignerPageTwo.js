@@ -443,16 +443,16 @@ export default class DesignerPageTwoComponent extends React.Component {
     // this.getCategory()
     // this.getObjectData()
 
-    this.focusListener = navigation.addListener("focus", () => {
-      this.loadedDataAfterLoadPage();
-    });
+    this.loadedDataAfterLoadPage();
+    // this.focusListener = navigation.addListener("focus", () => {
+    // });
   }
 
   componentWillUnmount() {
     // Remove the event listener
-    if (this.focusListener) {
-      this.focusListener();
-    }
+    // if (this.focusListener) {
+    //   this.focusListener();
+    // }
   }
 
   render() {
@@ -1341,7 +1341,8 @@ export default class DesignerPageTwoComponent extends React.Component {
                     },
                   ]}
                   onPress={() => {
-                    this.setState({ aboutUsPopup: true });
+                    // this.setState({ aboutUsPopup: true });
+                    this.props.navigation.navigate('AboutUsScreen', {value: this.state.about_us,  hideText: true})
                   }}
                 >
                   <Image
@@ -1491,7 +1492,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                             Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                           </Text>
                         )}
-                        {item.about && item.about != 'null' && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.setState({ aboutProduct: item.about, aboutProductPopup: true })}>
+                        {item.about && (item.about != 'null' && item.about != '<p><br></p>') && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() =>  this.props.navigation.navigate('AboutUsScreen', {value: item.about,  hideText: true})}>
                           <Image source={require('../../assets/image/Screenshot_2.png')} style={{ width: 27, height: 27 }} width={27} height={27} />
                         </TouchableOpacity>}
                       </View>

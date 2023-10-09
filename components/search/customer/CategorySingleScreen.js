@@ -13,7 +13,7 @@ import Loading from "../../Component/Loading";
 import CustomerMainPageNavComponent from "../../Customer/CustomerMainPageNav";
 import shuffle from "../shuffle";
 
-export default function CategorySingleScreenCustomer({ navigation, category, mynextUrl, myproducts, product }) {
+export default function CategorySingleScreenCustomer({ navigation, category, mynextUrl, myproducts, product, cityId, startPrice, endPrice }) {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [moreLoading, setMoreLoading] = useState()
@@ -35,8 +35,18 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
 
     async function getProducts(refresh) {
         let formdata = new FormData();
-        console.log(category);
-        formdata.append("category_id", category.id)
+        if (category.parent) {
+            console.log('subcategory');
+            formdata.append("parent_category_id", category.parent_id)
+            formdata.append("category_id", category.id)
+        } else {
+            formdata.append("parent_category_id", category.id)
+        }
+
+        cityId && formdata.append("city_id", cityId.id)
+        startPrice && formdata.append("start_price", startPrice.replaceAll('.', ''))
+        endPrice && formdata.append("end_price", endPrice.replaceAll('.', ''))
+
         await fetch(refresh ? firstPageUrl : nextUrl, {
             method: 'POST',
             headers: {

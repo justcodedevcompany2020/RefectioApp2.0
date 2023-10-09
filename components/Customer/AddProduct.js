@@ -217,7 +217,7 @@ export default class AddProductComponent extends React.Component {
     this.formdata.append("tabletop", this.state.tabletop);
     this.formdata.append("material", this.state.material);
     this.formdata.append("inserciones", this.state.inserciones);
-    this.formdata.append("description", this.state.description);
+    // this.formdata.append("description", this.state.description);
 
     let requestOptions = {
       method: "POST",

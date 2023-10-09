@@ -401,7 +401,7 @@ export default function CategoryScreenGuest({ navigation, category }) {
                     data={products}
                     numColumns={3}
                     renderItem={({ item, index }) => {
-                        return <TouchableOpacity onPress={() => navigation.navigate('CategorySingleScreen', { category, nextUrl, products, product: index })}>
+                        return <TouchableOpacity onPress={() => navigation.navigate('CategorySingleScreen', { category, nextUrl, products, product: index, cityId, startPrice, endPrice })}>
                             <Image source={{ uri: APP_IMAGE_URL + item.product_image[0].image }} style={{ marginBottom: 5, marginRight: 5 }} width={(width - 40) / 3} height={(width - 40) / 3} />
                         </TouchableOpacity>
                     }}

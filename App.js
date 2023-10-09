@@ -99,7 +99,7 @@ function GhostPage({ navigation }) {
 }
 
 function SelectCategoryScreenComponent({ navigation, route }) {
-  return <SelectCategoryScreen navigation={navigation} user_id={route.params.user_id}/>;
+  return <SelectCategoryScreen navigation={navigation} user_id={route.params.user_id} />;
 }
 
 function SelectSubCategoryScreenComponent({ navigation, route }) {
@@ -159,7 +159,7 @@ function CategoryScreenComponentGuest({ navigation, route }) {
 }
 
 function CategorySingleScreenComponentGuest({ navigation, route }) {
-  return <CategorySingleScreenGuest navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+  return <CategorySingleScreenGuest navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} cityId={route.params.cityId}  startPrice={route.params.startPrice} endPrice={route.params.endPrice}/>
 }
 
 
@@ -171,7 +171,7 @@ function CategoryScreenComponentDesigner({ navigation, route }) {
 }
 
 function CategorySingleScreenComponentDesigner({ navigation, route }) {
-  return <CategorySingleScreenDesigner navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+  return <CategorySingleScreenDesigner navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} cityId={route.params.cityId}  startPrice={route.params.startPrice} endPrice={route.params.endPrice} />
 }
 
 function SearchScreenComponentCustomer({ navigation }) {
@@ -182,7 +182,7 @@ function CategoryScreenComponentCustomer({ navigation, route }) {
 }
 
 function CategorySingleScreenComponentCustomer({ navigation, route }) {
-  return <CategorySingleScreenCustomer navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} />
+  return <CategorySingleScreenCustomer navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} cityId={route.params.cityId}  startPrice={route.params.startPrice} endPrice={route.params.endPrice}/>
 }
 
 function SubCategoryScreenComponentCustomer({ navigation, route }) {
@@ -197,7 +197,7 @@ function SubCategoryScreenComponentGuest({ navigation, route }) {
 }
 
 function AboutUsScreenComponent({ navigation, route }) {
-  return <AboutUsScreen navigation={navigation} value={route.params.value} />
+  return <AboutUsScreen navigation={navigation} value={route.params.value} hideText={route.params.hideText} />
 }
 
 function ForgetPassword({ navigation }) {
@@ -246,7 +246,6 @@ function PraductiaFunc({ route, navigation }) {
     <PraductiaComponent
       user_id={params}
       navigation={navigation}
-      product_id={params}
     />
   );
 }
@@ -569,6 +568,10 @@ export default function App() {
                   name="AddZakazchikDesigner"
                   component={AddZakazchikDesignerComponent}
                 />
+                <Stack.Screen
+                    name="AboutUsScreen"
+                    component={AboutUsScreenComponent}
+                  />
               </Stack.Navigator>
             ) : // Customer Pages Tabs
 
@@ -729,6 +732,10 @@ export default function App() {
                       component={NewPasswordComponent}
                     />
                     <Stack.Screen name="Modal" component={ModalComponent} />
+                    <Stack.Screen
+                      name="AboutUsScreen"
+                      component={AboutUsScreenComponent}
+                    />
                   </Stack.Navigator>
                 ) : (
                   <></>

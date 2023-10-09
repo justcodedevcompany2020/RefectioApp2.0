@@ -203,7 +203,7 @@ export default class CustomerMainPageComponent extends React.Component {
 
     let formdata = new FormData();
     formdata.append("meshok", meshok);
-    formdata.append("category_name", category_name);
+    formdata.append("parent_category_name", category_name);
     formdata.append("city_name", city_name);
     formdata.append("made_in", made_in_result);
     formdata.append("show_room", show_room);

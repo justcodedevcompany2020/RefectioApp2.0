@@ -6,7 +6,6 @@ import {
   View,
   Image,
   Text,
-  Touchable,
   TouchableOpacity,
   TextInput,
   ScrollView,
@@ -25,7 +24,6 @@ import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import HTML from 'react-native-render-html';
-import RichTextEditorComponent from "../Auth/RichTextEditor";
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -50,7 +48,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
 
       authUserState: [],
 
-      id: "",
+      id: null,
       inn: "",
       strana: "",
 
@@ -278,11 +276,10 @@ export default class CustomerMyAccauntComponent extends React.Component {
     })
       .then((response) => response.json())
       .then((res) => {
-        console.log('about_us', res?.data[0].about_us ?? '');
 
         this.setState({
-          about_us: res?.data[0].about_us ?? '',
-          updatedAboutUs: res?.data[0].about_us ?? '',
+          about_us: res?.data[0].about_us ,
+          updatedAboutUs: res?.data[0].about_us ,
           authUserState: res?.data,
           gorodArray: res?.data[0].city_of_sales_manufacturer,
           allCities: res?.data[0].city_of_sales_manufacturer.length == res?.city_count ? true : false,
@@ -2185,6 +2182,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
+                disabled={!this.state.id}
               >
                 <Text
                   style={{

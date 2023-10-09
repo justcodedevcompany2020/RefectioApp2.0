@@ -37,7 +37,7 @@ export default function SearchScreenCustomer({ navigation }) {
                 position: "relative",
             }}>
                 <Text style={{ fontSize: 25, color: 'black', fontWeight: '600' }}>Поиск</Text>
-                <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 20 }}>
+                <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 40 }}>
                     {categories.length ? categories.map((el, i) => <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, paddingBottom: 5, borderBottomWidth: 1, borderColor: 'lightgray' }} key={i}
                         onPress={() => {
                             el.childrens.length ? navigation.navigate('SubCategoryScreen', { category: el })

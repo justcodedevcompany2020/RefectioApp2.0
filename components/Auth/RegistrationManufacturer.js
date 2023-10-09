@@ -413,7 +413,7 @@ export default class RegistrationManufacturerComponent extends Component {
     this.form_data.append("dmodel", d3model)
     this.form_data.append("sales_city", new_sales_city);
     // this.form_data.append("product_category[]", new_product_category);
-    this.form_data.append("percent_bonus[]", this.state.procentArrayToString);
+    // this.form_data.append("percent_bonus[]", this.state.procentArrayToString);
     this.form_data.append("about_us", dopInfo)
 
     let requestOptions = {

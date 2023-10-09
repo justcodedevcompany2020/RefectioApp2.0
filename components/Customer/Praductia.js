@@ -337,7 +337,7 @@ export default class PraductiaComponent extends React.Component {
       })
     }
 
-    fetch(`${APP_URL}add_star`, requestOptions)
+    await fetch(`${APP_URL}add_star`, requestOptions)
       .then((response) => response.json())
       .then(res => {
         console.log(res);
