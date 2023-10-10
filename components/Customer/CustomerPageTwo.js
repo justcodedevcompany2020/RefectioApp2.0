@@ -23,10 +23,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Slider2 from "../slider/Slider2";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import WebView from "react-native-webview";
+import { BackHandler } from 'react-native';
 
 export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       RewardModal: false,
 
@@ -120,15 +122,23 @@ export default class DesignerPageTwoComponent extends React.Component {
     this.setState({ active: 0 });
   };
 
+  handleBackButtonClick() {
+    this.props.navigation.navigate('CustomerMainPage', { screen: true })
+    return true
+  }
+
+
   componentDidMount() {
     const { navigation } = this.props;
     this.loadedDataAfterLoadPage();
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
     // this.focusListener = navigation.addListener("focus", () => {
     //   this.loadedDataAfterLoadPage();
     // });
   }
 
   componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     // Remove the event listener
     // if (this.focusListener) {
     //   this.focusListener();
@@ -149,7 +159,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       myHeaders.append("Authorization", "Bearer " + userToken);
 
       let formdata = new FormData();
-      formdata.append("parent_category_name", parent_category_name); 
+      formdata.append("parent_category_name", parent_category_name);
       formdata.append("user_id", userID);
 
       let requestOptions = {
@@ -289,7 +299,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                 // show_plus_button: false
                 change_category_loaded: false,
                 pressCategory: true,
-              });   
+              });
               return false;
             }
 
@@ -706,7 +716,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               </View>
             </ImageBackground>
           </Modal>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={() => this.props.navigation.navigate('CustomerMainPage', { screen: true })}>
+          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={this.handleBackButtonClick}>
             <Svg
               width={25}
               height={30}
@@ -1085,7 +1095,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                     ]}
                     onPress={() => {
                       // this.setState({ aboutUsPopup: true })
-                      this.props.navigation.navigate('AboutUsScreen', {value: this.state.about_us,  hideText: true})
+                      this.props.navigation.navigate('AboutUsScreen', { value: this.state.about_us, hideText: true })
                     }}
                   >
                     <Image
@@ -1203,6 +1213,11 @@ export default class DesignerPageTwoComponent extends React.Component {
                               Корпус: {item.frame}
                             </Text>
                           )}
+                          {item.profile && (
+                            <Text>
+                              Профиль: {item.profile}
+                            </Text>
+                          )}
                           {item.tabletop && (
                             <Text>
                               Столешница: {item.tabletop}
@@ -1224,22 +1239,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                               Материал: {item.material}
                             </Text>
                           )}
-                          {item.description && (
-                            <Text>
-                              Описание: {item.description}
-                            </Text>
-                          )}
-                          {item.inserciones && (
-                            <Text>
-                              Описание: {item.inserciones}
-                            </Text>
-                          )}
                           {item.price && (
                             <Text>
                               Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                             </Text>
                           )}
-                          {item.about && item.about != 'null' && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.props.navigation.navigate('AboutUsScreen', {value: item.about, hideText: true})} >
+                          {item.about && item.about != 'null' && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.props.navigation.navigate('AboutUsScreen', { value: item.about, hideText: true })} >
                             <Image source={require('../../assets/image/Screenshot_2.png')} style={{ width: 27, height: 27 }} width={27} height={27} />
                           </TouchableOpacity>}
                         </View>

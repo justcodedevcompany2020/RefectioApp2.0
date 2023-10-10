@@ -47,6 +47,7 @@ export default class CustomerMainPageComponent extends React.Component {
     this.handler = this.handler.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
+    this.ref = React.createRef()
   }
 
   clearAllData = async () => {
@@ -248,6 +249,7 @@ export default class CustomerMainPageComponent extends React.Component {
           filter: false,
           isLastPage: true
         });
+        this.ref.current.scrollToIndex({ index: 0, animated: true });
       })
       .catch((error) => console.log("error", error));
 
@@ -635,6 +637,7 @@ export default class CustomerMainPageComponent extends React.Component {
           <FlatList
             showsVerticalScrollIndicator={false}
             renderItem={this.renderItem}
+            ref={this.ref}
             data={this.state.getAllProducts}
             keyExtractor={(item, index) => index.toString()}
             onEndReached={this.handleLoadMore}

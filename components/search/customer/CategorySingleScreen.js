@@ -106,7 +106,7 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
                                 navigation.navigate("CustomerPageTwo", {
                                     params: item.user_product.id,
                                 })
-                                
+
                             }}>
                                 <Image
                                     source={{ uri: APP_IMAGE_URL + item.user_product.logo }}
@@ -138,6 +138,11 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
                                             Корпус: {item.frame}
                                         </Text>
                                     )}
+                                    {item.profile && (
+                                        <Text>
+                                            Профиль: {item.profile}
+                                        </Text>
+                                    )}
                                     {item.tabletop && (
                                         <Text>
                                             Столешница: {item.tabletop}
@@ -156,16 +161,6 @@ export default function CategorySingleScreenCustomer({ navigation, category, myn
                                     {item.material && (
                                         <Text>
                                             Материал: {item.material}
-                                        </Text>
-                                    )}
-                                    {item.description && (
-                                        <Text>
-                                            Описание: {item.description}
-                                        </Text>
-                                    )}
-                                    {item.inserciones && (
-                                        <Text>
-                                            Описание: {item.inserciones}
                                         </Text>
                                     )}
                                     {item.price && (

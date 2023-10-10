@@ -1342,7 +1342,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                   ]}
                   onPress={() => {
                     // this.setState({ aboutUsPopup: true });
-                    this.props.navigation.navigate('AboutUsScreen', {value: this.state.about_us,  hideText: true})
+                    this.props.navigation.navigate('AboutUsScreen', { value: this.state.about_us, hideText: true })
                   }}
                 >
                   <Image
@@ -1457,6 +1457,11 @@ export default class DesignerPageTwoComponent extends React.Component {
                             Корпус: {item.frame}
                           </Text>
                         )}
+                        {item.profile && (
+                          <Text>
+                            Профиль: {item.profile}
+                          </Text>
+                        )}
                         {item.tabletop && (
                           <Text>
                             Столешница: {item.tabletop}
@@ -1477,22 +1482,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                             Материал: {item.material}
                           </Text>
                         )}
-                        {item.description && (
-                          <Text>
-                            Описание: {item.description}
-                          </Text>
-                        )}
-                        {item.inserciones && (
-                          <Text>
-                            Описание: {item.inserciones}
-                          </Text>
-                        )}
                         {item.price && (
                           <Text>
                             Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                           </Text>
                         )}
-                        {item.about && (item.about != 'null' && item.about != '<p><br></p>') && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() =>  this.props.navigation.navigate('AboutUsScreen', {value: item.about,  hideText: true})}>
+                        {item.about && (item.about != 'null' && item.about != '<p><br></p>') && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.props.navigation.navigate('AboutUsScreen', { value: item.about, hideText: true })}>
                           <Image source={require('../../assets/image/Screenshot_2.png')} style={{ width: 27, height: 27 }} width={27} height={27} />
                         </TouchableOpacity>}
                       </View>

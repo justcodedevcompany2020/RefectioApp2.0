@@ -1003,6 +1003,11 @@ export default class GhostPageTwoComponent extends React.Component {
                             Корпус: {item.frame}
                           </Text>
                         )}
+                        {item.profile && (
+                        <Text>
+                          Профиль: {item.profile}
+                        </Text>
+                      )}
                         {item.tabletop && (
                           <Text>
                             Столешница: {item.tabletop}
@@ -1021,16 +1026,6 @@ export default class GhostPageTwoComponent extends React.Component {
                         {item.material && (
                           <Text>
                             Материал: {item.material}
-                          </Text>
-                        )}
-                        {item.description && (
-                          <Text>
-                            Описание: {item.description}
-                          </Text>
-                        )}
-                        {item.inserciones && (
-                          <Text>
-                            Описание: {item.inserciones}
                           </Text>
                         )}
                         {item.price && (

@@ -71,6 +71,7 @@ export default class GhostPageComponent extends React.Component {
     this.handler = this.handler.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
+    this.ref = React.createRef()
   }
 
   clearAllData = async () => {
@@ -221,6 +222,7 @@ export default class GhostPageComponent extends React.Component {
           filter: false,
           isLastPage: true
         });
+        this.ref.current.scrollToIndex({ index: 0, animated: true });
       })
       .catch((error) => console.log("error", error));
   }
@@ -533,6 +535,7 @@ export default class GhostPageComponent extends React.Component {
               showsVerticalScrollIndicator={false}
               renderItem={this.renderItem}
               data={this.state.getAllProducts}
+              ref={this.ref}
               keyExtractor={(_, index) => index.toString()}
               onEndReached={this.handleLoadMore}
               onEndReachedThreshold={0.5}

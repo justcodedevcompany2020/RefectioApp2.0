@@ -2228,14 +2228,14 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     marginRight: 12,
                   }}
                 >
-                  <Text
+                  {this.state.gorodArray.length ? <Text
                     style={{
                       fontFamily: "Poppins_500Medium",
                       color: "#888888",
                     }}
                   >
-                    Москва
-                  </Text>
+                    {this.state.gorodArray.length == 80 ? 'Все города России' : this.state.gorodArray[0]?.city_name + '...' }
+                  </Text> : null}
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {

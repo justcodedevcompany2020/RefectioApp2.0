@@ -70,6 +70,7 @@ export default class AddProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasMaterial: false
     };
   }
   formdata = new FormData();
@@ -147,6 +148,7 @@ export default class AddProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasMaterial: false
     });
   };
 
@@ -309,6 +311,7 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 30 ||
         this.props.category.id == 31 ||
         this.props.category.id == 36 ||
+        this.props.category.id == 37 ||
         this.props.category.parent_id == 4 ||
         this.props.category.id == 42 ||
         this.props.category.id == 43 ||
@@ -335,6 +338,7 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 30 ||
         this.props.category.id == 31 ||
         this.props.category.id == 36 ||
+        this.props.category.id == 37 ||
         this.props.category.parent_id == 4 ||
         this.props.category.id == 42 ||
         this.props.category.id == 43 ||
@@ -365,8 +369,34 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 57 ||
         this.props.category.id == 58 ||
         this.props.category.id == 96 ||
+        this.props.category.id == 97 ||
         this.props.category.id == 63 ||
         this.props.category.id == 66 ||
+        this.props.category.id == 98,
+      hasMaterial:
+        this.props.category.id == 28 ||
+        this.props.category.id == 30 ||
+        this.props.category.id == 31 ||
+        this.props.category.id == 36 ||
+        this.props.category.id == 37 ||
+        this.props.category.parent_id == 4 ||
+        this.props.category.id == 40 ||
+        this.props.category.id == 41 ||
+        this.props.category.id == 42 ||
+        this.props.category.id == 43 ||
+        this.props.category.id == 45 ||
+        this.props.category.id == 46 ||
+        this.props.category.id == 50 ||
+        this.props.category.id == 51 ||
+        this.props.category.id == 57 ||
+        this.props.category.id == 58 ||
+        this.props.category.id == 63 ||
+        this.props.category.id == 65 ||
+        this.props.category.id == 66 ||
+        this.props.category.id == 94 ||
+        this.props.category.id == 95 ||
+        this.props.category.id == 96 ||
+        this.props.category.id == 97 ||
         this.props.category.id == 98
     })
 
@@ -574,53 +604,8 @@ export default class AddProductComponent extends React.Component {
               />
             </View>
 
-            {/* Цена */}
-            <View>
-              <Text
-                style={{
-                  fontFamily: "Poppins_500Medium",
-                  lineHeight: 23,
-                  fontSize: 16,
-                  color: "#5B5B5B",
-                  marginBottom: 5,
-                  marginTop: 12,
-                }}
-              >
-                Цена
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="1.000.000"
-                  keyboardType="number-pad"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "89%",
-                    borderRadius: 5,
-                    marginRight: 5,
-                  }}
-                  value={this.state.price}
-                  maxLength={9}
-                  onChangeText={(text) => {
-                    let without_dots = text.split(".").join("");
-                    let with_dots = without_dots
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-                    this.setState({ price: with_dots });
-                  }}
-                />
-                <Image
-                  source={require("../../assets/image/apranqiGin.png")}
-                  style={{ width: 30, height: 50 }}
-                />
-              </View>
-            </View>
-
             {/* Материал */}
-            <View>
+            {!this.state.hasMaterial ? <View>
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
@@ -647,7 +632,7 @@ export default class AddProductComponent extends React.Component {
                 value={this.state.material}
                 onChangeText={(text) => this.setState({ material: text })}
               />
-            </View>
+            </View> : null}
 
             {/* Фасады */}
             {this.state.hasFacades ? <View>
@@ -739,37 +724,6 @@ export default class AddProductComponent extends React.Component {
                 onChangeText={(text) => this.setState({ tabletop: text })}
               />
             </View>}
-
-            {/* Длина */}
-            {this.state.hasLength && <View>
-              <Text
-                style={{
-                  fontFamily: "Poppins_500Medium",
-                  lineHeight: 23,
-                  fontSize: 16,
-                  color: "#5B5B5B",
-                  marginBottom: 5,
-                  marginTop: 12,
-                }}
-              >
-                Длина
-              </Text>
-              <TextInput
-                underlineColorAndroid="transparent"
-                placeholder="8 метров"
-                keyboardType="numeric"
-                style={{
-                  borderWidth: 1,
-                  borderColor: "#F5F5F5",
-                  padding: 10,
-                  width: "100%",
-                  borderRadius: 5,
-                }}
-                value={this.state.length}
-                onChangeText={(text) => this.setState({ length: text })}
-              />
-            </View>}
-
             {/* Высота */}
             {this.state.hasHeight && <View>
               <Text
@@ -798,7 +752,85 @@ export default class AddProductComponent extends React.Component {
                 value={this.state.height}
                 onChangeText={(text) => this.setState({ height: text })}
               />
+
+              {/* Длина */}
+              {this.state.hasLength && <View>
+                <Text
+                  style={{
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: "#5B5B5B",
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}
+                >
+                  Длина
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="8 метров"
+                  keyboardType="numeric"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#F5F5F5",
+                    padding: 10,
+                    width: "100%",
+                    borderRadius: 5,
+                  }}
+                  value={this.state.length}
+                  onChangeText={(text) => this.setState({ length: text })}
+                />
+              </View>}
+
+
             </View>}
+
+            {/* Цена */}
+            <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Цена
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="1.000.000"
+                  keyboardType="number-pad"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#F5F5F5",
+                    padding: 10,
+                    width: "89%",
+                    borderRadius: 5,
+                    marginRight: 5,
+                  }}
+                  value={this.state.price}
+                  maxLength={9}
+                  onChangeText={(text) => {
+                    let without_dots = text.split(".").join("");
+                    let with_dots = without_dots
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+                    this.setState({ price: with_dots });
+                  }}
+                />
+                <Image
+                  source={require("../../assets/image/apranqiGin.png")}
+                  style={{ width: 30, height: 50 }}
+                />
+              </View>
+            </View>
+
 
             {/* imageeeee */}
             <Text

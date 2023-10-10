@@ -55,7 +55,7 @@ export default function SelectCategoryScreen({ navigation, user_id }) {
                             </TouchableOpacity>
                         )
                     }) :
-                        <View style={{}}>
+                        <View style={{marginTop: 20}}>
                             <Loading />
                         </View>
                     }

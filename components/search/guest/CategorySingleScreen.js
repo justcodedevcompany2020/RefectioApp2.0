@@ -49,7 +49,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
         cityId && formdata.append("city_id", cityId.id)
         startPrice && formdata.append("start_price", startPrice.replaceAll('.', ''))
         endPrice && formdata.append("end_price", endPrice.replaceAll('.', ''))
-        
+
         await fetch(refresh ? firstPageUrl : nextUrl, {
             method: 'POST',
             headers: {
@@ -103,7 +103,7 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                     data={products}
                     renderItem={({ item, }) => {
                         return <View style={{ marginTop: 15 }}>
-                            <Slider2 slid={item.product_image} searchMode/>
+                            <Slider2 slid={item.product_image} searchMode />
                             <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }} onPress={() => navigation.navigate("GhostPageTwo", {
                                 params: item.user_product.id,
                             })}>
@@ -137,6 +137,11 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                                             Корпус: {item.frame}
                                         </Text>
                                     )}
+                                    {item.profile && (
+                                        <Text>
+                                            Профиль: {item.profile}
+                                        </Text>
+                                    )}
                                     {item.tabletop && (
                                         <Text>
                                             Столешница: {item.tabletop}
@@ -157,19 +162,9 @@ export default function CategorySingleScreenGuest({ navigation, category, mynext
                                             Материал: {item.material}
                                         </Text>
                                     )}
-                                    {item.description && (
-                                        <Text>
-                                            Описание: {item.description}
-                                        </Text>
-                                    )}
-                                    {item.inserciones && (
-                                        <Text>
-                                            Описание: {item.inserciones}
-                                        </Text>
-                                    )}
                                     {item.price && (
                                         <Text>
-                                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")    } руб.
+                                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
                                         </Text>
                                     )}
                                 </View>

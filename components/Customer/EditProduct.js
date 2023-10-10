@@ -75,6 +75,7 @@ export default class EditProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasMaterial: false,
 
       max_image_error: false,
     };
@@ -220,6 +221,7 @@ export default class EditProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasMaterial: false
     });
   };
 
@@ -445,6 +447,7 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 30 ||
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
+              result.data[0].category_id == 37 ||
               result.data[0].parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
               result.data[0].category_id == 43 ||
@@ -471,6 +474,7 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 30 ||
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
+              result.data[0].category_id == 37 ||
               result.data[0].parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
               result.data[0].category_id == 43 ||
@@ -501,8 +505,34 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 57 ||
               result.data[0].category_id == 58 ||
               result.data[0].category_id == 96 ||
+              result.data[0].category_id == 97 ||
               result.data[0].category_id == 63 ||
               result.data[0].category_id == 66 ||
+              result.data[0].category_id == 98,
+            hasMaterial:
+              result.data[0].category_id == 28 ||
+              result.data[0].category_id == 30 ||
+              result.data[0].category_id == 31 ||
+              result.data[0].category_id == 36 ||
+              result.data[0].category_id == 37 ||
+              result.data[0].parent_category_id == 4 ||
+              result.data[0].category_id == 40 ||
+              result.data[0].category_id == 41 ||
+              result.data[0].category_id == 42 ||
+              result.data[0].category_id == 43 ||
+              result.data[0].category_id == 45 ||
+              result.data[0].category_id == 46 ||
+              result.data[0].category_id == 50 ||
+              result.data[0].category_id == 51 ||
+              result.data[0].category_id == 57 ||
+              result.data[0].category_id == 58 ||
+              result.data[0].category_id == 63 ||
+              result.data[0].category_id == 65 ||
+              result.data[0].category_id == 66 ||
+              result.data[0].category_id == 94 ||
+              result.data[0].category_id == 95 ||
+              result.data[0].category_id == 96 ||
+              result.data[0].category_id == 97 ||
               result.data[0].category_id == 98
           });
 
@@ -722,51 +752,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View>
 
-              <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Цена
-                </Text>
-                <View style={{ flexDirection: "row" }}>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="1.000.000"
-                    keyboardType="number-pad"
-                    maxLength={9}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#F5F5F5",
-                      padding: 10,
-                      width: "89%",
-                      borderRadius: 5,
-                      marginRight: 5,
-                    }}
-                    value={this.state.price}
-                    onChangeText={(text) => {
-                      let without_dots = text.split(".").join("");
-                      let with_dots = without_dots
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-                      this.setState({ price: with_dots });
-                    }}
-                  />
-                  <Image
-                    source={require("../../assets/image/apranqiGin.png")}
-                    style={{ width: 30, height: 50 }}
-                  />
-                </View>
-              </View>
-
-              <View>
+              {!this.state.hasMaterial ? <View>
                 <Text
                   style={{
                     fontFamily: "Poppins_500Medium",
@@ -793,7 +779,7 @@ export default class EditProductComponent extends React.Component {
                   value={this.state.material}
                   onChangeText={(text) => this.setState({ material: text })}
                 />
-              </View>
+              </View> : null}
 
               {this.state.hasFacades ? <View>
                 <Text
@@ -883,6 +869,35 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
+              {this.state.hasHeight ? <View>
+                <Text
+                  style={{
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: "#5B5B5B",
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}
+                >
+                  Высота
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="0.5 метров"
+                  keyboardType="decimal-pad"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#F5F5F5",
+                    padding: 10,
+                    width: "100%",
+                    borderRadius: 5,
+                  }}
+                  value={this.state.height}
+                  onChangeText={(text) => this.setState({ height: text })}
+                />
+              </View> : null}
+
               {this.state.hasLength ? <View>
                 <Text
                   style={{
@@ -912,7 +927,8 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
-              {this.state.hasHeight ? <View>
+
+              <View>
                 <Text
                   style={{
                     fontFamily: "Poppins_500Medium",
@@ -923,23 +939,38 @@ export default class EditProductComponent extends React.Component {
                     marginTop: 12,
                   }}
                 >
-                  Высота
+                  Цена
                 </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="0.5 метров"
-                  keyboardType="decimal-pad"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.height}
-                  onChangeText={(text) => this.setState({ height: text })}
-                />
-              </View> : null}
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="1.000.000"
+                    keyboardType="number-pad"
+                    maxLength={9}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "89%",
+                      borderRadius: 5,
+                      marginRight: 5,
+                    }}
+                    value={this.state.price}
+                    onChangeText={(text) => {
+                      let without_dots = text.split(".").join("");
+                      let with_dots = without_dots
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+                      this.setState({ price: with_dots });
+                    }}
+                  />
+                  <Image
+                    source={require("../../assets/image/apranqiGin.png")}
+                    style={{ width: 30, height: 50 }}
+                  />
+                </View>
+              </View>
 
               {/* image */}
               <Text
@@ -1125,7 +1156,7 @@ export default class EditProductComponent extends React.Component {
               >
                 Дополнительная информация
               </Text>
-              <RichTextEditorComponent value={this.state.about}/>
+              <RichTextEditorComponent value={this.state.about} />
               {/* button */}
               <TouchableOpacity
                 onPress={() => {
