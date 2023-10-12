@@ -28,9 +28,9 @@ export default class EditProductComponent extends React.Component {
     super(props);
     this.state = {
       keyboardOpen: false,
-      category: "",
+      categoryName: "",
       categoryId: "",
-      parentCategory: null,
+      parentCategoryName: null,
       parentCategoryId: null,
       img: null,
 
@@ -52,7 +52,7 @@ export default class EditProductComponent extends React.Component {
       price_error: false,
 
       material: "",
-      inserciones: "",
+      profile: "",
 
       tabletop: "",
       tabletop_error: false,
@@ -75,6 +75,7 @@ export default class EditProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasProfile: false,
       hasMaterial: false,
 
       max_image_error: false,
@@ -183,7 +184,7 @@ export default class EditProductComponent extends React.Component {
       price_error: false,
 
       material: "",
-      inserciones: "",
+      profile: "",
 
       tabletop: "",
       tabletop_error: false,
@@ -196,11 +197,11 @@ export default class EditProductComponent extends React.Component {
       limitError: false,
 
       keyboardOpen: false,
-      category: "",
+      categoryName: "",
       // categoryChanged: "",
       // categoryChanged_error: "",
       categoryId: "",
-      parentCategory: null,
+      parentCategoryName: null,
       parentCategoryId: null,
       img: null,
 
@@ -221,6 +222,7 @@ export default class EditProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasProfile: false,
       hasMaterial: false
     });
   };
@@ -240,14 +242,14 @@ export default class EditProductComponent extends React.Component {
     formdata.append("product_id", this.props.user_id.product_id);
 
     if (this.state.parentCategoryId == 'null' || this.state.parentCategoryId == null) {
-      formdata.append("parent_category_id", this.state.parentCategoryId)
-      formdata.append("parent_category_name", this.state.parentCategory)
-
-      formdata.append("category_id", this.state.categoryId);
-      formdata.append("category_name", this.state.category);
+      formdata.append("parent_category_id", this.state.categoryId)
+      formdata.append("parent_category_name", this.state.categoryName)
     } else {
       formdata.append("parent_category_id", this.state.parentCategoryId)
-      formdata.append("parent_category_name", this.state.parentCategory)
+      formdata.append("parent_category_name", this.state.parentCategoryName)
+
+      formdata.append("category_id", this.state.categoryId);
+      formdata.append("category_name", this.state.categoryName);
     }
 
     formdata.append("name", this.state.name);
@@ -259,8 +261,8 @@ export default class EditProductComponent extends React.Component {
     formdata.append("price", myPrice);
     formdata.append("tabletop", this.state.tabletop);
     formdata.append("material", this.state.material);
-    formdata.append("inserciones", this.state.inserciones);
-    // formdata.append("about", this.state.about)
+    formdata.append("profile", this.state.profile);
+
     if (delate_photo.length > 0) {
       await delate_photo.map((item) => {
         formdata.append("Deletephoto[]", item.id);
@@ -285,6 +287,13 @@ export default class EditProductComponent extends React.Component {
       }
     } else if (all_images.length === 0 && get_old_image.length === 0) {
       this.setState({ buttonSend: false, all_images_error: true });
+    }
+
+    if(all_images.length > 10){
+      this.setState({ limitError: true });
+      return
+    } else {
+      this.setState({ limitError: false });
     }
 
     if (this.state.buttonSend) {
@@ -333,17 +342,17 @@ export default class EditProductComponent extends React.Component {
               });
             }
 
-            if (
-              result.data?.message ==
-              "you already have 3 products under this category"
-            ) {
-              await this.setState({ limitError: true });
-              let set = setTimeout(() => {
-                this.setState({ limitError: false });
-                this.clearAllData();
-                clearTimeout(set);
-              }, 3000);
-            }
+            // if (
+            //   result.data?.message ==
+            //   "you already have 3 products under this category"
+            // ) {
+            //   await this.setState({ limitError: true });
+            //   let set = setTimeout(() => {
+            //     this.setState({ limitError: false });
+            //     this.clearAllData();
+            //     clearTimeout(set);
+            //   }, 3000);
+            // }
           }
           formdata = new FormData();
           // this.setState({isLoading: false})
@@ -422,8 +431,12 @@ export default class EditProductComponent extends React.Component {
                 result.data[0].tabletop === null
                 ? ""
                 : result.data[0].tabletop,
-            category: result.data[0].category_name ?? null,
-            parentCategory: result.data[0].parent_category_name,
+            profile: result.data[0].profile === "null" ||
+              result.data[0].profile === null
+              ? ""
+              : result.data[0].profile,
+            categoryName: result.data[0].category_name ?? null,
+            parentCategoryName: result.data[0].parent_category_name,
             categoryId: result.data[0].category_id ?? null,
             parentCategoryId: result.data[0].parent_category_id,
             about: (result.data[0].about == 'null' || result.data[0].about == null || result.data[0].about == '<p><br></p>') ? null : result.data[0].about,
@@ -533,10 +546,19 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 95 ||
               result.data[0].category_id == 96 ||
               result.data[0].category_id == 97 ||
+              result.data[0].category_id == 98,
+            hasProfile:
+              result.data[0].category_id == 37 ||
+              result.data[0].category_id == 58 ||
+              result.data[0].category_id == 66 ||
+              result.data[0].category_id == 94 ||
+              result.data[0].category_id == 95 ||
+              result.data[0].category_id == 96 ||
+              result.data[0].category_id == 97 ||
               result.data[0].category_id == 98
           });
 
-          console.log(result.data[0].parent_category_id, typeof result.data[0].category_id, typeof result.data[0].category_name);
+          console.log(result.data[0].parent_category_id, result.data[0].category_id, typeof result.data[0].category_name);
 
           let new_all_images = [];
           result.data[0].product_image.map((item) => {
@@ -662,6 +684,7 @@ export default class EditProductComponent extends React.Component {
 
           {this.state.isLoading ? <Loading /> :
             <ScrollView showsVerticalScrollIndicator={false}>
+              {/* Категория */}
               <View>
                 <Text
                   style={[
@@ -702,12 +725,13 @@ export default class EditProductComponent extends React.Component {
                         fontFamily: "Poppins_500Medium",
                       }}
                     >
-                      {this.state.parentCategory}{this.state.category != 'null' && this.state.category != null && (' -> ' + this.state.category)}
+                      {this.state.parentCategoryName}{this.state.categoryName != 'null' && this.state.categoryName != null && (' -> ' + this.state.categoryName)}
                     </Text>
                   </View>
                 </View>
               </View>
 
+              {/* Название */}
               <View>
                 <Text
                   style={[
@@ -752,6 +776,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View>
 
+              {/* Материал */}
               {!this.state.hasMaterial ? <View>
                 <Text
                   style={{
@@ -781,6 +806,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
+              {/* Фасады */}
               {this.state.hasFacades ? <View>
                 <Text
                   style={{
@@ -810,6 +836,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
+              {/* Корпус */}
               {this.state.hasFrame ? <View>
                 <Text
                   style={{
@@ -840,6 +867,37 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
+              {/* Профиль */}
+              {this.state.hasProfile && <View>
+                <Text
+                  style={{
+                    fontFamily: "Poppins_500Medium",
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: "#5B5B5B",
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}
+                >
+                  Профиль
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="Aлюминиевый"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#F5F5F5",
+                    padding: 10,
+                    width: "100%",
+                    borderRadius: 5,
+                  }}
+                  value={this.state.profile}
+                  onChangeText={(text) => this.setState({ profile: text })}
+                />
+              </View>}
+
+              {/* Столешница */}
               {this.state.hasTableTop ? <View>
                 <Text
                   style={{
@@ -869,6 +927,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
+              {/* Высота */}
               {this.state.hasHeight ? <View>
                 <Text
                   style={{
@@ -898,6 +957,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
+              {/* Длина */}
               {this.state.hasLength ? <View>
                 <Text
                   style={{
@@ -927,7 +987,7 @@ export default class EditProductComponent extends React.Component {
                 />
               </View> : null}
 
-
+              {/* Цена */}
               <View>
                 <Text
                   style={{
@@ -1134,16 +1194,16 @@ export default class EditProductComponent extends React.Component {
                 <Text
                   style={{ color: "red", textAlign: "center", marginTop: 10 }}
                 >
-                  Превышен лимит добавления товаров в данной категории
+                  На данный момент можно загружать не более 10 фото по одному товару.
                 </Text>
               )}
-              {this.state.max_image_error === true && (
+              {/* {this.state.max_image_error === true && (
                 <Text
                   style={{ color: "red", textAlign: "center", marginTop: 10 }}
                 >
                   Максимальное количество из. 5 шт
                 </Text>
-              )}
+              )} */}
 
               {/* Дополнительная информация */}
               <Text

@@ -6,9 +6,18 @@ import { APP_URL, APP_IMAGE_URL } from "@env";
 import Loading from "../Component/Loading";
 import CustomerMainPageNavComponent from "./CustomerMainPageNav";
 import { BackBtn } from "../search/customer/CategorySingleScreen";
+import LimitPopup from "./LimitPopup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SelectCategoryScreen({ navigation, user_id }) {
     const [categories, setCategories] = useState([])
+
+    const [isLoading, setIsLoading] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+
+    useEffect(() => {
+        getCategories()
+    }, [])
 
     async function getCategories() {
         let myHeaders = new Headers();
@@ -24,9 +33,39 @@ export default function SelectCategoryScreen({ navigation, user_id }) {
             })
     }
 
-    useEffect(() => {
-        getCategories()
-    }, [])
+    async function onPressCategory(el) {
+        setIsLoading(true)
+        let token = await AsyncStorage.getItem("userToken");
+        let myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + token);
+        let formdata = new FormData();
+        formdata.append("category_id", el.id)
+
+        console.log(onPressCategory);
+
+        var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            redirect: "follow",
+            body: formdata
+        };
+
+        await fetch(`${APP_URL}validation_category`, requestOptions)
+            .then((response) => response.json())
+            .then((res) => {
+                console.log(res);
+                setIsLoading(false)
+                if (res.status) {
+                    navigation.navigate('AddProduct', { category: el, user_id: user_id })
+                } else {
+                    setShowModal(true)
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -38,13 +77,13 @@ export default function SelectCategoryScreen({ navigation, user_id }) {
                 <BackBtn onPressBack={() => navigation.goBack()} />
                 <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 30 }}>
                     {categories.length ? categories.map((el, i) => {
-                        console.log(el.name, el.id, el.childrens.length);
+                        // console.log(el.name, el.id, el.childrens.length);
                         return (
-                            <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between', flexShrink: 1, marginBottom: 10, paddingBottom: 5, borderBottomWidth: 1, borderColor: 'lightgray'  }} key={i}
+                            <TouchableOpacity style={{ marginBottom: 5, flexDirection: 'row', justifyContent: 'space-between', flexShrink: 1, marginBottom: 10, paddingBottom: 5, borderBottomWidth: 1, borderColor: 'lightgray' }} key={i}
                                 onPress={() => {
                                     el.childrens.length ?
                                         navigation.navigate('SelectSubCategoryScreen', { category: el, user_id: user_id })
-                                        : navigation.navigate('AddProduct', { category: el, user_id: user_id })
+                                        : onPressCategory(el)
 
                                 }}>
                                 <View style={{ flexDirection: 'row', flexShrink: 1, }}>
@@ -55,11 +94,13 @@ export default function SelectCategoryScreen({ navigation, user_id }) {
                             </TouchableOpacity>
                         )
                     }) :
-                        <View style={{marginTop: 20}}>
+                        <View style={{ marginTop: 20 }}>
                             <Loading />
                         </View>
                     }
                 </ScrollView>
+                {isLoading && <Loading />}
+                <LimitPopup modalVisible={showModal} onPressOk={() => setShowModal(false)}/>
             </View>
             <CustomerMainPageNavComponent
                 active_page={"Профиль"}

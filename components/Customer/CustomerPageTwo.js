@@ -98,7 +98,7 @@ export default class DesignerPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1)
           arr.push(myItem[0])
         }
-
+        // console.log(res.data.user[0].extract);
         this.setState({
           user: res.data.user,
           user_bonus_for_designer: res.data.user_bonus_for_designer,
@@ -109,7 +109,8 @@ export default class DesignerPageTwoComponent extends React.Component {
           show_room: res.data.user[0].show_room,
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
-          about_us: res.data.user[0].about_us
+          about_us: res.data.user[0].about_us,
+          extract: res.data.user[0].extract
         });
       });
   };
@@ -132,6 +133,13 @@ export default class DesignerPageTwoComponent extends React.Component {
     const { navigation } = this.props;
     this.loadedDataAfterLoadPage();
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+//     this.props.navigation.addListener('beforeRemove', (e) => {
+//       // e.preventDefault()
+//       // this.handleBackButtonClick()
+//       //clear setInterval here and go back
+//       this.props.navigation.navigate('CustomerMainPage', { screen: true })
+// // 
+//     })
     // this.focusListener = navigation.addListener("focus", () => {
     //   this.loadedDataAfterLoadPage();
     // });

@@ -50,8 +50,7 @@ export default class AddProductComponent extends React.Component {
       price_error: false,
 
       material: "",
-      inserciones: "",
-      description: "",
+      profile: "",
 
       tabletop: "",
       tabletop_error: false,
@@ -70,6 +69,7 @@ export default class AddProductComponent extends React.Component {
       hasTableTop: false,
       hasLength: false,
       hasHeight: false,
+      hasProfile: false,
       hasMaterial: false
     };
   }
@@ -126,8 +126,7 @@ export default class AddProductComponent extends React.Component {
       price_error: false,
 
       material: "",
-      inserciones: "",
-      description: "",
+      profile: "",
 
       tabletop: "",
       tabletop_error: false,
@@ -147,6 +146,7 @@ export default class AddProductComponent extends React.Component {
       hasFrame: false,
       hasTableTop: false,
       hasLength: false,
+      hasProfile: false,
       hasHeight: false,
       hasMaterial: false
     });
@@ -184,6 +184,14 @@ export default class AddProductComponent extends React.Component {
         this.formdata.append("photo[]", element);
       });
     }
+    
+    if(this.state.all_images.length > 10){
+      this.setState({ limitError: true });
+      return
+    } else {
+      this.setState({ limitError: false });
+    }
+    
     this.setState({ isLoading: true });
 
     let myHeaders = new Headers();
@@ -218,8 +226,7 @@ export default class AddProductComponent extends React.Component {
     this.formdata.append("price", myPrice);
     this.formdata.append("tabletop", this.state.tabletop);
     this.formdata.append("material", this.state.material);
-    this.formdata.append("inserciones", this.state.inserciones);
-    // this.formdata.append("description", this.state.description);
+    this.formdata.append("profile", this.state.profile);
 
     let requestOptions = {
       method: "POST",
@@ -268,12 +275,12 @@ export default class AddProductComponent extends React.Component {
             });
           }
 
-          if (
-            result.data?.message ==
-            "you already have 3 products under this category"
-          ) {
-            await this.setState({ limitError: true });
-          }
+          // if (
+          //   result.data?.message ==
+          //   "you already have 3 products under this category"
+          // ) {
+          //   await this.setState({ limitError: true });
+          // }
         }
         this.formdata = new FormData();
       })
@@ -397,10 +404,19 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 95 ||
         this.props.category.id == 96 ||
         this.props.category.id == 97 ||
+        this.props.category.id == 98,
+      hasProfile:
+        this.props.category.id == 37 ||
+        this.props.category.id == 58 ||
+        this.props.category.id == 66 ||
+        this.props.category.id == 94 ||
+        this.props.category.id == 95 ||
+        this.props.category.id == 96 ||
+        this.props.category.id == 97 ||
         this.props.category.id == 98
     })
 
-    console.log(this.props.category.parent?.id, this.props.category.id);
+    console.log(this.props.category.id, this.props.category.id == 28);
   }
 
   componentWillUnmount() {
@@ -665,7 +681,7 @@ export default class AddProductComponent extends React.Component {
             </View> : null}
 
             {/* Корпус */}
-            {this.state.hasFrame && <View>
+            {this.state.hasFrame ? <View>
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
@@ -693,10 +709,40 @@ export default class AddProductComponent extends React.Component {
                 value={this.state.frame}
                 onChangeText={(text) => this.setState({ frame: text })}
               />
-            </View>}
+            </View> : null}
+
+            {/* Профиль */}
+            {this.state.hasProfile ? <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Профиль
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="Aлюминиевый"
+                keyboardType="default"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.profile}
+                onChangeText={(text) => this.setState({ profile: text })}
+              />
+            </View> : null}
 
             {/* Столешница */}
-            {this.state.hasTableTop && <View>
+            {this.state.hasTableTop ? <View>
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
@@ -723,9 +769,10 @@ export default class AddProductComponent extends React.Component {
                 value={this.state.tabletop}
                 onChangeText={(text) => this.setState({ tabletop: text })}
               />
-            </View>}
+            </View> : null}
+
             {/* Высота */}
-            {this.state.hasHeight && <View>
+            {this.state.hasHeight ? <View>
               <Text
                 style={{
                   fontFamily: "Poppins_500Medium",
@@ -752,39 +799,39 @@ export default class AddProductComponent extends React.Component {
                 value={this.state.height}
                 onChangeText={(text) => this.setState({ height: text })}
               />
+            </View> : null}
 
-              {/* Длина */}
-              {this.state.hasLength && <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Длина
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="8 метров"
-                  keyboardType="numeric"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.length}
-                  onChangeText={(text) => this.setState({ length: text })}
-                />
-              </View>}
+            {/* Длина */}
+            {this.state.hasLength ? <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_500Medium",
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: "#5B5B5B",
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}
+              >
+                Длина
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                placeholder="8 метров"
+                keyboardType="numeric"
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#F5F5F5",
+                  padding: 10,
+                  width: "100%",
+                  borderRadius: 5,
+                }}
+                value={this.state.length}
+                onChangeText={(text) => this.setState({ length: text })}
+              />
+            </View> : null}
 
 
-            </View>}
 
             {/* Цена */}
             <View>
@@ -933,7 +980,7 @@ export default class AddProductComponent extends React.Component {
               <Text
                 style={{ color: "red", textAlign: "center", marginTop: 10 }}
               >
-                Превышен лимит добавления товаров в данной категории
+                На данный момент можно загружать не более 10 фото по одному товару.
               </Text>
             )}
 

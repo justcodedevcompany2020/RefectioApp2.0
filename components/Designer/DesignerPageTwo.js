@@ -192,6 +192,7 @@ export default class DesignerPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1)
           arr.push(myItem[0])
         }
+        console.log(APP_IMAGE_URL + res.data.user[0].extract);
 
         this.setState({
           user: res.data.user,

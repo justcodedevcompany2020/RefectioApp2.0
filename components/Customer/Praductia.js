@@ -665,7 +665,7 @@ export default class PraductiaComponent extends React.Component {
 
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("SelectCategoryScreen", {user_id: this.props.user_id})
+                  this.props.navigation.navigate("SelectCategoryScreen", { user_id: this.props.user_id })
                   this.clearAllData();
                 }}
                 style={{
@@ -803,6 +803,11 @@ export default class PraductiaComponent extends React.Component {
                           Корпус: {item.frame}
                         </Text>
                       )}
+                      {item.profile && (
+                        <Text>
+                          Профиль: {item.profile}
+                        </Text>
+                      )}
                       {item.tabletop && (
                         <Text>
                           Столешница: {item.tabletop}
@@ -824,16 +829,7 @@ export default class PraductiaComponent extends React.Component {
                           Материал: {item.material}
                         </Text>
                       )}
-                      {item.description && (
-                        <Text>
-                          Описание: {item.description}
-                        </Text>
-                      )}
-                      {item.inserciones && (
-                        <Text>
-                          Вставки: {item.inserciones}
-                        </Text>
-                      )}
+
                       {item.price && (
                         <Text>
                           Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
