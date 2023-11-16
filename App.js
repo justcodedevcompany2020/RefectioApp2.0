@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { View, Image, StatusBar, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -27,6 +28,7 @@ import DesignerSavedComponent from "./components/Designer/DesignerSaved";
 // import CustomerRewardsComponent from "./components/Customer/CustomerRewards";
 import CustomerMyAccauntComponent from "./components/Customer/CustomerMyAccaunt";
 // import CheckDesignerComponent from "./components/Customer/CheckDesigner";
+import * as Linking from "expo-linking";
 import PraductiaComponent from "./components/Customer/Praductia";
 import AddProductComponent from "./components/Customer/AddProduct";
 import ModalComponent from "./components/Ghost/Modal";
@@ -46,6 +48,7 @@ import EditProductComponent from "./components/Customer/EditProduct";
 import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import { APP_URL } from "@env";
+import * as Updates from "expo-updates";
 import SearchScreenGuest from "./components/search/guest/SearchScreen";
 import CategoryScreenGuest from "./components/search/guest/CategoryScreen";
 import CategorySingleScreenGuest from "./components/search/guest/CategorySingleScreen";
@@ -63,6 +66,7 @@ import SelectCategoryScreen from "./components/Customer/SelectCategoryScreen";
 import SelectSubCategoryScreen from "./components/Customer/SelectSubCategoryScreen";
 
 const Stack = createStackNavigator();
+const prefix = Linking.createURL("/");
 
 function AuthScreen({ navigation }) {
   return <AuthScreenComponent navigation={navigation} />;
@@ -99,11 +103,22 @@ function GhostPage({ navigation }) {
 }
 
 function SelectCategoryScreenComponent({ navigation, route }) {
-  return <SelectCategoryScreen navigation={navigation} user_id={route.params.user_id} />;
+  return (
+    <SelectCategoryScreen
+      navigation={navigation}
+      user_id={route.params.user_id}
+    />
+  );
 }
 
 function SelectSubCategoryScreenComponent({ navigation, route }) {
-  return <SelectSubCategoryScreen navigation={navigation} category={route.params.category} user_id={route.params.user_id} />;
+  return (
+    <SelectSubCategoryScreen
+      navigation={navigation}
+      category={route.params.category}
+      user_id={route.params.user_id}
+    />
+  );
 }
 function EditPhoneNumberConfirmFunc({ route, navigation }) {
   const { params } = route.params;
@@ -155,49 +170,117 @@ function SearchScreenComponentGuest({ navigation }) {
   return <SearchScreenGuest navigation={navigation} />;
 }
 function CategoryScreenComponentGuest({ navigation, route }) {
-  return <CategoryScreenGuest navigation={navigation} category={route.params.category} />;
+  return (
+    <CategoryScreenGuest
+      navigation={navigation}
+      category={route.params.category}
+    />
+  );
 }
 
 function CategorySingleScreenComponentGuest({ navigation, route }) {
-  return <CategorySingleScreenGuest navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} cityId={route.params.cityId}  startPrice={route.params.startPrice} endPrice={route.params.endPrice}/>
+  return (
+    <CategorySingleScreenGuest
+      navigation={navigation}
+      category={route.params.category}
+      mynextUrl={route.params.nextUrl}
+      myproducts={route.params.products}
+      product={route.params.product}
+      cityId={route.params.cityId}
+      startPrice={route.params.startPrice}
+      endPrice={route.params.endPrice}
+    />
+  );
 }
-
 
 function SearchScreenComponentDesigner({ navigation }) {
   return <SearchScreenDesigner navigation={navigation} />;
 }
 function CategoryScreenComponentDesigner({ navigation, route }) {
-  return <CategoryScreenDesigner navigation={navigation} category={route.params.category} />;
+  return (
+    <CategoryScreenDesigner
+      navigation={navigation}
+      category={route.params.category}
+    />
+  );
 }
 
 function CategorySingleScreenComponentDesigner({ navigation, route }) {
-  return <CategorySingleScreenDesigner navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} cityId={route.params.cityId}  startPrice={route.params.startPrice} endPrice={route.params.endPrice} />
+  return (
+    <CategorySingleScreenDesigner
+      navigation={navigation}
+      category={route.params.category}
+      mynextUrl={route.params.nextUrl}
+      myproducts={route.params.products}
+      product={route.params.product}
+      cityId={route.params.cityId}
+      startPrice={route.params.startPrice}
+      endPrice={route.params.endPrice}
+    />
+  );
 }
 
 function SearchScreenComponentCustomer({ navigation }) {
   return <SearchScreenCustomer navigation={navigation} />;
 }
 function CategoryScreenComponentCustomer({ navigation, route }) {
-  return <CategoryScreenCustomer navigation={navigation} category={route.params.category} />;
+  return (
+    <CategoryScreenCustomer
+      navigation={navigation}
+      category={route.params.category}
+    />
+  );
 }
 
 function CategorySingleScreenComponentCustomer({ navigation, route }) {
-  return <CategorySingleScreenCustomer navigation={navigation} category={route.params.category} mynextUrl={route.params.nextUrl} myproducts={route.params.products} product={route.params.product} cityId={route.params.cityId}  startPrice={route.params.startPrice} endPrice={route.params.endPrice}/>
+  return (
+    <CategorySingleScreenCustomer
+      navigation={navigation}
+      category={route.params.category}
+      mynextUrl={route.params.nextUrl}
+      myproducts={route.params.products}
+      product={route.params.product}
+      cityId={route.params.cityId}
+      startPrice={route.params.startPrice}
+      endPrice={route.params.endPrice}
+    />
+  );
 }
 
 function SubCategoryScreenComponentCustomer({ navigation, route }) {
-  return <SubCategoryScreenCustomer navigation={navigation} category={route.params.category} />
+  return (
+    <SubCategoryScreenCustomer
+      navigation={navigation}
+      category={route.params.category}
+    />
+  );
 }
 
 function SubCategoryScreenComponentDesigner({ navigation, route }) {
-  return <SubCategoryScreenDesigner navigation={navigation} category={route.params.category} />
+  return (
+    <SubCategoryScreenDesigner
+      navigation={navigation}
+      category={route.params.category}
+    />
+  );
 }
 function SubCategoryScreenComponentGuest({ navigation, route }) {
-  return <SubCategoryScreenGuest navigation={navigation} category={route.params.category} />
+  return (
+    <SubCategoryScreenGuest
+      navigation={navigation}
+      category={route.params.category}
+    />
+  );
 }
 
 function AboutUsScreenComponent({ navigation, route }) {
-  return <AboutUsScreen navigation={navigation} value={route.params.value} hideText={route.params.hideText} />
+  return (
+    <AboutUsScreen
+      navigation={navigation}
+      value={route.params.value}
+      hideText={route.params.hideText}
+    />
+  );
 }
 
 function ForgetPassword({ navigation }) {
@@ -242,17 +325,18 @@ function CustomerMyAccaunt({ navigation }) {
 function PraductiaFunc({ route, navigation }) {
   const { params } = route.params;
 
-  return (
-    <PraductiaComponent
-      user_id={params}
-      navigation={navigation}
-    />
-  );
+  return <PraductiaComponent user_id={params} navigation={navigation} />;
 }
 
 function AddProductScreen({ route, navigation }) {
   const { category, user_id } = route.params;
-  return <AddProductComponent category={category} navigation={navigation} user_id={user_id} />;
+  return (
+    <AddProductComponent
+      category={category}
+      navigation={navigation}
+      user_id={user_id}
+    />
+  );
 }
 
 function EditProductScreen({ route, navigation }) {
@@ -329,6 +413,27 @@ export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
   const [userRole, setUserRole] = React.useState(null);
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+
+  useEffect(() => {
+    async function checkForUpdate() {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        setUpdateAvailable(true);
+        await AsyncStorage.setItem("update", true);
+      }
+    }
+    checkForUpdate();
+  }, []);
+
+  const handleUpdate = async () => {
+    try {
+      await Updates.fetchUpdateAsync();
+      Updates.reloadFromCache();
+    } catch (error) {
+      // Handle update error
+    }
+  };
 
   const initialLoginState = {
     isLoading: true,
@@ -407,7 +512,7 @@ export default function App() {
       signUp: () => {
         // setIsLoading(false);
       },
-      notify_count: 0
+      notify_count: 0,
     }),
     []
   );
@@ -427,9 +532,8 @@ export default function App() {
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.status === true) {
-
           if (responseJson.data.data.length > 0) {
-            authContext.notify_count = responseJson.notify_count
+            authContext.notify_count = responseJson.notify_count;
           }
         }
       })
@@ -469,9 +573,21 @@ export default function App() {
       });
     }, 1000);
     setInterval(() => {
-      this.getLiveZakaz()
+      this.getLiveZakaz();
     }, 3000);
   }, []);
+
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        CustomerTwoPage: "CustomerPageTwo",
+      },
+    },
+  };
+
+  const url = Linking.useURL();
+  console.log(url, "url");
 
   if (isLoading) {
     return (
@@ -495,7 +611,7 @@ export default function App() {
           backgroundColor="white"
           barStyle="dark-content"
         />
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           {
             //  Designer Pages Tabs
             loginState.userToken !== null && loginState.userRole == "2" ? (
@@ -516,6 +632,7 @@ export default function App() {
 
                 {/* <Stack.Screen
                   name="DesignerMyBroni"
+    
                   component={DesignerMyBroniComponent}
                 /> */}
                 <Stack.Screen
@@ -569,177 +686,177 @@ export default function App() {
                   component={AddZakazchikDesignerComponent}
                 />
                 <Stack.Screen
-                    name="AboutUsScreen"
-                    component={AboutUsScreenComponent}
-                  />
+                  name="AboutUsScreen"
+                  component={AboutUsScreenComponent}
+                />
               </Stack.Navigator>
             ) : // Customer Pages Tabs
 
-              loginState.userToken !== null && loginState.userRole == "3" ? (
-                <Stack.Navigator
-                  initialRouteName="CustomerMainPage"
-                  screenOptions={({ route }) => ({
-                    tabBarShowLabel: false,
-                    headerShown: false,
-                    tabBarActiveTintColor: "#2EB6A5",
-                    tabBarInactiveTintColor: "gray",
-                    tabBarStyle: tabBarStyle,
-                  })}
-                >
-                  <Stack.Screen
-                    name="CustomerMainPage"
-                    component={CustomerMainPageComponent}
-                  />
-                  <Stack.Screen name="AddProduct" component={AddProductScreen} />
-                  {/* <Stack.Screen
+            loginState.userToken !== null && loginState.userRole == "3" ? (
+              <Stack.Navigator
+                initialRouteName="CustomerMainPage"
+                screenOptions={({ route }) => ({
+                  tabBarShowLabel: false,
+                  headerShown: false,
+                  tabBarActiveTintColor: "#2EB6A5",
+                  tabBarInactiveTintColor: "gray",
+                  tabBarStyle: tabBarStyle,
+                })}
+              >
+                <Stack.Screen
+                  name="CustomerMainPage"
+                  component={CustomerMainPageComponent}
+                />
+                <Stack.Screen name="AddProduct" component={AddProductScreen} />
+                {/* <Stack.Screen
                   name="CheckDesigner"
                   component={CheckDesignerComponent}
                 /> */}
 
-                  <Stack.Screen
-                    name="CustomerMyAccaunt"
-                    component={CustomerMyAccauntComponent}
-                  />
-                  <Stack.Screen
-                    name="SelectSubCategoryScreen"
-                    component={SelectSubCategoryScreenComponent}
-                  />
-                  <Stack.Screen
-                    name="CustomerPageTwo"
-                    component={CustomerPageTwo}
-                  />
-                  <Stack.Screen
-                    name="SelectCategoryScreen"
-                    component={SelectCategoryScreenComponent}
-                  />
-                  <Stack.Screen name="Praductia" component={PraductiaFunc} />
-                  <Stack.Screen
-                    name="EditPhoneNumber"
-                    component={EditPhoneNumberComponent}
-                  />
-                  <Stack.Screen
-                    name="EditPhoneNumberConfirm"
-                    component={EditPhoneNumberConfirmFunc}
-                  />
+                <Stack.Screen
+                  name="CustomerMyAccaunt"
+                  component={CustomerMyAccauntComponent}
+                />
+                <Stack.Screen
+                  name="SelectSubCategoryScreen"
+                  component={SelectSubCategoryScreenComponent}
+                />
+                <Stack.Screen
+                  name="CustomerPageTwo"
+                  component={CustomerPageTwo}
+                />
+                <Stack.Screen
+                  name="SelectCategoryScreen"
+                  component={SelectCategoryScreenComponent}
+                />
+                <Stack.Screen name="Praductia" component={PraductiaFunc} />
+                <Stack.Screen
+                  name="EditPhoneNumber"
+                  component={EditPhoneNumberComponent}
+                />
+                <Stack.Screen
+                  name="EditPhoneNumberConfirm"
+                  component={EditPhoneNumberConfirmFunc}
+                />
 
-                  <Stack.Screen
-                    name="EditPasswordCustomer"
-                    component={EditPasswordCustomerCompnent}
-                  />
-                  <Stack.Screen
-                    name="ZakaziLive"
-                    component={ZakaziLiveComponent}
-                  />
-                  <Stack.Screen
-                    name="LiveZakazchikSingl"
-                    component={LiveZakazchikSinglFunc}
-                  />
-                  <Stack.Screen name="AddZakazi" component={AddZakaziFunc} />
-                  <Stack.Screen name="EditZakazi" component={EditZakaziFunc} />
-                  <Stack.Screen
-                    name="EditProduct"
-                    component={EditProductScreen}
-                  />
-                  <Stack.Screen
-                    name="SearchScreen"
-                    component={SearchScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="CategoryScreen"
-                    component={CategoryScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="CategorySingleScreen"
-                    component={CategorySingleScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="SubCategoryScreen"
-                    component={SubCategoryScreenComponentCustomer}
-                  />
-                  <Stack.Screen
-                    name="AboutUsScreen"
-                    component={AboutUsScreenComponent}
-                  />
-                </Stack.Navigator>
-              ) : // Guest pages tabs
+                <Stack.Screen
+                  name="EditPasswordCustomer"
+                  component={EditPasswordCustomerCompnent}
+                />
+                <Stack.Screen
+                  name="ZakaziLive"
+                  component={ZakaziLiveComponent}
+                />
+                <Stack.Screen
+                  name="LiveZakazchikSingl"
+                  component={LiveZakazchikSinglFunc}
+                />
+                <Stack.Screen name="AddZakazi" component={AddZakaziFunc} />
+                <Stack.Screen name="EditZakazi" component={EditZakaziFunc} />
+                <Stack.Screen
+                  name="EditProduct"
+                  component={EditProductScreen}
+                />
+                <Stack.Screen
+                  name="SearchScreen"
+                  component={SearchScreenComponentCustomer}
+                />
+                <Stack.Screen
+                  name="CategoryScreen"
+                  component={CategoryScreenComponentCustomer}
+                />
+                <Stack.Screen
+                  name="CategorySingleScreen"
+                  component={CategorySingleScreenComponentCustomer}
+                />
+                <Stack.Screen
+                  name="SubCategoryScreen"
+                  component={SubCategoryScreenComponentCustomer}
+                />
+                <Stack.Screen
+                  name="AboutUsScreen"
+                  component={AboutUsScreenComponent}
+                />
+              </Stack.Navigator>
+            ) : // Guest pages tabs
 
-                loginState.userToken == null ? (
-                  <Stack.Navigator
-                    initialRouteName="GhostPage"
-                    screenOptions={({ route }) => ({
-                      tabBarShowLabel: false,
-                      headerShown: false,
-                      tabBarActiveTintColor: "#2EB6A5",
-                      tabBarInactiveTintColor: "gray",
-                      tabBarStyle: tabBarStyle,
-                    })}
-                  >
-                    <Stack.Screen name="GhostPage" component={GhostPageComponent} />
-                    <Stack.Screen
-                      name="LoginScreen"
-                      component={LoginScreenComponent}
-                    />
-                    <Stack.Screen
-                      name="ConfirmTelScreen"
-                      component={ConfirmTelScreenFunction}
-                    />
-                    <Stack.Screen
-                      name="RegisteredScreen"
-                      component={RegisteredScreenComponent}
-                    />
-                    <Stack.Screen
-                      name="RegisteredUserScreen"
-                      component={RegistrationUserScreenComponent}
-                    />
-                    <Stack.Screen
-                      name="RegistrationManufacturer"
-                      component={RegistrationManufacturerComponent}
-                    />
-                    <Stack.Screen
-                      name="AuthScreen"
-                      component={AuthScreenComponent}
-                    />
-                    <Stack.Screen
-                      name="SearchScreen"
-                      component={SearchScreenComponentGuest}
-                    />
-                    <Stack.Screen
-                      name="CategoryScreen"
-                      component={CategoryScreenComponentGuest}
-                    />
-                    <Stack.Screen
-                      name="CategorySingleScreen"
-                      component={CategorySingleScreenComponentGuest}
-                    />
-                    <Stack.Screen
-                      name="SubCategoryScreen"
-                      component={SubCategoryScreenComponentGuest}
-                    />
-                    <Stack.Screen
-                      name="GhostPageTwo"
-                      component={GhostPageTwoFunc}
-                    />
-                    <Stack.Screen
-                      name="ForgetPassword"
-                      component={ForgetPasswordComponent}
-                    />
-                    <Stack.Screen
-                      name="ForgetPasswordTel"
-                      component={ForgetPasswordTelComponent}
-                    />
-                    <Stack.Screen
-                      name="NewPassword"
-                      component={NewPasswordComponent}
-                    />
-                    <Stack.Screen name="Modal" component={ModalComponent} />
-                    <Stack.Screen
-                      name="AboutUsScreen"
-                      component={AboutUsScreenComponent}
-                    />
-                  </Stack.Navigator>
-                ) : (
-                  <></>
-                )
+            loginState.userToken == null ? (
+              <Stack.Navigator
+                initialRouteName="GhostPage"
+                screenOptions={({ route }) => ({
+                  tabBarShowLabel: false,
+                  headerShown: false,
+                  tabBarActiveTintColor: "#2EB6A5",
+                  tabBarInactiveTintColor: "gray",
+                  tabBarStyle: tabBarStyle,
+                })}
+              >
+                <Stack.Screen name="GhostPage" component={GhostPageComponent} />
+                <Stack.Screen
+                  name="LoginScreen"
+                  component={LoginScreenComponent}
+                />
+                <Stack.Screen
+                  name="ConfirmTelScreen"
+                  component={ConfirmTelScreenFunction}
+                />
+                <Stack.Screen
+                  name="RegisteredScreen"
+                  component={RegisteredScreenComponent}
+                />
+                <Stack.Screen
+                  name="RegisteredUserScreen"
+                  component={RegistrationUserScreenComponent}
+                />
+                <Stack.Screen
+                  name="RegistrationManufacturer"
+                  component={RegistrationManufacturerComponent}
+                />
+                <Stack.Screen
+                  name="AuthScreen"
+                  component={AuthScreenComponent}
+                />
+                <Stack.Screen
+                  name="SearchScreen"
+                  component={SearchScreenComponentGuest}
+                />
+                <Stack.Screen
+                  name="CategoryScreen"
+                  component={CategoryScreenComponentGuest}
+                />
+                <Stack.Screen
+                  name="CategorySingleScreen"
+                  component={CategorySingleScreenComponentGuest}
+                />
+                <Stack.Screen
+                  name="SubCategoryScreen"
+                  component={SubCategoryScreenComponentGuest}
+                />
+                <Stack.Screen
+                  name="GhostPageTwo"
+                  component={GhostPageTwoFunc}
+                />
+                <Stack.Screen
+                  name="ForgetPassword"
+                  component={ForgetPasswordComponent}
+                />
+                <Stack.Screen
+                  name="ForgetPasswordTel"
+                  component={ForgetPasswordTelComponent}
+                />
+                <Stack.Screen
+                  name="NewPassword"
+                  component={NewPasswordComponent}
+                />
+                <Stack.Screen name="Modal" component={ModalComponent} />
+                <Stack.Screen
+                  name="AboutUsScreen"
+                  component={AboutUsScreenComponent}
+                />
+              </Stack.Navigator>
+            ) : (
+              <></>
+            )
           }
         </NavigationContainer>
       </AuthContext.Provider>

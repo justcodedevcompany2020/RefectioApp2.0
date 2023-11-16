@@ -151,6 +151,7 @@ export default class RegistrationUserScreenComponent extends Component {
     await fetch(`${APP_URL}DizainerRegister`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
+        console.log(res, "res,");
         if (res.status === false && res.message == "phone arledy exist") {
           this.setState({
             phone_exist: true,
@@ -269,23 +270,17 @@ export default class RegistrationUserScreenComponent extends Component {
   clearAllData = () => {
     this.setState({
       valid: false,
-
       imgFirst: "",
       imgSecond: "",
-
       name: "",
       name_error: false,
-
       surname: "",
       surname_error: false,
-
       phone: "",
       phone_error: false,
       phone_exist: false,
-
       password: "",
       password_error: false,
-
       password_confirmation: "",
       password_confirmation_error: false,
 

@@ -42,13 +42,19 @@
       ],
       [
         "expo-apple-authentication"
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "Refectio"
+        }
       ]
     ],
     "extra": {
       "eas": {
         "projectId": "2dd5dcd9-1b64-49b8-b777-8c6a9ebc4076"
       }
-    },
-    "owner": "a200796a"
+    }
+   
   }
 }

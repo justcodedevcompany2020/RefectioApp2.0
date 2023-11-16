@@ -19,7 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { APP_URL, APP_IMAGE_URL } from "@env";
 import Loading from "../Component/Loading";
-import HTML from 'react-native-render-html';
+import HTML from "react-native-render-html";
 import { Dimensions } from "react-native";
 import RichTextEditorComponent from "../Auth/RichTextEditor";
 
@@ -84,7 +84,7 @@ export default class EditProductComponent extends React.Component {
     this.richText = React.createRef();
   }
 
-  handleHead = ({ tintColor }) => <Text style={{ color: tintColor }}>H1</Text>
+  handleHead = ({ tintColor }) => <Text style={{ color: tintColor }}>H1</Text>;
 
   pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -223,14 +223,14 @@ export default class EditProductComponent extends React.Component {
       hasLength: false,
       hasHeight: false,
       hasProfile: false,
-      hasMaterial: false
+      hasMaterial: false,
     });
   };
 
   sendProduct = async () => {
     // this.setState({isLoading: true})
     let { all_images, delate_photo, get_old_image } = this.state;
-    Keyboard.dismiss()
+    Keyboard.dismiss();
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem("userToken");
     console.log(userToken);
@@ -241,12 +241,15 @@ export default class EditProductComponent extends React.Component {
     let formdata = new FormData();
     formdata.append("product_id", this.props.user_id.product_id);
 
-    if (this.state.parentCategoryId == 'null' || this.state.parentCategoryId == null) {
-      formdata.append("parent_category_id", this.state.categoryId)
-      formdata.append("parent_category_name", this.state.categoryName)
+    if (
+      this.state.parentCategoryId == "null" ||
+      this.state.parentCategoryId == null
+    ) {
+      formdata.append("parent_category_id", this.state.categoryId);
+      formdata.append("parent_category_name", this.state.categoryName);
     } else {
-      formdata.append("parent_category_id", this.state.parentCategoryId)
-      formdata.append("parent_category_name", this.state.parentCategoryName)
+      formdata.append("parent_category_id", this.state.parentCategoryId);
+      formdata.append("parent_category_name", this.state.parentCategoryName);
 
       formdata.append("category_id", this.state.categoryId);
       formdata.append("category_name", this.state.categoryName);
@@ -257,7 +260,7 @@ export default class EditProductComponent extends React.Component {
     formdata.append("facades", this.state.facades);
     formdata.append("length", this.state.length);
     formdata.append("height", this.state.height);
-    let myPrice = this.state.price.replaceAll('.', '')
+    let myPrice = this.state.price.replaceAll(".", "");
     formdata.append("price", myPrice);
     formdata.append("tabletop", this.state.tabletop);
     formdata.append("material", this.state.material);
@@ -289,9 +292,9 @@ export default class EditProductComponent extends React.Component {
       this.setState({ buttonSend: false, all_images_error: true });
     }
 
-    if(all_images.length > 10){
+    if (all_images.length > 10) {
       this.setState({ limitError: true });
-      return
+      return;
     } else {
       this.setState({ limitError: false });
     }
@@ -383,7 +386,7 @@ export default class EditProductComponent extends React.Component {
       .then((response) => response.json())
       .then((result) => {
         if (result.status === true) {
-          console.log('asdasdasdasda', result.data[0]);
+          console.log("asdasdasdasda", result.data[0]);
           this.setState({
             name:
               result.data[0].name === "null" || result.data[0].name === null
@@ -397,7 +400,7 @@ export default class EditProductComponent extends React.Component {
 
             facades:
               result.data[0].facades === "null" ||
-                result.data[0].facades === null
+              result.data[0].facades === null
                 ? ""
                 : result.data[0].facades,
 
@@ -414,32 +417,42 @@ export default class EditProductComponent extends React.Component {
             price:
               result.data[0].price === "null" || result.data[0].price === null
                 ? ""
-                : result.data[0].price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+                : result.data[0].price
+                    .toString()
+                    .split(".")
+                    .join("")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
 
             material:
               result.data[0].material === "null" ||
-                result.data[0].material === null
+              result.data[0].material === null
                 ? ""
                 : result.data[0].material,
             inserciones:
               result.data[0].inserciones === "null" ||
-                result.data[0].inserciones === null
+              result.data[0].inserciones === null
                 ? ""
                 : result.data[0].inserciones,
             tabletop:
               result.data[0].tabletop === "null" ||
-                result.data[0].tabletop === null
+              result.data[0].tabletop === null
                 ? ""
                 : result.data[0].tabletop,
-            profile: result.data[0].profile === "null" ||
+            profile:
+              result.data[0].profile === "null" ||
               result.data[0].profile === null
-              ? ""
-              : result.data[0].profile,
+                ? ""
+                : result.data[0].profile,
             categoryName: result.data[0].category_name ?? null,
             parentCategoryName: result.data[0].parent_category_name,
             categoryId: result.data[0].category_id ?? null,
             parentCategoryId: result.data[0].parent_category_id,
-            about: (result.data[0].about == 'null' || result.data[0].about == null || result.data[0].about == '<p><br></p>') ? null : result.data[0].about,
+            about:
+              result.data[0].about == "null" ||
+              result.data[0].about == null ||
+              result.data[0].about == "<p><br></p>"
+                ? null
+                : result.data[0].about,
             hasFacades:
               result.data[0].category_id == 28 ||
               result.data[0].category_id == 30 ||
@@ -555,10 +568,14 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 95 ||
               result.data[0].category_id == 96 ||
               result.data[0].category_id == 97 ||
-              result.data[0].category_id == 98
+              result.data[0].category_id == 98,
           });
 
-          console.log(result.data[0].parent_category_id, result.data[0].category_id, typeof result.data[0].category_name);
+          console.log(
+            result.data[0].parent_category_id,
+            result.data[0].category_id,
+            typeof result.data[0].category_name
+          );
 
           let new_all_images = [];
           result.data[0].product_image.map((item) => {
@@ -566,7 +583,7 @@ export default class EditProductComponent extends React.Component {
           });
           this.setState({ get_old_image: new_all_images });
         }
-        this.setState({ isLoading: false })
+        this.setState({ isLoading: false });
       })
       .catch((error) => console.log("error", error));
   };
@@ -682,7 +699,9 @@ export default class EditProductComponent extends React.Component {
             </Text>
           </View>
 
-          {this.state.isLoading ? <Loading /> :
+          {this.state.isLoading ? (
+            <Loading />
+          ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
               {/* Категория */}
               <View>
@@ -725,7 +744,10 @@ export default class EditProductComponent extends React.Component {
                         fontFamily: "Poppins_500Medium",
                       }}
                     >
-                      {this.state.parentCategoryName}{this.state.categoryName != 'null' && this.state.categoryName != null && (' -> ' + this.state.categoryName)}
+                      {this.state.parentCategoryName}
+                      {this.state.categoryName != "null" &&
+                        this.state.categoryName != null &&
+                        " -> " + this.state.categoryName}
                     </Text>
                   </View>
                 </View>
@@ -777,215 +799,229 @@ export default class EditProductComponent extends React.Component {
               </View>
 
               {/* Материал */}
-              {!this.state.hasMaterial ? <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Материал
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Эмаль"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.material}
-                  onChangeText={(text) => this.setState({ material: text })}
-                />
-              </View> : null}
+              {!this.state.hasMaterial ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Материал
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Эмаль"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.material}
+                    onChangeText={(text) => this.setState({ material: text })}
+                  />
+                </View>
+              ) : null}
 
               {/* Фасады */}
-              {this.state.hasFacades ? <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Фасады
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Эмаль"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.facades}
-                  onChangeText={(text) => this.setState({ facades: text })}
-                />
-              </View> : null}
+              {this.state.hasFacades ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Фасады
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Эмаль"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.facades}
+                    onChangeText={(text) => this.setState({ facades: text })}
+                  />
+                </View>
+              ) : null}
 
               {/* Корпус */}
-              {this.state.hasFrame ? <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Корпус
-                </Text>
+              {this.state.hasFrame ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Корпус
+                  </Text>
 
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="ДСП"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.frame}
-                  onChangeText={(text) => this.setState({ frame: text })}
-                />
-              </View> : null}
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="ДСП"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.frame}
+                    onChangeText={(text) => this.setState({ frame: text })}
+                  />
+                </View>
+              ) : null}
 
               {/* Профиль */}
-              {this.state.hasProfile && <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Профиль
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Aлюминиевый"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.profile}
-                  onChangeText={(text) => this.setState({ profile: text })}
-                />
-              </View>}
+              {this.state.hasProfile && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Профиль
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Aлюминиевый"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.profile}
+                    onChangeText={(text) => this.setState({ profile: text })}
+                  />
+                </View>
+              )}
 
               {/* Столешница */}
-              {this.state.hasTableTop ? <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Столешница
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="Камень"
-                  keyboardType="default"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.tabletop}
-                  onChangeText={(text) => this.setState({ tabletop: text })}
-                />
-              </View> : null}
+              {this.state.hasTableTop ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Столешница
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="Камень"
+                    keyboardType="default"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.tabletop}
+                    onChangeText={(text) => this.setState({ tabletop: text })}
+                  />
+                </View>
+              ) : null}
 
               {/* Высота */}
-              {this.state.hasHeight ? <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Высота
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="0.5 метров"
-                  keyboardType="decimal-pad"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.height}
-                  onChangeText={(text) => this.setState({ height: text })}
-                />
-              </View> : null}
+              {this.state.hasHeight ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Высота
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="0.5 метров"
+                    keyboardType="decimal-pad"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.height}
+                    onChangeText={(text) => this.setState({ height: text })}
+                  />
+                </View>
+              ) : null}
 
               {/* Длина */}
-              {this.state.hasLength ? <View>
-                <Text
-                  style={{
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 23,
-                    fontSize: 16,
-                    color: "#5B5B5B",
-                    marginBottom: 5,
-                    marginTop: 12,
-                  }}
-                >
-                  Длина
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  placeholder="8 метров"
-                  keyboardType="numeric"
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#F5F5F5",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                  }}
-                  value={this.state.length}
-                  onChangeText={(text) => this.setState({ length: text })}
-                />
-              </View> : null}
+              {this.state.hasLength ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_500Medium",
+                      lineHeight: 23,
+                      fontSize: 16,
+                      color: "#5B5B5B",
+                      marginBottom: 5,
+                      marginTop: 12,
+                    }}
+                  >
+                    Длина
+                  </Text>
+                  <TextInput
+                    underlineColorAndroid="transparent"
+                    placeholder="8 метров"
+                    keyboardType="numeric"
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      padding: 10,
+                      width: "100%",
+                      borderRadius: 5,
+                    }}
+                    value={this.state.length}
+                    onChangeText={(text) => this.setState({ length: text })}
+                  />
+                </View>
+              ) : null}
 
               {/* Цена */}
               <View>
@@ -1194,7 +1230,8 @@ export default class EditProductComponent extends React.Component {
                 <Text
                   style={{ color: "red", textAlign: "center", marginTop: 10 }}
                 >
-                  На данный момент можно загружать не более 10 фото по одному товару.
+                  На данный момент можно загружать не более 10 фото по одному
+                  товару.
                 </Text>
               )}
               {/* {this.state.max_image_error === true && (
@@ -1211,7 +1248,7 @@ export default class EditProductComponent extends React.Component {
                   fontSize: 16,
                   fontFamily: "Poppins_500Medium",
                   marginTop: 15,
-                  color: "#5B5B5B"
+                  color: "#5B5B5B",
                 }}
               >
                 Дополнительная информация
@@ -1223,15 +1260,15 @@ export default class EditProductComponent extends React.Component {
                   this.sendProduct();
                 }}
                 style={{
-                  alignSelf: "center",
-                  marginTop: 60,
+                  alignSelf: this.state.about ? "center" : "flex-start",
+                  // marginTop: 60,
                   marginBottom: 250,
                 }}
               >
                 <BlueButton name="Изменить" />
               </TouchableOpacity>
             </ScrollView>
-          }
+          )}
         </View>
 
         {this.state.keyboardOpen === false && (

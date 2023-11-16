@@ -15,7 +15,8 @@ import {
   FlatList,
 } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
-import Slider from "../slider/Slider";
+// import Slider from "../slider/Slider";
+import { ImageSlider } from "react-native-image-slider-banner";
 import GhostNavComponent from "./GhostNav";
 import FilterComponent from "../Component/FilterComponent";
 import * as Font from "expo-font";
@@ -71,7 +72,7 @@ export default class GhostPageComponent extends React.Component {
     this.handler = this.handler.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
-    this.ref = React.createRef()
+    this.ref = React.createRef();
   }
 
   clearAllData = async () => {
@@ -112,14 +113,15 @@ export default class GhostPageComponent extends React.Component {
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].slider_photo.length > 0) {
-                let product_image = data[i].slider_photo
+                let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
-                data[i].images = product_image
+                data[i].images = product_image;
               } else if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
               } else {
-                let product_image = data[i].user_product_limit1[0].product_image;
+                let product_image =
+                  data[i].user_product_limit1[0].product_image;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               }
@@ -130,7 +132,7 @@ export default class GhostPageComponent extends React.Component {
               isLoading: false,
             });
           } else {
-            console.log('else');
+            console.log("else");
             this.setState({
               isLastPage: true,
               isLoading: false,
@@ -192,9 +194,9 @@ export default class GhostPageComponent extends React.Component {
 
         for (let i = 0; i < data.length; i++) {
           if (data[i].slider_photo.length > 0) {
-            let product_image = data[i].slider_photo
+            let product_image = data[i].slider_photo;
             product_image.length > 5 ? product_image.splice(5) : null;
-            data[i].images = product_image
+            data[i].images = product_image;
           } else if (data[i].user_product_limit1.length < 1) {
             data[i].images = [];
             continue;
@@ -202,7 +204,6 @@ export default class GhostPageComponent extends React.Component {
             let product_image = data[i].user_product_limit1[0].product_image;
             product_image.length > 5 ? product_image.splice(5) : null;
             data[i].images = product_image;
-
 
             if (res.data.returnCategoryNameArray.length > 0) {
               let new_user_product_limit = data[i].user_product_limit1;
@@ -220,7 +221,7 @@ export default class GhostPageComponent extends React.Component {
         this.setState({
           getAllProducts: data,
           filter: false,
-          isLastPage: true
+          isLastPage: true,
         });
         this.ref.current.scrollToIndex({ index: 0, animated: true });
       })
@@ -419,7 +420,38 @@ export default class GhostPageComponent extends React.Component {
               })}
             </ScrollView>
           </View>
-          <Slider slid={item.images} />
+          {/* <Slider slid={item.images} /> */}
+          <ImageSlider
+            showIndicator
+            indicatorSize={8} // Adjust the size of the indicators
+            indicatorColor="red" // Adjust the color of the indicators
+            inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
+            indicatorAtBottom={true}
+            preview={true}
+            // children
+            // data={[
+            //   {
+            //     img: APP_IMAGE_URL + item.images,
+            //   },
+            // ]}
+            data={item.images.map((value) => {
+              return { img: APP_IMAGE_URL + value.image };
+            })}
+            // dataSource={item.images.map((item, index) => ({
+            //   url: APP_IMAGE_URL + item.image,
+            //   // title: item.title,
+            //   // You can add more properties as needed
+            //   // For example: description: item.description
+            // }))}
+            autoPlay={false}
+            onItemChanged={(item) => console.log(item)}
+            closeIconColor="#fff"
+            // showIndicator={false}
+            caroselImageStyle={{
+              resizeMode: "cover",
+              height: 270,
+            }}
+          />
         </View>
       )
     );
@@ -435,7 +467,7 @@ export default class GhostPageComponent extends React.Component {
   };
 
   handleLoadMore = () => {
-    console.log('handleLoadMore');
+    console.log("handleLoadMore");
     this.getProductsFunction();
   };
 

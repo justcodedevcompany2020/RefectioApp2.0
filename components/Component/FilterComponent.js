@@ -40,19 +40,20 @@ export default class FilterComponent extends React.Component {
         {
           companyLogo: require("../../assets/image/category3.png"),
           category_name: "Мебель для ванной",
-          filterName: "Мебель для\nванной",
-          size: 7,
+          filterName: "Ванные комнаты",
+          size: 8,
           lineHeight: 9.03,
           id: 3,
         },
         {
           companyLogo: require("../../assets/image/category7.png"),
           category_name: "Мебель для спальни",
-          filterName: "Мебель для\nспальни",
-          size: 7,
-          lineHeight: 9.03,
+          filterName: "Спальни",
+          size: 10,
+          lineHeight: 12.9,
           id: 4,
         },
+
         {
           companyLogo: require("../../assets/image/category5.png"),
           category_name: "Гардеробные",
@@ -93,6 +94,78 @@ export default class FilterComponent extends React.Component {
           lineHeight: 9.03,
           id: 9,
         },
+        {
+          companyLogo: require("../../assets/image/PNG/category10.png"),
+          category_name: "Мебель-трансформер",
+          filterName: "Мебель-трансформер",
+          size: 7,
+          lineHeight: 9.03,
+          id: 10,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category11.png"),
+          category_name: "Декор",
+          filterName: "Декор",
+          size: 7,
+          lineHeight: 9.03,
+          id: 11,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category12.png"),
+          category_name: "Зеркала",
+          filterName: "Зеркала",
+          size: 7,
+          lineHeight: 9.03,
+          id: 12,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category13.png"),
+          category_name: "Из искусственного камня",
+          filterName: "Из искусственного камня",
+          size: 7,
+          lineHeight: 9.03,
+          id: 13,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category14.png"),
+          category_name: "Loft мебель",
+          filterName: "Loft мебель",
+          size: 7,
+          lineHeight: 9.03,
+          id: 14,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category15.png"),
+          category_name: "Мягкая мебель",
+          filterName: "Мягкая мебель",
+          size: 7,
+          lineHeight: 9.03,
+          id: 15,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category16.png"),
+          category_name: "Из натурального камня",
+          filterName: "Из натурального камня",
+          size: 7,
+          lineHeight: 9.03,
+          id: 16,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category17.png"),
+          category_name: "Стеновые панели",
+          filterName: "Стеновые панели",
+          size: 7,
+          lineHeight: 9.03,
+          id: 17,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category18.png"),
+          category_name: "Уличная мебель",
+          filterName: "Уличная мебель",
+          size: 7,
+          lineHeight: 9.03,
+          id: 18,
+        },
       ],
       view2: [
         {
@@ -118,6 +191,14 @@ export default class FilterComponent extends React.Component {
           size: 8,
           lineHeight: 9.03,
           id: 12,
+        },
+        {
+          companyLogo: require("../../assets/image/PNG/category19.png"),
+          category_name: "HoReCa",
+          filterName: "HoReCa",
+          size: 7,
+          lineHeight: 9.03,
+          id: 19,
         },
       ],
       rubli: [
@@ -204,21 +285,23 @@ export default class FilterComponent extends React.Component {
             made_in_name: item.made_in,
             checked: false,
           });
-        });  
-        const cities  = result.city_of_sales
-        let sanktIndex = cities.findIndex((el) => el.city_name == 'Санкт-Петербург')
-        let removed1 = cities.splice(sanktIndex, 1)
-        cities.unshift(removed1[0])
-        let moskvaIndex = cities.findIndex((el) => el.city_name == 'Москва')
-        let removed2 = cities.splice(moskvaIndex, 1)
-        cities.unshift(removed2[0])
+        });
+        const cities = result.city_of_sales;
+        let sanktIndex = cities.findIndex(
+          (el) => el.city_name == "Санкт-Петербург"
+        );
+        let removed1 = cities.splice(sanktIndex, 1);
+        cities.unshift(removed1[0]);
+        let moskvaIndex = cities.findIndex((el) => el.city_name == "Москва");
+        let removed2 = cities.splice(moskvaIndex, 1);
+        cities.unshift(removed2[0]);
 
         this.setState({
           made_in_array: made_in_array,
           city_name_array: cities,
         });
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log("error--->", error));
   };
 
   getFilterData = async () => {
@@ -248,7 +331,7 @@ export default class FilterComponent extends React.Component {
       show_room: show_room,
     };
 
-    console.log(filter_data);
+    // console.log(filter_data, 'lllllhbjh');
     this.props.handler(filter_data);
   };
 
@@ -287,7 +370,11 @@ export default class FilterComponent extends React.Component {
   render() {
     const { resetFilterData, closePopup } = this.props;
     return (
-      <Modal visible={this.state.filter} transparent={true} onRequestClose={() => closePopup(false)}>
+      <Modal
+        visible={this.state.filter}
+        transparent={true}
+        onRequestClose={() => closePopup(false)}
+      >
         <View style={styles.modalWindow}>
           <View
             style={[
@@ -599,10 +686,10 @@ export default class FilterComponent extends React.Component {
                   borderColor: "#F5F5F5",
                   padding: 10,
                   width: "100%",
-                  borderRadius: 5,
+                  borderRadius: 10,
                   position: "relative",
                   height: 45,
-                  backgroundColor: "#52A8EF",
+                  backgroundColor: "#B5D8FE",
                   justifyContent: "center",
                 }}
                 onPress={() =>
@@ -810,7 +897,6 @@ export default class FilterComponent extends React.Component {
                   borderRadius: 15,
                 }}
                 onPress={() => {
-                  
                   resetFilterData();
                 }}
               >

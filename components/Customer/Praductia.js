@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import ArrowGrayComponent from "../../assets/image/ArrowGray";
 import Slider from "../slider/Slider";
+import { ImageSlider } from "react-native-image-slider-banner";
 import CustomerMainPageNavComponent from "./CustomerMainPageNav";
 import Svg, { Path, Rect } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";

@@ -35,9 +35,21 @@ export default function Slider(props) {
   let sliderItem = ({ item, index }) => {
     return (
       <View>
-        {props.showStars && <TouchableOpacity style={{ position: 'absolute', top: 5, right: 10, zIndex: 999 }} onPress={() => props.onPressStar(item)}>
-          <Image source={item.star == '0' ? require('../../assets/image/unfilled_star.png') : require('../../assets/image/filled_star.png')} style={{ width: 20, height: 20 }} />
-        </TouchableOpacity>}
+        {/* {props.showStars && (
+          <TouchableOpacity
+            style={{ position: "absolute", top: 5, right: 10, zIndex: 999 }}
+            onPress={() => props.onPressStar(item)}
+          >
+            <Image
+              source={
+                item.star == "0"
+                  ? require("../../assets/image/unfilled_star.png")
+                  : require("../../assets/image/filled_star.png")
+              }
+              style={{ width: 20, height: 20 }}
+            />
+          </TouchableOpacity>
+        )} */}
         <Image
           source={{ uri: APP_IMAGE_URL + item.image }}
           style={{ height: "100%", width: width, resizeMode: "cover" }}
@@ -60,12 +72,13 @@ export default function Slider(props) {
         onScroll={({ nativeEvent }) => change(nativeEvent)}
       />
       <View style={styles.wrapDot}>
-        {props.slid.length > 1 && props.slid.map((item, index) => (
-          <View
-            style={imgActive === index ? styles.dotActive : styles.dot}
-            key={index}
-          />
-        ))}
+        {props.slid.length > 1 &&
+          props.slid.map((item, index) => (
+            <View
+              style={imgActive === index ? styles.dotActive : styles.dot}
+              key={index}
+            />
+          ))}
       </View>
     </View>
   );
@@ -74,7 +87,7 @@ export default function Slider(props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: width,
-    height: width / 7 * 5,
+    height: (width / 7) * 5,
   },
   wrapDot: {
     position: "absolute",

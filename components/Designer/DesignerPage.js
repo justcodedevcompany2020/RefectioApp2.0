@@ -16,17 +16,20 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
+import { ImageSlider } from "react-native-image-slider-banner";
 import Slider from "../slider/Slider";
 import FilterComponent from "../Component/FilterComponent";
 import DesignerPageNavComponent from "./DesignerPageNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BlueButton from "../Component/Buttons/BlueButton";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import { Updates } from "expo";
 
 export default class CustomerMainPageComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      updateAvilable: false,
       filter: false,
       keyboardOpen: false,
       getAllProducts: [],
@@ -47,8 +50,29 @@ export default class CustomerMainPageComponent extends React.Component {
     this.handler = this.handler.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
-    this.ref = React.createRef()
+    this.ref = React.createRef();
   }
+
+  componentDidMount() {
+    this.checkForUpdate();
+  }
+
+  async checkForUpdate() {
+    const update = await Updates.checkForUpdateAsync();
+    console.log("update");
+    if (update.isAvailable) {
+      this.setState({ updateAvailable: true });
+    }
+  }
+
+  handleUpdate = async () => {
+    try {
+      await Updates.fetchUpdateAsync();
+      Updates.reloadFromCache();
+    } catch (error) {
+      // Handle update error
+    }
+  };
 
   clearAllData = async () => {
     await this.setState({
@@ -97,14 +121,15 @@ export default class CustomerMainPageComponent extends React.Component {
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].slider_photo.length > 0) {
-                let product_image = data[i].slider_photo
+                let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
-                data[i].images = product_image
+                data[i].images = product_image;
               } else if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
               } else {
-                let product_image = data[i].user_product_limit1[0].product_image;
+                let product_image =
+                  data[i].user_product_limit1[0].product_image;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               }
@@ -219,9 +244,9 @@ export default class CustomerMainPageComponent extends React.Component {
 
         for (let i = 0; i < data.length; i++) {
           if (data[i].slider_photo.length > 0) {
-            let product_image = data[i].slider_photo
+            let product_image = data[i].slider_photo;
             product_image.length > 5 ? product_image.splice(5) : null;
-            data[i].images = product_image
+            data[i].images = product_image;
           } else if (data[i].user_product_limit1.length < 1) {
             data[i].images = [];
             continue;
@@ -240,14 +265,13 @@ export default class CustomerMainPageComponent extends React.Component {
                   data[i].images = product_image;
                 }
               });
-
             }
           }
         }
         this.setState({
           getAllProducts: data,
           filter: false,
-          isLastPage: true
+          isLastPage: true,
         });
         this.ref.current.scrollToIndex({ index: 0, animated: true });
       })
@@ -442,7 +466,35 @@ export default class CustomerMainPageComponent extends React.Component {
               })}
             </ScrollView>
           </View>
-          <Slider slid={item.images} />
+          {/* <Slider slid={item.images} /> */}
+          <ImageSlider
+            showIndicator
+            indicatorSize={8} // Adjust the size of the indicators
+            indicatorColor="red" // Adjust the color of the indicators
+            inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
+            indicatorAtBottom={true}
+            preview={true}
+            // children
+            // data={[
+            //   {
+            //     img: APP_IMAGE_URL + item.images,
+            //   },
+            // ]}
+            data={item.images.map((value) => {
+              return { img: APP_IMAGE_URL + value.image };
+            })}
+            // dataSource={item.images.map((item, index) => ({
+            //   url: APP_IMAGE_URL + item.image,
+            //   // title: item.title,
+            //   // You can add more properties as needed
+            //   // For example: description: item.description
+            // }))}
+            autoPlay={false}
+            onItemChanged={(item) => console.log(item)}
+            closeIconColor="#fff"
+            // showIndicator={false}
+            caroselImageStyle={{ resizeMode: "cover", height: 270 }}
+          />
         </View>
       )
     );

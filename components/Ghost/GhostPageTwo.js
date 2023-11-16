@@ -15,6 +15,7 @@ import {
   Share,
 } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
+import { ImageSlider } from "react-native-image-slider-banner";
 import Slider from "../slider/Slider";
 import GhostNavComponent from "./GhostNav";
 import BlueButton from "../Component/Buttons/BlueButton";
@@ -83,25 +84,31 @@ export default class GhostPageTwoComponent extends React.Component {
     })
       .then((response) => response.json())
       .then((res) => {
-        let arr = res.data.user_category_for_product
-        const isFound = res.data.user_category_for_product.findIndex((element) => +element.parent_category_id == 10);
+        let arr = res.data.user_category_for_product;
+        const isFound = res.data.user_category_for_product.findIndex(
+          (element) => +element.parent_category_id == 10
+        );
         if (isFound == 0) {
-          arr = res.data.user_category_for_product
-          let lastItem = res.data.user_category_for_product[0]
-          arr.shift(res.data.user_category_for_product[0])
-          arr.push(lastItem)
+          arr = res.data.user_category_for_product;
+          let lastItem = res.data.user_category_for_product[0];
+          arr.shift(res.data.user_category_for_product[0]);
+          arr.push(lastItem);
         }
 
-        const isFoundKitchen = arr.findIndex((element) => +element.parent_category_id == 2);
+        const isFoundKitchen = arr.findIndex(
+          (element) => +element.parent_category_id == 2
+        );
         if (isFoundKitchen >= 0) {
-          let firstItem = arr.splice(isFoundKitchen, 1)
-          arr.unshift(firstItem[0])
+          let firstItem = arr.splice(isFoundKitchen, 1);
+          arr.unshift(firstItem[0]);
         }
 
-        const receptionАrea = arr.findIndex((element) => +element.parent_category_id == 12);
+        const receptionАrea = arr.findIndex(
+          (element) => +element.parent_category_id == 12
+        );
         if (receptionАrea >= 0) {
-          let myItem = arr.splice(receptionАrea, 1)
-          arr.push(myItem[0])
+          let myItem = arr.splice(receptionАrea, 1);
+          arr.push(myItem[0]);
         }
         console.log(res.data.user[0].about_us);
         this.setState({
@@ -110,7 +117,7 @@ export default class GhostPageTwoComponent extends React.Component {
           city_for_sales_user: res.data.city_for_sales_user,
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
-          about_us: res.data.user[0].about_us
+          about_us: res.data.user[0].about_us,
         });
       });
   };
@@ -263,7 +270,10 @@ export default class GhostPageTwoComponent extends React.Component {
       this.state.user_category_for_product[0].parent_category_name
     );
     await this.setState({
-      changed: this.state.city_for_sales_user.length == this.state.city_count ? 'Все города России' : this.state.city_for_sales_user[0].city_name,
+      changed:
+        this.state.city_for_sales_user.length == this.state.city_count
+          ? "Все города России"
+          : this.state.city_for_sales_user[0].city_name,
     });
     await this.setState({ active: 0 });
   };
@@ -288,7 +298,7 @@ export default class GhostPageTwoComponent extends React.Component {
     if (protocolRegex.test(url)) {
       return url;
     }
-    return 'http://' + url;
+    return "http://" + url;
   }
 
   render() {
@@ -388,12 +398,23 @@ export default class GhostPageTwoComponent extends React.Component {
                 Дополнительная информация
               </Text>
 
-              {!this.state.about_us ? <Text style={{ marginVertical: 20 }}>Производитель не добавил доп. информацию</Text>
-                :
+              {!this.state.about_us ? (
+                <Text style={{ marginVertical: 20 }}>
+                  Производитель не добавил доп. информацию
+                </Text>
+              ) : (
                 <WebView
-                  style={{ height: 100, width: 280, marginTop: 30, zIndex: 99999, }}
-                  source={{ html: `<div style="font-size:55px;">${this.state.about_us}</div>` }}
-                />}
+                  style={{
+                    height: 100,
+                    width: 280,
+                    marginTop: 30,
+                    zIndex: 99999,
+                  }}
+                  source={{
+                    html: `<div style="font-size:55px;">${this.state.about_us}</div>`,
+                  }}
+                />
+              )}
 
               <TouchableOpacity
                 style={{
@@ -436,12 +457,20 @@ export default class GhostPageTwoComponent extends React.Component {
                   color: "#2D9EFB",
                   fontFamily: "Poppins_500Medium",
                 }}
-              >Дополнительная информация
+              >
+                Дополнительная информация
               </Text>
 
               <WebView
-                style={{ height: 100, width: 280, marginTop: 30, zIndex: 99999 }}
-                source={{ html: `<div style="font-size:55px;">${this.state.aboutProduct}</div>` }}
+                style={{
+                  height: 100,
+                  width: 280,
+                  marginTop: 30,
+                  zIndex: 99999,
+                }}
+                source={{
+                  html: `<div style="font-size:55px;">${this.state.aboutProduct}</div>`,
+                }}
               />
 
               <TouchableOpacity
@@ -518,7 +547,15 @@ export default class GhostPageTwoComponent extends React.Component {
         </Modal>
 
         <View style={styles.main}>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginLeft: -10 }} onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 15,
+              marginLeft: -10,
+            }}
+            onPress={() => this.props.navigation.goBack()}
+          >
             <Svg
               width={30}
               height={35}
@@ -533,9 +570,7 @@ export default class GhostPageTwoComponent extends React.Component {
             </Svg>
             <Text style={styles.backText}>Назад</Text>
           </TouchableOpacity>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.campaign}>
               {this.state.user.length > 0 && (
                 <View style={styles.infoCompanyMain}>
@@ -578,10 +613,12 @@ export default class GhostPageTwoComponent extends React.Component {
                           marginTop: 4,
                         }}
                       >
-                        {`${this.state.user[0].saite}` !== 'null' && (
+                        {`${this.state.user[0].saite}` !== "null" && (
                           <TouchableOpacity
                             onPress={() => {
-                              Linking.openURL(this.addProtocol(this.state.user[0].saite))
+                              Linking.openURL(
+                                this.addProtocol(this.state.user[0].saite)
+                              );
                             }}
                           >
                             <Image
@@ -632,10 +669,12 @@ export default class GhostPageTwoComponent extends React.Component {
                             />
                           </TouchableOpacity>
                         )}
-                        {this.state.user[0].job_with_designer == 'Да' && (
-                          <TouchableOpacity onPress={() => {
-                            this.setState({ designerModal: true })
-                          }}>
+                        {this.state.user[0].job_with_designer == "Да" && (
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.setState({ designerModal: true });
+                            }}
+                          >
                             <Image
                               source={require("../../assets/image/design.png")}
                               style={{
@@ -646,9 +685,12 @@ export default class GhostPageTwoComponent extends React.Component {
                             />
                           </TouchableOpacity>
                         )}
-                        {this.state.user[0].dmodel == 'Да' && (
+                        {this.state.user[0].dmodel == "Да" && (
                           <TouchableOpacity
-                            onPress={() => this.setState({ dmodel_popup: true })}>
+                            onPress={() =>
+                              this.setState({ dmodel_popup: true })
+                            }
+                          >
                             <Image
                               source={require("../../assets/image/cube.png")}
                               style={{
@@ -737,8 +779,8 @@ export default class GhostPageTwoComponent extends React.Component {
                   }
                 >
                   <ScrollView nestedScrollEnabled={true}>
-                    {this.state.city_for_sales_user.length == this.state.city_count ?
-
+                    {this.state.city_for_sales_user.length ==
+                    this.state.city_count ? (
                       <TouchableOpacity
                         style={{
                           width: "100%",
@@ -761,8 +803,8 @@ export default class GhostPageTwoComponent extends React.Component {
                           {this.state.changed}
                         </Text>
                       </TouchableOpacity>
-
-                      : this.state.city_for_sales_user.map((item, index) => {
+                    ) : (
+                      this.state.city_for_sales_user.map((item, index) => {
                         return (
                           <TouchableOpacity
                             key={index}
@@ -789,7 +831,8 @@ export default class GhostPageTwoComponent extends React.Component {
                             </Text>
                           </TouchableOpacity>
                         );
-                      })}
+                      })
+                    )}
                   </ScrollView>
                 </View>
 
@@ -876,7 +919,10 @@ export default class GhostPageTwoComponent extends React.Component {
                   ]}
                   onPress={() => {
                     // this.setState({ aboutUsPopup: true })
-                    this.props.navigation.navigate('AboutUsScreen', { value: this.state.about_us, hideText: true })
+                    this.props.navigation.navigate("AboutUsScreen", {
+                      value: this.state.about_us,
+                      hideText: true,
+                    });
                   }}
                 >
                   <Image
@@ -902,7 +948,7 @@ export default class GhostPageTwoComponent extends React.Component {
                       `whatsapp://send?text=Здравствуйте!
 
 Пишу из приложения Refectio.&phone=${this.state.whatsapp}`
-                    ).catch(err => console.log(err))
+                    ).catch((err) => console.log(err));
                   }}
                 >
                   <Image
@@ -917,9 +963,9 @@ export default class GhostPageTwoComponent extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.info}
-                // onPress={() => {
-                //   this.props.navigation.navigate("Modal");
-                // }}
+                  // onPress={() => {
+                  //   this.props.navigation.navigate("Modal");
+                  // }}
                 >
                   <Image
                     source={require("../../assets/image/pcichka.png")}
@@ -980,7 +1026,38 @@ export default class GhostPageTwoComponent extends React.Component {
                 this.state.products.map((item, index) => {
                   return (
                     <View key={index} style={{ marginTop: 18 }}>
-                      <Slider2 slid={item.product_image} />
+                      {/* <Slider2 slid={item.product_image} /> */}
+                      <ImageSlider
+                        showIndicator
+                        indicatorSize={8} // Adjust the size of the indicators
+                        indicatorColor="red" // Adjust the color of the indicators
+                        inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
+                        indicatorAtBottom={true}
+                        preview={true}
+                        // children
+                        // data={[
+                        //   {
+                        //     img: APP_IMAGE_URL + item.images,
+                        //   },
+                        // ]}
+                        data={item.product_image.map((value) => {
+                          return { img: APP_IMAGE_URL + value.image };
+                        })}
+                        // dataSource={item.images.map((item, index) => ({
+                        //   url: APP_IMAGE_URL + item.image,
+                        //   // title: item.title,
+                        //   // You can add more properties as needed
+                        //   // For example: description: item.description
+                        // }))}
+                        autoPlay={false}
+                        onItemChanged={(item) => console.log(item)}
+                        closeIconColor="#fff"
+                        // showIndicator={false}
+                        caroselImageStyle={{
+                          resizeMode: "cover",
+                          height: 270,
+                        }}
+                      />
                       <View>
                         <Text
                           style={{
@@ -988,54 +1065,57 @@ export default class GhostPageTwoComponent extends React.Component {
                             fontSize: 13,
                             marginTop: 5,
                             marginBottom: 4,
-                            width: '90%'
+                            width: "90%",
                           }}
                         >
                           {item.name}
                         </Text>
-                        {item.facades && (
-                          <Text>
-                            Фасады : {item.facades}
-                          </Text>
-                        )}
-                        {item.frame && (
-                          <Text>
-                            Корпус: {item.frame}
-                          </Text>
-                        )}
-                        {item.profile && (
-                        <Text>
-                          Профиль: {item.profile}
-                        </Text>
-                      )}
+                        {item.facades && <Text>Фасады : {item.facades}</Text>}
+                        {item.frame && <Text>Корпус: {item.frame}</Text>}
+                        {item.profile && <Text>Профиль: {item.profile}</Text>}
                         {item.tabletop && (
-                          <Text>
-                            Столешница: {item.tabletop}
-                          </Text>
+                          <Text>Столешница: {item.tabletop}</Text>
                         )}
-                        {item.length && (
-                          <Text>
-                            Длина: {item.length} м.
-                          </Text>
-                        )}
-                        {item.height && (
-                          <Text>
-                            Высота: {item.height} м.
-                          </Text>
-                        )}
+                        {item.length && <Text>Длина: {item.length} м.</Text>}
+                        {item.height && <Text>Высота: {item.height} м.</Text>}
                         {item.material && (
-                          <Text>
-                            Материал: {item.material}
-                          </Text>
+                          <Text>Материал: {item.material}</Text>
                         )}
                         {item.price && (
                           <Text>
-                            Цена: {item.price.toString().split(".").join("").replace(/\B(?=(\d{3})+(?!\d))/g, ".")} руб.
+                            Цена:{" "}
+                            {item.price
+                              .toString()
+                              .split(".")
+                              .join("")
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
+                            руб.
                           </Text>
                         )}
-                        {item.about && item.about != 'null' && <TouchableOpacity style={{ width: 27, height: 27, position: 'absolute', right: 0, top: 5 }} onPress={() => this.props.navigation.navigate('AboutUsScreen', { value: item.about, hideText: true })}>
-                          <Image source={require('../../assets/image/Screenshot_2.png')} style={{ width: 27, height: 27 }} width={27} height={27} />
-                        </TouchableOpacity>}
+                        {item.about && item.about != "null" && (
+                          <TouchableOpacity
+                            style={{
+                              width: 27,
+                              height: 27,
+                              position: "absolute",
+                              right: 0,
+                              top: 5,
+                            }}
+                            onPress={() =>
+                              this.props.navigation.navigate("AboutUsScreen", {
+                                value: item.about,
+                                hideText: true,
+                              })
+                            }
+                          >
+                            <Image
+                              source={require("../../assets/image/Screenshot_2.png")}
+                              style={{ width: 27, height: 27 }}
+                              width={27}
+                              height={27}
+                            />
+                          </TouchableOpacity>
+                        )}
                       </View>
                     </View>
                   );
@@ -1140,8 +1220,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   backText: {
-    color: '#94D8F4',
+    color: "#94D8F4",
     fontSize: 16,
     marginTop: 5,
-  }
+  },
 });

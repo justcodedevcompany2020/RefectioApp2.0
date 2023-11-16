@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+// import { Updates } from "expo-updates";
 import {
   SafeAreaView,
   View,
@@ -14,19 +15,26 @@ import {
   ImageBackground,
   FlatList,
   ActivityIndicator,
+  Platform,
+  Linking,
 } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
+// import { APP_IMAGE_URL } from "@env";
 import Slider from "../slider/Slider";
 import CustomerMainPageNavComponent from "./CustomerMainPageNav";
 import FilterComponent from "../Component/FilterComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BlueButton from "../Component/Buttons/BlueButton";
 import { APP_URL, APP_IMAGE_URL } from "@env";
+import * as Updates from "expo-updates";
+import { ImageSlider } from "react-native-image-slider-banner";
+// import { useLinkTo } from "@react-navigation/native";
 
 export default class CustomerMainPageComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      updateAvailable: false,
       filter: false,
       keyboardOpen: false,
       getAllProducts: [],
@@ -47,7 +55,7 @@ export default class CustomerMainPageComponent extends React.Component {
     this.handler = this.handler.bind(this);
     this.closePopup = this.closePopup.bind(this);
     this.resetFilterData = this.resetFilterData.bind(this);
-    this.ref = React.createRef()
+    this.ref = React.createRef();
   }
 
   clearAllData = async () => {
@@ -90,14 +98,15 @@ export default class CustomerMainPageComponent extends React.Component {
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].slider_photo.length > 0) {
-                let product_image = data[i].slider_photo
+                let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
-                data[i].images = product_image
+                data[i].images = product_image;
               } else if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
               } else {
-                let product_image = data[i].user_product_limit1[0].product_image;
+                let product_image =
+                  data[i].user_product_limit1[0].product_image;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               }
@@ -202,12 +211,15 @@ export default class CustomerMainPageComponent extends React.Component {
     let city_name = filter_data.city_name;
     let show_room = filter_data.show_room;
 
+    console.log(filter_data, "customer");
+
     let formdata = new FormData();
+    console.log(city_name, meshok, made_in_result, "cityyyy");
     formdata.append("meshok", meshok);
     formdata.append("parent_category_name", category_name);
-    formdata.append("city_name", city_name);
-    formdata.append("made_in", made_in_result);
-    formdata.append("show_room", show_room);
+     formdata.append("city_name", city_name);
+     formdata.append("made_in", made_in_result);
+     formdata.append("show_room", show_room);
 
     let requestOptions = {
       method: "POST",
@@ -221,6 +233,7 @@ export default class CustomerMainPageComponent extends React.Component {
     fetch(`${APP_URL}filterProizvoditel`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
+        console.log(res, "resss");
         if (!res.status) {
           this.setState({
             getAllProducts: [],
@@ -232,13 +245,13 @@ export default class CustomerMainPageComponent extends React.Component {
         let data = res.data.user;
 
         let filtered_category_name = res.data.returnCategoryNameArray[0];
-
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].slider_photo.length > 0) {
-            let product_image = data[i].slider_photo
-            product_image.length > 5 ? product_image.splice(5) : null;
-            data[i].images = product_image
-          } else if (data[i].user_product_limit1.length < 1) {
+        console.log(data.length,'length');
+        for (let i = 0; i < data?.length; i++) {
+          if (data[i].slider_photo?.length > 0) {
+            let product_image = data[i]?.slider_photo;
+            product_image?.length > 5 ? product_image.splice(5) : null;
+            data[i].images = product_image;
+          } else if (data[i].user_product_limit1?.length < 1) {
             data[i].images = [];
             continue;
           } else {
@@ -246,7 +259,7 @@ export default class CustomerMainPageComponent extends React.Component {
             product_image.length > 5 ? product_image.splice(5) : null;
             data[i].images = product_image;
 
-            if (res.data.returnCategoryNameArray.length > 0) {
+            if (res.data.returnCategoryNameArray?.length > 0) {
               let new_user_product_limit = data[i].user_product_limit1;
 
               new_user_product_limit.filter((item, index) => {
@@ -262,12 +275,11 @@ export default class CustomerMainPageComponent extends React.Component {
         this.setState({
           getAllProducts: data,
           filter: false,
-          isLastPage: true
+          isLastPage: true,
         });
         this.ref.current.scrollToIndex({ index: 0, animated: true });
-        
-      })
-      .catch((error) => console.log("error", error));
+      });
+    // .catch((error) => console.log("error--->", error));
   }
 
   resetFilterData = async () => {
@@ -287,8 +299,26 @@ export default class CustomerMainPageComponent extends React.Component {
 
   formImageData = new FormData();
 
+  async checkForUpdate() {
+    const update = await Updates.checkForUpdateAsync();
+    if (update.isAvailable) {
+      this.setState({ updateAvailable: true });
+    }
+  }
+
+  handleUpdate = async () => {
+    try {
+      await Updates.fetchUpdateAsync();
+      Updates.reloadFromCache();
+    } catch (error) {
+      // Handle update error
+    }
+  };
+
   componentDidMount() {
     const { navigation } = this.props;
+    // console.log("sjanc");
+    this.checkForUpdate();
     this.focusListener = navigation.addListener("focus", () => {
       if (!this.props.route.params?.screen) {
         this.clearAllData();
@@ -351,6 +381,8 @@ export default class CustomerMainPageComponent extends React.Component {
 
   renderItem = ({ item, index }) => {
     let count = item.meshok;
+
+    console.log(item.images[0].image, "img");
     return (
       item.user_product_limit1.length !== 0 && (
         <View key={index} style={styles.campaign}>
@@ -425,7 +457,6 @@ export default class CustomerMainPageComponent extends React.Component {
               horizontal={true}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              
             >
               {item.parent_category.map((item, ind) => {
                 return (
@@ -436,7 +467,35 @@ export default class CustomerMainPageComponent extends React.Component {
               })}
             </ScrollView>
           </View>
-          <Slider slid={item.images} />
+          <ImageSlider
+            showIndicator
+            indicatorSize={8} // Adjust the size of the indicators
+            indicatorColor="red" // Adjust the color of the indicators
+            inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
+            indicatorAtBottom={true}
+            preview={true}
+            // children
+            // data={[
+            //   {
+            //     img: APP_IMAGE_URL + item.images,
+            //   },
+            // ]}
+            data={item.images.map((value) => {
+              return { img: APP_IMAGE_URL + value.image };
+            })}
+            // dataSource={item.images.map((item, index) => ({
+            //   url: APP_IMAGE_URL + item.image,
+            //   // title: item.title,
+            //   // You can add more properties as needed
+            //   // For example: description: item.description
+            // }))}
+            autoPlay={false}
+            onItemChanged={(item) => console.log(item)}
+            closeIconColor="#fff"
+            // showIndicator={false}
+            caroselImageStyle={{ resizeMode: "cover", height: 270 }}
+          />
+          {/* <Slider slid={item.images} /> */}
         </View>
       )
     );
@@ -455,8 +514,8 @@ export default class CustomerMainPageComponent extends React.Component {
     this.getProductsFunction();
   };
 
-
   render() {
+    // const linkTo = useLinkTo();
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.main}>
@@ -493,6 +552,82 @@ export default class CustomerMainPageComponent extends React.Component {
 
             <Text style={styles.myComponyName}>{this.state.name}</Text>
           </View>
+
+          <Modal visible={this.state.updateAvailable}>
+            <View style={{ flex: 1, paddingTop: 50 }}>
+              <Image
+                style={{ width: "100%", height: 550, position: "relative" }}
+                resizeMode="cover"
+                source={require("../../assets/image/photoMob.png")}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({ updateAvailable: false });
+                  console.log(this.state.updateAvailable);
+                }}
+                style={{ position: "absolute", right: 18, top: 50 }}
+              >
+                <Image
+                  source={require("../../assets/image/ixs.png")}
+                  style={{ width: 22.5, height: 22.5 }}
+                />
+              </TouchableOpacity>
+              <View style={{ alignItems: "center" }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  В приложении удобнее
+                </Text>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    paddingHorizontal: 20,
+                    marginTop: 10,
+                    fontSize: 15,
+                  }}
+                >
+                  смотреть фото и описания.{"\n"} Есть фильтры и возможность
+                  смотреть подходящие примеры работ сразу от многих
+                  производителей.
+                </Text>
+              </View>
+              <View style={{ width: "100%", paddingHorizontal: 20 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (Platform.OS === "ios") {
+                      Linking.openURL(
+                        "https://apps.apple.com/us/app/com.JustCode.Refection"
+                      );
+                    } else {
+                      Linking.openURL(
+                        "https://play.google.com/store/apps/details?id=com.JustCode.Refection"
+                      );
+                    }
+                  }}
+                  style={{
+                    width: "100%",
+                    borderRadius: 15,
+                    backgroundColor: "#B5D8FE",
+                    height: 50,
+                    marginTop: 20,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: 18, color: "white", fontWeight: "700" }}
+                  >
+                    Скачать
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
 
           <Modal visible={this.state.firstLogin == "1"}>
             <ImageBackground

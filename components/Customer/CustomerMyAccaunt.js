@@ -23,7 +23,7 @@ import { AuthContext } from "../AuthContext/context";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { APP_URL, APP_IMAGE_URL } from "@env";
-import HTML from 'react-native-render-html';
+import HTML from "react-native-render-html";
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -95,7 +95,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
       ],
 
       collaborate: "",
-      dmodel: '',
+      dmodel: "",
       openDesignerPopup: false,
       dmodelPopup: false,
       about_us: "",
@@ -121,7 +121,12 @@ export default class CustomerMyAccauntComponent extends React.Component {
         if (res.status === true) {
           this.setState({ sOpenCityDropDown3: !this.state.sOpenCityDropDown3 });
         }
-        this.setState({ cityItems: [{ name: 'Все города России', id: 9999 }, ...res.data.city] });
+        this.setState({
+          cityItems: [
+            { name: "Все города России", id: 9999 },
+            ...res.data.city,
+          ],
+        });
       });
   };
 
@@ -276,13 +281,15 @@ export default class CustomerMyAccauntComponent extends React.Component {
     })
       .then((response) => response.json())
       .then((res) => {
-
         this.setState({
-          about_us: res?.data[0].about_us ,
-          updatedAboutUs: res?.data[0].about_us ,
+          about_us: res?.data[0].about_us,
+          updatedAboutUs: res?.data[0].about_us,
           authUserState: res?.data,
           gorodArray: res?.data[0].city_of_sales_manufacturer,
-          allCities: res?.data[0].city_of_sales_manufacturer.length == res?.city_count ? true : false,
+          allCities:
+            res?.data[0].city_of_sales_manufacturer.length == res?.city_count
+              ? true
+              : false,
           id: res?.data[0].id,
           inn: res?.data[0].individual_number,
           strana: res?.data[0].made_in,
@@ -300,7 +307,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
               ? "t.me/" + res?.data[0].telegram
               : "t.me/",
           collaborate: res?.data[0].job_with_designer,
-          dmodel: res?.data[0].dmodel
+          dmodel: res?.data[0].dmodel,
         });
       });
   };
@@ -536,8 +543,13 @@ export default class CustomerMyAccauntComponent extends React.Component {
     items.city_name = items.name;
 
     if (items.city_id == 9999) {
-      filterSort = this.state.cityItems.filter(el => el.id !== 9999).map((item, i) => ({ city_name: item.name, city_id: item.id }))
-      this.setState({ allCities: true, countCity: this.state.cityItems.length - 1 })
+      filterSort = this.state.cityItems
+        .filter((el) => el.id !== 9999)
+        .map((item, i) => ({ city_name: item.name, city_id: item.id }));
+      this.setState({
+        allCities: true,
+        countCity: this.state.cityItems.length - 1,
+      });
     } else {
       filterSort.find((item) => {
         if (item.id == items.city_id) {
@@ -605,7 +617,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
         if (
           result.status === false &&
           result.message ===
-          "Нельзя удалить заполненную категорию. Сначала удалите объекты в разделе Продукция по данной категории"
+            "Нельзя удалить заполненную категорию. Сначала удалите объекты в разделе Продукция по данной категории"
         ) {
           this.setState({ delate_category: true });
           setTimeout(() => {
@@ -828,7 +840,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
         console.log(result);
       })
       .catch((error) => console.log("error", error));
-  }
+  };
 
   update_job_with_designer = async (value) => {
     let myHeaders = new Headers();
@@ -852,8 +864,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
         console.log(result);
       })
       .catch((error) => console.log("error", error));
-  }
-
+  };
 
   render() {
     return (
@@ -915,43 +926,49 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     height: 50,
                   }}
                 >
-                  {this.state.allCities ? <View
-                    style={{
-                      position: "relative",
-                      marginRight: 10,
-                      marginTop: 10,
-                      borderRadius: 8,
-                    }}
-                  >
-                    <Text
+                  {this.state.allCities ? (
+                    <View
                       style={{
-                        paddingHorizontal: 16,
-                        paddingVertical: 10,
-                        backgroundColor: "#F5F5F5",
-                        fontFamily: "Poppins_500Medium",
+                        position: "relative",
+                        marginRight: 10,
+                        marginTop: 10,
+                        borderRadius: 8,
                       }}
                     >
-                      Все города России
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({ allCities: false, gorodArray: [], countCity: 0 })
-                      }}
-                      style={{
-                        position: "absolute",
-                        right: -5,
-                        top: -5,
-                      }}
-                    >
-                      <Image
-                        source={require("../../assets/image/ixs.png")}
+                      <Text
                         style={{
-                          width: 12,
-                          height: 12,
+                          paddingHorizontal: 16,
+                          paddingVertical: 10,
+                          backgroundColor: "#F5F5F5",
+                          fontFamily: "Poppins_500Medium",
                         }}
-                      />
-                    </TouchableOpacity>
-                  </View> :
+                      >
+                        Все города России
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({
+                            allCities: false,
+                            gorodArray: [],
+                            countCity: 0,
+                          });
+                        }}
+                        style={{
+                          position: "absolute",
+                          right: -5,
+                          top: -5,
+                        }}
+                      >
+                        <Image
+                          source={require("../../assets/image/ixs.png")}
+                          style={{
+                            width: 12,
+                            height: 12,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
                     <ScrollView
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}
@@ -998,7 +1015,8 @@ export default class CustomerMyAccauntComponent extends React.Component {
                           </View>
                         );
                       })}
-                    </ScrollView>}
+                    </ScrollView>
+                  )}
                 </View>
 
                 {/* gorod dropDown start */}
@@ -1126,7 +1144,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
               </View>
             </ImageBackground>
           </Modal>
-
 
           <Modal visible={this.state.editModal}>
             <ImageBackground
@@ -1618,7 +1635,13 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         >
                           {this.state.collaborate}
                         </Text>
-                        <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                        <View
+                          style={{
+                            position: "absolute",
+                            right: 17,
+                            bottom: 18,
+                          }}
+                        >
                           {!this.state.openDesignerPopup && (
                             <Svg
                               width="18"
@@ -1678,8 +1701,8 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                   this.setState({
                                     collaborate: item.name,
                                     openDesignerPopup: false,
-                                  })
-                                  this.update_job_with_designer(item.name)
+                                  });
+                                  this.update_job_with_designer(item.name);
                                 }}
                               >
                                 <Text
@@ -1747,7 +1770,13 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         >
                           {this.state.dmodel}
                         </Text>
-                        <View style={{ position: "absolute", right: 17, bottom: 18 }}>
+                        <View
+                          style={{
+                            position: "absolute",
+                            right: 17,
+                            bottom: 18,
+                          }}
+                        >
                           {!this.state.dmodelPopup && (
                             <Svg
                               width="18"
@@ -1804,12 +1833,12 @@ export default class CustomerMyAccauntComponent extends React.Component {
                                   borderBottomColor: "#F5F5F5",
                                 }}
                                 onPress={() => {
-                                  console.log('onpress');
+                                  console.log("onpress");
                                   this.setState({
                                     dmodel: item.name,
                                     dmodelPopup: false,
-                                  })
-                                  this.update_dmodel(item.name)
+                                  });
+                                  this.update_dmodel(item.name);
                                 }}
                               >
                                 <Text
@@ -1828,13 +1857,11 @@ export default class CustomerMyAccauntComponent extends React.Component {
                         </ScrollView>
                       </View>
                     </View>
-
                   </ScrollView>
                 </KeyboardAwareScrollView>
               </View>
             </ImageBackground>
           </Modal>
-
 
           {/* <Modal visible={this.state.aboutUsModal}>
             <ImageBackground
@@ -1884,7 +1911,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
               </View>
             </ImageBackground>
           </Modal> */}
-
 
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("CustomerMainPage")}
@@ -2228,14 +2254,18 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     marginRight: 12,
                   }}
                 >
-                  {this.state.gorodArray.length ? <Text
-                    style={{
-                      fontFamily: "Poppins_500Medium",
-                      color: "#888888",
-                    }}
-                  >
-                    {this.state.gorodArray.length == 80 ? 'Все города России' : this.state.gorodArray[0]?.city_name + '...' }
-                  </Text> : null}
+                  {this.state.gorodArray.length ? (
+                    <Text
+                      style={{
+                        fontFamily: "Poppins_500Medium",
+                        color: "#888888",
+                      }}
+                    >
+                      {this.state.gorodArray.length == 80
+                        ? "Все города России"
+                        : this.state.gorodArray[0]?.city_name + "..."}
+                    </Text>
+                  ) : null}
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -2254,8 +2284,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
             </View>
 
             {/* dropDown end */}
-
-
             <Text
               style={{
                 fontFamily: "Poppins_500Medium",
@@ -2268,33 +2296,97 @@ export default class CustomerMyAccauntComponent extends React.Component {
             >
               Дополнительная информация
             </Text>
-            <View
-              style={{
-                flexDirection: 'row', width: '95%', flexDirection: "row",
-                position: "relative", marginTop: 15
-              }}>
-              <View style={{ borderWidth: 1, borderColor: '#F5F5F5', borderRadius: 6, position: "relative", marginRight: 12, width: "88%", padding: 10, }}>
-                <HTML
-                  contentWidth={700}
-                  source={{ html: `<div style="font-size: 16px">${this.state.about_us}</div>` }}
-                />
-              </View>
-
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate('AboutUsScreen', {value: this.state.about_us})
+            {!this.state.about_us ? (
+              <>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    width: "95%",
+                    flexDirection: "row",
+                    position: "relative",
+                    alignItems: "center",
+                    marginTop: 15,
+                  }}
+                >
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#F5F5F5",
+                      borderRadius: 6,
+                      position: "relative",
+                      marginRight: 12,
+                      width: "88%",
+                      padding: 10,
+                      height: 48,
+                    }}
+                  ></View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate("AboutUsScreen", {
+                        value: this.state.about_us,
+                      });
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/image/ep_edit.png")}
+                      style={{
+                        width: 30,
+                        height: 30,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "95%",
+                  flexDirection: "row",
+                  position: "relative",
+                  // alignItems: "center",
+                  marginTop: 15,
                 }}
               >
-                <Image
-                  source={require("../../assets/image/ep_edit.png")}
+                <View
                   style={{
-                    width: 30,
-                    height: 30,
+                    borderWidth: 1,
+                    borderColor: "#F5F5F5",
+                    borderRadius: 6,
+                    position: "relative",
+                    marginRight: 12,
+                    width: "88%",
+                    padding: 10,
                   }}
-                />
-              </TouchableOpacity>
-            </View>
+                >
+                  <HTML
+                    contentWidth={700}
+                    source={{
+                      html: `<div style="font-size: 16px">${
+                        this.state.about_us ? this.state.about_us : ""
+                      }</div>`,
+                    }}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate("AboutUsScreen", {
+                      value: this.state.about_us,
+                    });
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/image/ep_edit.png")}
+                    style={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
 
+            {/**/}
             <TouchableOpacity
               onPress={async () => {
                 await this.logouth();
